@@ -32,6 +32,7 @@ import { Component } from "@angular/core";
           <span class="input-group-addon" id="basic-addon1">@</span>
           <input id="password" type="password" class="form-control" placeholder="password" aria-describedby="basic-addon1">
         </div>
+        <a class="forgot-password" onClick="openForgotPassword()">Forgot Password</a>
         <br>
         <div>
           <button type="submit" style="width:280px;" class="btn btn-success" (click)="switchToMainPanel()">Sign In</button>
