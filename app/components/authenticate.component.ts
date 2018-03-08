@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, AfterViewInit } from "@angular/core";
 
 
 @Component({
@@ -23,29 +23,38 @@ import { Component } from "@angular/core";
         </label>
         <br><br>
         <div class="input-group" style="width:280px;">
-          <span class="input-group-addon" id="basic-addon1">@</span>
           <input id="username" type="text" class="form-control" placeholder="username" aria-describedby="basic-addon1">
         </div>
         <br>
 
         <div class="input-group" style="width:280px;">
-          <span class="input-group-addon" id="basic-addon1">@</span>
           <input id="password" type="password" class="form-control" placeholder="password" aria-describedby="basic-addon1">
         </div>
-        <a class="forgot-password" onClick="openForgotPassword()" href="#">Forgot Password</a>
         <br>
         <div>
           <button type="submit" style="width:280px;" class="btn btn-success" (click)="switchToMainPanel()">Sign In</button>
         </div>
         <br>
         <button type="submit" style="width:280px;" class="btn btn-primary" onclick="switchToMainPanel()">Continue without sign in</button>
+        <br>
+        <a class="forgot-password" onClick="openForgotPassword()" href="#">Forgot Password</a>
       </form>
     </div>
   `
 })
 
-export class AuthenticateComponent {
+export class AuthenticateComponent implements AfterViewInit {
   switchToMainPanel(): void {
     signInPage(switchToMainPanel);
+  }
+
+  ngAfterViewInit() {
+    let username = getUsername();
+    let uncryptedData = decryptValue(username);
+    document.getElementById('username').value = uncryptedData.toString(CryptoJS.enc.Utf8);
+
+    let password = getPassword();
+    let uncryptedData = decryptValue(password);
+    document.getElementById('password').value = uncryptedData.toString(CryptoJS.enc.Utf8);
   }
 }
