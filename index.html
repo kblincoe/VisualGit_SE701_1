@@ -20,6 +20,9 @@
     <script src="app/misc/router.js"></script>
     <script src="app/misc/authenticate.js"></script>
     <script src="app/misc/color.js"></script>
+    <script src="app/misc/encryption.js"></script>
+    <script src="app/misc/localstorage.js"></script>
+    <script src="app/misc/editFile.js"></script>
     <link href="node_modules/vis/dist/vis.min.css" rel="stylesheet" type="text/css">
     <script src="node_modules/jquery/dist/jquery.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -48,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
     // Add click event to Commit button
     document.getElementById('commit-button').addEventListener("click", function() {
-      console.log("clicked");
       addAndCommit();
     });
   }, 2000);
@@ -60,12 +62,12 @@ document.addEventListener('DOMContentLoaded', function() {
 }, false);
 
 $('#repo-modal').on('hidden.bs.modal', function (e) {
-  console.log(e);
   var butt = document.getElementById("cloneButton");
   butt.innerHTML = 'Clone';
   butt.setAttribute('class', 'btn btn-primary disabled');
  });
 
+ // Set for right click to EDIT FILES
  $.contextMenu({
    selector: ".file",
    build: function($trigger) {
@@ -76,9 +78,51 @@ $('#repo-modal').on('hidden.bs.modal', function (e) {
            name: "Edit",
            icon: "edit",
            callback: function(itemKey, opt) {
-             let content = $trigger.text();
-             console.log(repoFullPath + "/" + content);
-             opn(repoFullPath + "/" + content);
+            let content = $trigger.text();
+            let filepath = repoFullPath + "/" + content;
+            console.log(filepath);
+
+            // check if diff panel is open, if open close it before displaying text editor panel
+            let diffPanel = document.getElementById("diff-panel");
+            let textEditorPanel = document.getElementById("text-editor-panel");
+
+            console.log('diffPanel width = ' + diffPanel.style.width);
+            console.log('textEditorPanel width = ' + textEditorPanel.style.width);
+
+            // show EXIT EDIT MODE confirmation dialog if the user clicks the Edit button
+            // on some file when the text editor is opened
+            if (textEditorPanel.style.width !== '0px' && textEditorPanel.style.width !== '') {
+              // Set the [Yes] button of exit confirmation dialog to 
+              // configure the text editor with the new text
+              document.getElementById("exit-edit-mode-button").onclick = function () { 
+                configureTextEditorForSelectedFile();
+              }
+              // ^ the setting of [Yes] button above must be run before this line of code
+              // because we need the [Yes] button to configure the text editor if needed
+              displayExitConfirmationDialog();
+              
+              console.log('after confirmation');
+            } else {
+              // hide diff if it's open
+              if (diffPanel.style.width !== '0px' && diffPanel.style.width !== '') {
+                hideDiffPanel();
+              }
+
+              configureTextEditorForSelectedFile();
+            }
+
+            function configureTextEditorForSelectedFile(){
+              // Set the [Yes] button of the exit confirmation dialog to hide the panel
+              document.getElementById("exit-edit-mode-button").onclick = function () {
+                hideTextEditorPanel();
+              }
+              setTextEditorPanelTitle(content);
+              readFileToTextEditor(filepath);
+              displayTextEditorPanel();
+
+              // set Save button for saving changes
+              document.getElementById("save-file").onclick = function () { saveFromTextEditorToFile(filepath); }
+            }
            }
          }
        }
@@ -95,7 +139,6 @@ $.contextMenu({
     var options = {
       callback: function(key, options) {
         var m = "clicked: " + key;
-        console.log(m + "??????");
       },
       items: {
         "checkout this branch": {
@@ -132,7 +175,6 @@ $.contextMenu({
         branch = branch.substring(1, branch.length);
       }
       options.items['merge to HEAD'].callback = function(itemKey, opt) {
-        console.log("lolololol");
         mergeInMenu(branch);
       };
     } else {

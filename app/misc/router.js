@@ -1,6 +1,7 @@
 var cred;
 function collpaseSignPanel() {
     $('#nav-collapse1').collapse('hide');
+    clearTextBoxes();
 }
 function switchToMainPanel() {
     hideAuthenticatePanel();
@@ -9,7 +10,6 @@ function switchToMainPanel() {
     displayGraphPanel();
 }
 function switchToAddRepositoryPanel() {
-    console.log("1111111");
     hideAuthenticatePanel();
     hideFilePanel();
     hideGraphPanel();
@@ -44,6 +44,16 @@ function displayDiffPanel() {
     document.getElementById("graph-panel").style.width = "60%";
     document.getElementById("diff-panel").style.width = "40%";
 }
+function displayTextEditorPanel() {
+    document.getElementById("graph-panel").style.width = "60%";
+    document.getElementById("text-editor-panel").style.width = "40%";
+    document.getElementById("text-editor-panel-body").style.visibility = "visible";
+}
+function hideTextEditorPanel() {
+    document.getElementById("text-editor-panel").style.width = "0";
+    document.getElementById("graph-panel").style.width = "100%";
+    document.getElementById("text-editor-panel-body").style.visibility = "hidden";
+}
 function hideDiffPanel() {
     document.getElementById("diff-panel").style.width = "0";
     document.getElementById("graph-panel").style.width = "100%";
@@ -53,4 +63,8 @@ function hideAuthenticatePanel() {
 }
 function displayAuthenticatePanel() {
     document.getElementById("authenticate").style.zIndex = "20";
+}
+function clearTextBoxes() {
+    document.getElementById("Email1").value = "";
+    document.getElementById("Password1").value = "";
 }
