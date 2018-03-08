@@ -67,4 +67,6 @@ function hideAuthenticatePanel() {
 
 function displayAuthenticatePanel() {
   document.getElementById("authenticate").style.zIndex = "20";
+  let username = getUsername();
+  document.getElementById('username').value = username;
 }
