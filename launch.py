@@ -1,3 +1,5 @@
+#!/usr/bin/env python 
+
 # a script that allows the user to launch VisualGit through double-clicking/executing
 # note that in linux/mac os, you may have to configure this script's access permission to allow double-clicking this script to execute it
 
