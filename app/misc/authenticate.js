@@ -1,5 +1,4 @@
 var github = require("octonode");
-var opn = require("opn");
 var username;
 var password;
 var aid, atoken;
@@ -17,9 +16,6 @@ function signInPage(callback) {
     username = document.getElementById("username").value;
     password = document.getElementById("password").value;
     getUserInfo(callback);
-}
-function openForgotPassword() {
-    opn('https://github.com/password_reset');
 }
 function getUserInfo(callback) {
     cred = Git.Cred.userpassPlaintextNew(username, password);
