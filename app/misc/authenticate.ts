@@ -1,4 +1,5 @@
 let github = require("octonode");
+let opn = require("opn");
 let username;
 let password;
 let aid, atoken;
@@ -33,6 +34,8 @@ function getUserInfo(callback) {
       displayModal(err);
     } else {
       avaterImg = Object.values(data)[2]
+      clearStorage();
+      storeEncryptedData();
       // let doc = document.getElementById("avater");
       // doc.innerHTML = "";
       // var elem = document.createElement("img");
@@ -86,6 +89,15 @@ function selectRepo(ele) {
   butt.innerHTML = 'Clone ' + ele.innerHTML;
   butt.setAttribute('class', 'btn btn-primary');
   console.log(url + 'JJJJJJJJ' + ele.innerHTML);
+}
+
+function storeEncryptedData(){
+  let randomUUID = generateUniqueSecret();
+  storeVariable('secret', randomUUID);
+  let encryptedUser = encryptValue(username);
+  storeUsername(encryptedUser);
+  let encryptedPassword = encryptValue(password);
+  storePassword(encryptedPassword);
 }
 
 function cloneRepo() {

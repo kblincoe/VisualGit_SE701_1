@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, AfterViewInit } from "@angular/core";
 
 
 @Component({
@@ -43,8 +43,18 @@ import { Component } from "@angular/core";
   `
 })
 
-export class AuthenticateComponent {
+export class AuthenticateComponent implements AfterViewInit {
   switchToMainPanel(): void {
     signInPage(switchToMainPanel);
+  }
+
+  ngAfterViewInit() {
+    let username = getUsername();
+    let uncryptedData = decryptValue(username);
+    document.getElementById('username').value = uncryptedData.toString(CryptoJS.enc.Utf8);
+
+    let password = getPassword();
+    let uncryptedData = decryptValue(password);
+    document.getElementById('password').value = uncryptedData.toString(CryptoJS.enc.Utf8);
   }
 }
