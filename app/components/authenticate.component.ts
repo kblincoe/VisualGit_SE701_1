@@ -38,8 +38,6 @@ import { Component, AfterViewInit } from "@angular/core";
         </div>
         <br>
         <button type="submit" style="width:280px;" class="btn btn-primary" onclick="switchToMainPanel()">Continue without sign in</button>
-        <br>
-        <a class="forgot-password" onClick="openForgotPassword()" href="#">Forgot Password</a>
       </form>
     </div>
   `

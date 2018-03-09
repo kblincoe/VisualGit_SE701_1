@@ -1,7 +1,5 @@
 let github = require("octonode");
 let opn = require("opn");
-let session = require('electron').remote.session;
-let ses = session.fromPartition('persist:name');
 let username;
 let password;
 let aid, atoken;
@@ -21,10 +19,6 @@ function signInPage(callback) {
   username = document.getElementById("username").value;
   password = document.getElementById("password").value;
   getUserInfo(callback);
-}
-
-function openForgotPassword() {
-  opn('https://github.com/password_reset');
 }
 
 function getUserInfo(callback) {
