@@ -23,13 +23,11 @@ import { Component } from "@angular/core";
         </label>
         <br><br>
         <div class="input-group" style="width:280px;">
-          <span class="input-group-addon" id="basic-addon1">@</span>
           <input id="username" type="text" class="form-control" placeholder="username" aria-describedby="basic-addon1">
         </div>
         <br>
 
         <div class="input-group" style="width:280px;">
-          <span class="input-group-addon" id="basic-addon1">@</span>
           <input id="password" type="password" class="form-control" placeholder="password" aria-describedby="basic-addon1">
         </div>
         <br>
@@ -38,6 +36,8 @@ import { Component } from "@angular/core";
         </div>
         <br>
         <button type="submit" style="width:280px;" class="btn btn-primary" onclick="switchToMainPanel()">Continue without sign in</button>
+        <br>
+        <a class="forgot-password" onClick="openForgotPassword()" href="#">Forgot Password</a>
       </form>
     </div>
   `
