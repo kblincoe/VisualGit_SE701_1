@@ -303,7 +303,6 @@ function makeBasicNode(c, column: number) {
       id: id,
       name : name,
       email : email,
-      username: c.author().toString(),
       shape: "circularImage",
       title: title,
       image: img4User(name),
@@ -388,7 +387,6 @@ function makeAbsNode(c, column: number) {
       id: id,
       name : name,
       email : email,
-      username: c.author().toString()
       shape: "circularImage",
       title: title,
       image: img4User(name),
@@ -453,7 +451,6 @@ function makeNode(c, column: number) {
     id: id,
     name : name,
     email : email,
-    username: c.author().toString()
     shape: "circularImage",
     title: title,
     image: img4User(name),

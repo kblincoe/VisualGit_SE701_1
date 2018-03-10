@@ -145,12 +145,22 @@ function drawGraph() {
   });
 
   network.on('click', function(properties) {
-    var ids = properties.nodes;
-    if (ids != '') {
-        console.log(basicList)
-        var clickedNodes = bsNodes.get(ids);
-        displayModal('clicked ' + clickedNodes);
-        console.log('clicked nodes:', clickedNodes);
+    let ids = properties.nodes;        
+    if (ids != '') {        // If we have clicked on a node
+      let clickedNode;
+      
+      if (flag == 'basic'){
+        clickedNode = bsNodes.get(ids)[0];
+      } else if (flag == 'abstract'){
+        clickedNode = abNodes.get(ids)[0];
+      } else {
+        clickedNode = nodes.get(ids)[0];
+      } 
+      
+      if (clickedNode.hasOwnProperty('name')){  // if node has a name property, show data
+        displayModal('<b>Name: ' + clickedNode.name + '</b></br>'
+          + 'Email: <a href=mailto:' + clickedNode.email + '>' + clickedNode.email + '</a></br>');
+      }
     }
   });
 
