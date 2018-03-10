@@ -120,6 +120,15 @@ function drawGraph() {
     getAllCommits(function (commits) {
         processGraph(commits);
     });
+    network.on('click', function (properties) {
+        var ids = properties.nodes;
+        if (ids != '') {
+            console.log(basicList);
+            var clickedNodes = bsNodes.get(ids);
+            displayModal('clicked ' + clickedNodes);
+            console.log('clicked nodes:', clickedNodes);
+        }
+    });
     network.on("stabilizationIterationsDone", function () {
         network.setOptions({ physics: false });
     });
