@@ -47,6 +47,8 @@ function getUserInfo(callback) {
             // doc.innerHTML = 'sign out';
             var doc = document.getElementById("avatar");
             doc.innerHTML = 'Sign out';
+            var usernameTitle = document.getElementById("usernameTitle");
+            usernameTitle.innerHTML = username;
             callback();
         }
     });

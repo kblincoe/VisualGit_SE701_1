@@ -47,6 +47,9 @@ import { GraphService } from "../services/graph.service";
 
           <ul class="navbar-nav navbar-right hidden-xs">
             <li>
+              <a id="usernameTitle"></a>
+            </li>
+            <li>
               <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="." onclick="window.location.reload()" aria-expanded="false" aria-controls="nav-collapse1">Sign in</a>
             </li>
           </ul>
