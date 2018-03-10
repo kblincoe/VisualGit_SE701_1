@@ -1,4 +1,5 @@
 let github = require("octonode");
+let opn = require("opn");
 let username;
 let password;
 let aid, atoken;
@@ -19,6 +20,11 @@ function signInPage(callback) {
   password = document.getElementById("password").value;
   getUserInfo(callback);
 }
+
+function openForgotPassword(){
+  opn('https://github.com/password_reset');
+}
+
 
 function getUserInfo(callback) {
   cred = Git.Cred.userpassPlaintextNew(username, password);
@@ -96,7 +102,7 @@ function cloneRepo() {
   let splitText = url.split(/\.|:|\//);
   let local;
   if (splitText.length >= 2) {
-    local = splitText[splitText.length - 2];
+    local = splitText[splitText.length - 1];
   }
   downloadFunc(url, local);
   url = null;
