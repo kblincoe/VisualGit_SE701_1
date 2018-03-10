@@ -25,7 +25,7 @@ import { Component } from "@angular/core";
             <p>File location to save to</p>
           </div>
           <div class="right">
-            <input type="text" name="repositoryLocal" size="30" id="repoSave"/>
+            <input type="text" name="repositoryLocal" size="40" id="repoSave"/>
             <input type="file" webkitdirectory directory name="repositoryFull" id="repoSaveLocation"/>
             <button class="button-clone" (click)="addRepository()">Clone</button>
           </div>
@@ -41,7 +41,7 @@ import { Component } from "@angular/core";
             <p>Location of existing repository</p>
           </div>
           <div class="right">
-            <input type="file" webkitdirectory directory name="repositoryLocal" size="100" id="repoOpen"/>
+            <input type="file" webkitdirectory directory name="repositoryLocal" id="repoOpen"/>
             <button class="button-open" (click)="openRepository()">Open</button>
           </div>
         </div>
