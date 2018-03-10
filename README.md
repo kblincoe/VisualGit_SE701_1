@@ -25,7 +25,7 @@ If you have homebrew installed:
 ````
 brew install npm
 ````
-Otherwise download and install the latest version of [Node.j](https://nodejs.org/en/) (v6.2.1 or later)
+Otherwise download and install the latest version of [Node.js](https://nodejs.org/en/) (v6.2.1 or later)
 
 #### Windows
 Download and install the latest version of  [Node.js](https://nodejs.org/en/) (v6.2.1 or later)
