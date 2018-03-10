@@ -2,7 +2,6 @@ var cs = require('color-scheme');
 var before = 'default';
 ;
 function changeColor(color) {
-    console.log(color + '   ' + (color === 'white'));
     var head = document.getElementsByClassName('navbar');
     var headButton = document.getElementsByClassName('navbar-btn');
     var fa = document.getElementsByClassName('fa');
@@ -16,7 +15,6 @@ function changeColor(color) {
     var auth = document.getElementById('authenticate');
     if (color === 'white') {
         for (var i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-white';
         }
         for (var i = 0; i < headButton.length; i++) {
@@ -45,7 +43,6 @@ function changeColor(color) {
     }
     else if (color === 'default') {
         for (var i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-inverse';
         }
         for (var i = 0; i < headButton.length; i++) {

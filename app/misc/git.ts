@@ -62,7 +62,6 @@ function addAndCommit() {
       sign = Git.Signature.default(repository);
     }
     commitMessage = document.getElementById('commit-message-input').value;
-    //console.log(sign.toString());
     if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
       let tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
       return repository.createCommit("HEAD", sign, sign, commitMessage, oid, [parent.id().toString(), tid.trim()]);
@@ -269,7 +268,7 @@ function createBranch() {
         repo.defaultSignature(),
         "Created new-branch on HEAD");
     }, function(err) {
-      console.error(err + "LLLLLL");
+      console.error(err);
     });
   }).done(function() {
     refreshAll(repos);

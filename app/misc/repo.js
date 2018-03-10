@@ -81,7 +81,7 @@ function refreshAll(repository) {
         var branchParts = reference.name().split("/");
         branch = branchParts[branchParts.length - 1];
     }, function (err) {
-        console.error(err + "?????");
+        console.error(err);
     })
         .then(function () {
         return repository.getReferences(Git.Reference.TYPE.LISTALL);
@@ -105,7 +105,7 @@ function refreshAll(repository) {
                     }
                 }
             }, function (err) {
-                console.error(err + "?????????");
+                console.error(err);
             });
             if (branchList[i].isRemote()) {
                 if (localBranches.indexOf(bp[bp.length - 1]) < 0) {
@@ -209,7 +209,7 @@ function checkoutLocalBranch(element) {
             .then(function () {
             refreshAll(repo);
         }, function (err) {
-            console.error(err + "<<<<<<<");
+            console.error(err);
         });
     });
 }

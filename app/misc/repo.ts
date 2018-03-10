@@ -93,7 +93,7 @@ function refreshAll(repository) {
     let branchParts = reference.name().split("/");
     branch = branchParts[branchParts.length - 1];
   },function(err) {
-    console.error(err + "?????"); // TODO show error on screen
+    console.error(err); // TODO show error on screen
   })
   .then(function() {
     return repository.getReferences(Git.Reference.TYPE.LISTALL);
@@ -102,11 +102,9 @@ function refreshAll(repository) {
     let count = 0;
     clearBranchElement();
     for (let i = 0; i < branchList.length; i++) {
-      //console.log(branchList[i].name() + "!!!!");
       let bp = branchList[i].name().split("/");
       Git.Reference.nameToId(repository, branchList[i].name()).then(function(oid) {
         // Use oid
-        //console.log(oid + "  TTTTTTTT");
         if (branchList[i].isRemote()) {
           remoteName[bp[bp.length-1]] = oid;
         } else {
@@ -118,7 +116,7 @@ function refreshAll(repository) {
           }
         }
       }, function(err) {
-        console.error(err + "?????????");
+        console.error(err);
       });
       if (branchList[i].isRemote()) {
         if (localBranches.indexOf(bp[bp.length - 1]) < 0) {
@@ -226,7 +224,7 @@ function checkoutLocalBranch(element) {
     .then(function() {
       refreshAll(repo);
     }, function(err) {
-      console.error(err + "<<<<<<<");
+      console.error(err);
     });
   })
 }

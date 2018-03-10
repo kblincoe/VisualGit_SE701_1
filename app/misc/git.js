@@ -219,7 +219,7 @@ function createBranch() {
             .then(function (commit) {
             return repo.createBranch(branchName, commit, 0, repo.defaultSignature(), "Created new-branch on HEAD");
         }, function (err) {
-            console.error(err + "LLLLLL");
+            console.error(err);
         });
     }).done(function () {
         refreshAll(repos);

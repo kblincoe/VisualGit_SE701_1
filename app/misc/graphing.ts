@@ -489,7 +489,6 @@ function makeNode(c, column: number) {
     branch: flag,
   });
 
-  //console.log(commitList[id-1]['id'] + '   ' + id);
 }
 
 function makeEdge(sha: string, parentSha: string) {
