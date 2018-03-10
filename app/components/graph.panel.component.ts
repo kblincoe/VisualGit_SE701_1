@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import {Component, Directive, ElementRef, ViewChild} from "@angular/core";
+import {mergeCommits, rebaseCommits} from "../misc/git";
 
 @Component({
   selector: "graph-panel",
@@ -23,9 +24,9 @@ import { Component } from "@angular/core";
           <div class="modal-body">
             <p id="mergeModalBody"></p>
           </div>
-          <p class="invisible" id="fromMerge"></p>
+          <p class="invisible" id="fromMerge" #fromMerge></p>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="mergeBranches()" data-dismiss="modal">Yes</button>
+            <button type="button" class="btn btn-primary" (click)="mergeBranches(fromMerge.innerHTML)" data-dismiss="modal">Yes</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           </div>
         </div><!-- /.modal-content -->
@@ -41,10 +42,10 @@ import { Component } from "@angular/core";
           <div class="modal-body">
             <p id="rebaseModalBody"></p>
           </div>
-          <p class="invisible" id="fromRebase"></p>
-          <p class="invisible" id="toRebase"></p>
+          <p class="invisible" id="fromRebase" #fromRebase></p>
+          <p class="invisible" id="toRebase" #toRebase></p>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" (click)="mergeBranches()" data-dismiss="modal">Yes</button>
+            <button type="button" class="btn btn-primary" (click)="mergeBranches(fromMerge.innerHTML)" data-dismiss="modal">Yes</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
           </div>
         </div><!-- /.modal-content -->
@@ -55,14 +56,14 @@ import { Component } from "@angular/core";
 })
 
 export class GraphPanelComponent {
-  mergeBranches(): void {
-    let p1 = document.getElementById('fromMerge').innerHTML;
+  mergeBranches(fromMerge : string): void {
+    let p1 = fromMerge;
     mergeCommits(p1);
   }
 
-  rebaseBranches(): void {
-    let p1 = document.getElementById('fromRebase').innerHTML;
-    let p2 = document.getElementById('toRebase').innerHTML;
+  rebaseBranches(fromRebase : string, toRebase : string): void {
+    let p1 = fromRebase;
+    let p2 = toRebase;
     rebaseCommits(p1, p2);
   }
 }
