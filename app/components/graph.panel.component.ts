@@ -1,4 +1,4 @@
-import {Component, Directive, ElementRef, ViewChild} from "@angular/core";
+import {Component} from "@angular/core";
 import {mergeCommits, rebaseCommits} from "../misc/git";
 
 @Component({
