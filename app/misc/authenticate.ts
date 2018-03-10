@@ -25,6 +25,7 @@ function openForgotPassword(){
   opn('https://github.com/password_reset');
 }
 
+
 function getUserInfo(callback) {
   cred = Git.Cred.userpassPlaintextNew(username, password);
 
