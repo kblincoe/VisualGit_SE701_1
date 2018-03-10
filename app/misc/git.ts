@@ -9,7 +9,7 @@ let async = require("async");
 let readFile = require("fs-sync");
 let green = "#84db00";
 let repo, index, oid, remote, commitMessage;
-let filesToAdd = [];
+let filesToAdd : string[] = [];
 let theirCommit = null;
 let modifiedFiles;
 
@@ -26,14 +26,14 @@ function addAndCommit() {
   .then(function(indexResult) {
     console.log("2.0");
     index = indexResult;
-    let filesToStage = [];
+    let filesToStage : string[] = [];
     filesToAdd = [];
     let fileElements = document.getElementsByClassName('file');
     for (let i = 0; i < fileElements.length; i++) {
       let fileElementChildren = fileElements[i].childNodes;
-      if (fileElementChildren[1].checked === true) {
-        filesToStage.push(fileElementChildren[0].innerHTML);
-        filesToAdd.push(fileElementChildren[0].innerHTML);
+      if ((<HTMLInputElement> fileElementChildren[1]).checked === true) {
+        filesToStage.push((<HTMLElement>fileElementChildren[0]).innerHTML);
+        filesToAdd.push((<HTMLElement>fileElementChildren[0]).innerHTML);
       }
     }
     console.log("2.1");
@@ -69,7 +69,7 @@ function addAndCommit() {
     } else {
       sign = Git.Signature.default(repository);
     }
-    commitMessage = document.getElementById('commit-message-input').value;
+    commitMessage = (<HTMLInputElement>document.getElementById('commit-message-input')).value;
     //console.log(sign.toString());
     if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
       let tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
@@ -103,7 +103,7 @@ function addAndCommit() {
 
 // Clear all modified files from the left file panel
 function clearModifiedFilesList() {
-  let filePanel = document.getElementById("files-changed");
+  let filePanel = <HTMLDivElement>document.getElementById("files-changed");
   while (filePanel.firstChild) {
     filePanel.removeChild(filePanel.firstChild);
   }
@@ -115,11 +115,11 @@ function clearModifiedFilesList() {
 }
 
 function clearCommitMessage() {
-  document.getElementById('commit-message-input').value = "";
+  (<HTMLInputElement>document.getElementById('commit-message-input')).value = "";
 }
 
 function clearSelectAllCheckbox() {
-  document.getElementById('select-all-checkbox').checked = false;
+  (<HTMLInputElement>document.getElementById('select-all-checkbox')).checked = false;
 }
 
 function getAllCommits(callback) {
@@ -137,8 +137,8 @@ function getAllCommits(callback) {
   //   history.start();
   // });
   let repos;
-  let allCommits = [];
-  let aclist = [];
+  let allCommits : any[] = [];
+  let aclist : any[] = [];
   console.log("1.0");
   Git.Repository.open(repoFullPath)
   .then(function(repo) {
@@ -190,7 +190,7 @@ function getAllCommits(callback) {
 
 function pullFromRemote() {
   let repository;
-  let branch = document.getElementById("branch-name").innerText;
+  let branch = (<HTMLElement>document.getElementById("branch-name")).innerText;
   if (modifiedFiles.length > 0) {
     updateModalText("Please commit before pulling from remote!");
   }
@@ -246,7 +246,7 @@ function pullFromRemote() {
 }
 
 function pushToRemote() {
-  let branch = document.getElementById("branch-name").innerText;
+  let branch = (<HTMLElement>document.getElementById("branch-name")).innerText;
   Git.Repository.open(repoFullPath)
   .then(function(repo) {
     console.log("Pushing changes to remote")
@@ -277,7 +277,7 @@ function pushToRemote() {
 }
 
 function createBranch() {
-  let branchName = document.getElementById("branchName").value;
+  let branchName = (<HTMLInputElement>document.getElementById("branchName")).value;
   let repos;
   console.log(branchName + "!!!!!!");
   Git.Repository.open(repoFullPath)
@@ -341,7 +341,7 @@ function mergeLocalBranches(element) {
   });
 }
 
-function mergeCommits(from) {
+export function mergeCommits(from) {
   let repos;
   let index;
   Git.Repository.open(repoFullPath)
@@ -373,7 +373,7 @@ function mergeCommits(from) {
   });
 }
 
-function rebaseCommits(from: string, to: string) {
+export function rebaseCommits(from: string, to: string) {
   let repos;
   let index;
   let branch;
@@ -411,9 +411,9 @@ function rebaseCommits(from: string, to: string) {
 }
 
 function rebaseInMenu(from: string, to: string) {
-  let p1 = document.getElementById("fromRebase");
-  let p2 = document.getElementById("toRebase");
-  let p3 = document.getElementById("rebaseModalBody");
+  let p1 = <HTMLElement>document.getElementById("fromRebase");
+  let p2 = <HTMLElement>document.getElementById("toRebase");
+  let p3 = <HTMLElement>document.getElementById("rebaseModalBody");
   p1.innerHTML = from;
   p2.innerHTML = to;
   p3.innerHTML = "Do you want to rebase branch " + from + " to " + to + " ?";
@@ -421,8 +421,8 @@ function rebaseInMenu(from: string, to: string) {
 }
 
 function mergeInMenu(from: string) {
-  let p1 = document.getElementById("fromMerge");
-  let p3 = document.getElementById("mergeModalBody");
+  let p1 = <HTMLElement>document.getElementById("fromMerge");
+  let p3 = <HTMLElement>document.getElementById("mergeModalBody");
   p1.innerHTML = from;
   p3.innerHTML = "Do you want to merge branch " + from + " to HEAD ?";
   $("#mergeModal").modal('show');
@@ -501,8 +501,10 @@ function displayModifiedFiles() {
       statuses.forEach(addModifiedFile);
       if (modifiedFiles.length !== 0) {
         if (document.getElementById("modified-files-message") !== null) {
-          let filePanelMessage = document.getElementById("modified-files-message");
-          filePanelMessage.parentNode.removeChild(filePanelMessage);
+          let filePanelMessage = <HTMLElement>document.getElementById("modified-files-message");
+          if (filePanelMessage.parentNode != null) {
+            filePanelMessage.parentNode.removeChild(filePanelMessage);
+          }
         }
       }
       modifiedFiles.forEach(displayModifiedFile);
@@ -566,19 +568,19 @@ function displayModifiedFiles() {
         checkbox.className = "checkbox";
         fileElement.appendChild(checkbox);
 
-        document.getElementById("files-changed").appendChild(fileElement);
+        (<HTMLElement>document.getElementById("files-changed")).appendChild(fileElement);
 
         fileElement.onclick = function() {
-          let doc = document.getElementById("diff-panel");
+          let doc = <HTMLElement>document.getElementById("diff-panel");
           console.log(doc.style.width + 'oooooo');
           if (doc.style.width === '0px' || doc.style.width === '') {
             displayDiffPanel();
-            document.getElementById("diff-panel-body").innerHTML = "";
+            (<HTMLElement>document.getElementById("diff-panel-body")).innerHTML = "";
 
             if (fileElement.className === "file file-created") {
               printNewFile(file.filePath);
             } else {
-              printFileDiff(file.filePath)；
+              printFileDiff(file.filePath);
             }
           } else {
             hideDiffPanel();
@@ -641,14 +643,14 @@ function displayModifiedFiles() {
         }
 
         element.innerText = line;
-        document.getElementById("diff-panel-body").appendChild(element);
+        (<HTMLElement>document.getElementById("diff-panel-body")).appendChild(element);
       }
 
       function formatNewFileLine(text) {
         let element = document.createElement("div");
         element.style.backgroundColor = green;
         element.innerHTML = text;
-        document.getElementById("diff-panel-body").appendChild(element);
+        (<HTMLElement>document.getElementById("diff-panel-body")).appendChild(element);
       }
     });
   },
