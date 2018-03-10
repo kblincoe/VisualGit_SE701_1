@@ -65,7 +65,7 @@ function cloneRepo() {
     var splitText = url.split(/\.|:|\//);
     var local;
     if (splitText.length >= 2) {
-        local = splitText[splitText.length - 2];
+        local = splitText[splitText.length - 1];
     }
     downloadFunc(url, local);
     url = null;
