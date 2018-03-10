@@ -301,6 +301,9 @@ function makeBasicNode(c, column: number) {
     let title = "Number of Commits: " + count;
     bsNodes.add({
       id: id,
+      name : name,
+      email : email,
+      username: c.author().toString(),
       shape: "circularImage",
       title: title,
       image: img4User(name),
@@ -383,6 +386,9 @@ function makeAbsNode(c, column: number) {
 
     abNodes.add({
       id: id,
+      name : name,
+      email : email,
+      username: c.author().toString()
       shape: "circularImage",
       title: title,
       image: img4User(name),
@@ -445,6 +451,9 @@ function makeNode(c, column: number) {
   let flag = false;
   nodes.add({
     id: id,
+    name : name,
+    email : email,
+    username: c.author().toString()
     shape: "circularImage",
     title: title,
     image: img4User(name),
