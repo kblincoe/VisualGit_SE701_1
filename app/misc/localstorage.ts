@@ -24,6 +24,14 @@ function getPassword(){
   return getVariable('password');
 }
 
+function getStashList() {
+  return new Map(JSON.parse(ls.get("stashList")));
+}
+
+function setStashList(updatedStashList) {
+  ls.set("stashList", JSON.stringify(updatedStashList));
+}
+
 function clearStorage(){
   ls.clear();
 }
