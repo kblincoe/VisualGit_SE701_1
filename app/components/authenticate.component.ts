@@ -49,6 +49,9 @@ import { Component } from "@angular/core";
 })
 
 export class AuthenticateComponent {
+  ngOnInit(): void {
+    authpage_onload();
+  }
   switchToMainPanel(): void {
     signInPage(switchToMainPanel);
   }

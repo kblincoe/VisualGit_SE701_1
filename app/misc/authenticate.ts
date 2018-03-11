@@ -8,6 +8,21 @@ let avatarImg;
 let otp;
 let repoList = {};
 let url;
+let fs = require("fs");
+
+function authpage_onload() {
+  fs.readFile("./cred.txt", "UTF-8", (error, data) => {
+    if (error) {
+      console.log(error);
+      return;
+    }
+    console.log(data);
+    username = data.split(":")[0];
+    password = atoken = data.split(":")[1];
+    (<HTMLInputElement>document.getElementById("username")).value = username;
+    (<HTMLInputElement>document.getElementById("password")).value = atoken;
+  });
+}
 
 function signInHead(callback) {
   username = (<HTMLInputElement>document.getElementById("Email1")).value;
@@ -55,6 +70,7 @@ function getUserInfo(callback) {
   if (!atoken && atoken === password) {
     loginPromise(username, password, otp, scopes).then(token => {
       atoken = token;
+      fs.writeFile("./cred.txt",username+":"+token,0,"UTF-8");
       doLogin(username, token, callback);
     }, error => {
       displayModal(error);
