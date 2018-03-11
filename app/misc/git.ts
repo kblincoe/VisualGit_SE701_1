@@ -8,7 +8,7 @@ let fs = require("fs");
 let async = require("async");
 let readFile = require("fs-sync");
 let green = "#84db00";
-let repo, index, oid, remote, commitMessage;
+let repo, index, oid, remote, commitMessage, stashMessage;
 let filesToAdd = [];
 let theirCommit = null;
 
@@ -679,3 +679,18 @@ function displayModifiedFiles() {
     console.error(err);
   });
 }
+
+function clearModifiedFilesExport() {
+  return new clearModifiedFilesList();
+}
+
+function clearCommitMessageExport() {
+  return new clearCommitMessage();
+}
+
+function clearSelectAllCheckboxExport() {
+  return new clearSelectAllCheckbox();
+}
+
+
+module.exports = { clearModifiedFilesExport, clearCommitMessageExport, clearSelectAllCheckboxExport };
