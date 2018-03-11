@@ -4,20 +4,32 @@ let username;
 let password;
 let aid, atoken;
 let client;
-let avaterImg;
+let avatarImg;
+let otp;
 let repoList = {};
 let url;
 
 function signInHead(callback) {
-  username = document.getElementById("Email1").value;
-  password = document.getElementById("Password1").value;
+  username = (<HTMLInputElement>document.getElementById("Email1")).value;
+  password = (<HTMLInputElement>document.getElementById("Password1")).value;
+  otp = (<HTMLInputElement>document.getElementById("tfa-code")).value;
   console.log(username + '      ' + password);
   getUserInfo(callback);
 }
 
+function signOut() {
+  username = null;
+  password = null;
+  aid = null;
+  atoken = null;
+  displayModal("You can revoke your Personal Access Token now");
+  setTimeout(e => window.location.reload(), 5000);
+}
+
 function signInPage(callback) {
-  username = document.getElementById("username").value;
-  password = document.getElementById("password").value;
+  username = (<HTMLInputElement>document.getElementById("username")).value;
+  password = (<HTMLInputElement>document.getElementById("password")).value;
+  otp = (<HTMLInputElement>document.getElementById("tfa-code")).value;
   getUserInfo(callback);
 }
 
@@ -25,9 +37,52 @@ function openForgotPassword(){
   opn('https://github.com/password_reset');
 }
 
+// UUIDv4 generator by jed - https://gist.github.com/jed/982883
+function uuidv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  )
+}
 
 function getUserInfo(callback) {
   cred = Git.Cred.userpassPlaintextNew(username, password);
+
+  let scopes = {
+    'scopes': ['user', 'repo', 'gist'],
+    'note': uuidv4()
+  };
+
+  if (!atoken && atoken === password) {
+    loginPromise(username, password, otp, scopes).then(token => {
+      atoken = token;
+      doLogin(username, token, callback);
+    }, error => {
+      displayModal(error);
+    });
+  } else {
+    doLogin(username, atoken, callback);
+  }
+
+}
+
+function loginPromise(uname: string, pass: string, tfa: string, scopes: object) : Promise<any> {
+  var config = (tfa) ? {
+    username: uname,
+    password: pass,
+    otp: tfa
+  } : {
+    username : uname,
+    password: pass
+  };
+  return new Promise(((resolve, reject) => {
+    github.auth.config(config).login(scopes, (err, id, token, headers) => {
+      if (err) reject(err);
+      resolve(token);
+    });
+  }));
+}
+
+function doLogin(username: string, password: string, callback: Function) {
 
   client = github.client({
     username: username,
@@ -38,17 +93,17 @@ function getUserInfo(callback) {
     if (err) {
       displayModal(err);
     } else {
-      avaterImg = Object.values(data)[2]
-      // let doc = document.getElementById("avater");
+      avatarImg = Object.values(data)[2]
+      // let doc = document.getElementById("avatar");
       // doc.innerHTML = "";
       // var elem = document.createElement("img");
       // elem.width = 40;
       // elem.height = 40;
-      // elem.src = avaterImg;
+      // elem.src = avatarImg;
       // doc.appendChild(elem);
       // doc = document.getElementById("log");
       // doc.innerHTML = 'sign out';
-      let doc = document.getElementById("avatar");
+      let doc = <HTMLElement>document.getElementById("avatar");
       doc.innerHTML = 'Sign out';
       callback();
     }
@@ -68,27 +123,11 @@ function getUserInfo(callback) {
     }
   });
 
-  // let scopes = {
-  //   'add_scopes': ['user', 'repo', 'gist'],
-  //   'note': 'admin script'
-  // };
-  //
-  // github.auth.config({
-  //   username: username,
-  //   password: password
-  // }).login(scopes, function (err, id, token) {
-  //   if (err !== null) {
-  //     console.log("login fail -- " + err);
-  //   }
-  //   aid = id;
-  //   atoken = token;
-  //   console.log(id, token);
-  // });
 }
 
 function selectRepo(ele) {
   url = repoList[ele.innerHTML];
-  let butt = document.getElementById("cloneButton");
+  let butt = <HTMLElement>document.getElementById("cloneButton");
   butt.innerHTML = 'Clone ' + ele.innerHTML;
   butt.setAttribute('class', 'btn btn-primary');
   console.log(url + 'JJJJJJJJ' + ele.innerHTML);
