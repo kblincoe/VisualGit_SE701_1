@@ -96,7 +96,7 @@ function selectRepo(ele) {
 
 function cloneRepo() {
   if (url === null) {
-    updateModalText("Ops! Error occors");
+    updateModalText("Please enter an URL!");
     return;
   }
   let splitText = url.split(/\.|:|\//);
