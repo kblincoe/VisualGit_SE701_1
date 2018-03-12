@@ -251,9 +251,11 @@ function updateLocalPath() {
 }
 function displayModal(text) {
     document.getElementById("modal-text-box").innerHTML = text;
+    document.getElementById("modal-text-box").style.wordWrap = 'break-word';
     $('#modal').modal('show');
 }
 function updateModalText(text) {
     document.getElementById("modal-text-box").innerHTML = text;
+    document.getElementById("modal-text-box").style.wordWrap = 'break-word';
     $('#modal').modal('show');
 }

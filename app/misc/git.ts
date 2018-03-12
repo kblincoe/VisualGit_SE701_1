@@ -83,7 +83,7 @@ function addAndCommit() {
     refreshAll(repository);
   }, function(err) {
     console.error(err);
-    updateModalText("Oops, error occours! If u haven't login, please login and try again.");
+    updateModalText("Please sign in before committing!");
   });
 }
 
@@ -172,13 +172,13 @@ function pullFromRemote() {
   let repository;
   let branch = document.getElementById("branch-name").innerText;
   if (modifiedFiles.length > 0) {
-    updateModalText("Please commit before pulling from remote!");
+    updateModalText("Please commit your changes before pulling from remote!");
   }
   Git.Repository.open(repoFullPath)
   .then(function(repo) {
     repository = repo;
     addCommand("git pull");
-    displayModal("Pulling new changes from the remote repository");
+    displayModal("Pulling new changes from the remote repository...");
 
     return repository.fetchAll({
       callbacks: {
@@ -209,7 +209,7 @@ function pullFromRemote() {
   })
   .then(function() {
     if (fs.existsSync(repoFullPath + "/.git/MERGE_MSG")) {
-      updateModalText("Conflicts exists! Please check files list on right side and solve conflicts before you commit again!");
+      updateModalText("There are merge conflicts! Please check the list of files on the right and resolve conflicts, then commit again.");
       refreshAll(repository);
     } else {
       updateModalText("Successfully pulled from remote branch " + branch + "!");
@@ -303,7 +303,7 @@ function mergeLocalBranches(element) {
     if (index instanceof Git.Index) {
       text = "Conflicts Exist";
     } else {
-      text = "Merge Successfully";
+      text = "Merged Successfully";
     }
     updateModalText(text);
     refreshAll(repos);
@@ -331,7 +331,7 @@ function mergeCommits(from) {
   })
   .then(function() {
     if (fs.existsSync(repoFullPath + "/.git/MERGE_MSG")) {
-      updateModalText("Conflicts exists! Please check files list on right side and solve conflicts before you commit again!");
+      updateModalText("There are merge conflicts! Please check the list of files on the right and resolve conflicts, then commit again.");
       refreshAll(repos);
     } else {
       updateModalText("Successfully Merged!");
@@ -407,7 +407,7 @@ function resetCommit(name: string) {
   })
   .then(function(number) {
     if (number !== 0) {
-      updateModalText("Reset failed, please check if you have pushed the commit.");
+      updateModalText("Reset failed, please check if you have already pushed the commit.");
     } else {
       updateModalText("Reset successfully.");
     }
@@ -437,9 +437,9 @@ function revertCommit(name: string) {
   })
   .then(function(number) {
     if (number === -1) {
-      updateModalText("Revert failed, please check if you have pushed the commit.");
+      updateModalText("Revert failed, please check if you have already pushed the commit.");
     } else {
-      updateModalText("Revert successfully.");
+      updateModalText("Reverted successfully.");
     }
     refreshAll(repos);
   }, function(err) {
