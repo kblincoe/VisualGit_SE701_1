@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, AfterViewInit } from "@angular/core";
 
 
 @Component({
@@ -13,6 +13,9 @@ import { Component } from "@angular/core";
           </button>
           <ul class="dropdown-menu" id="color-dropdown" role="menu" aria-labelledby="branch-name">
             <li class="white" onclick="changeColor('white')">white</li>
+            <li class="vintage" onclick="changeColor('vintage')">vintage</li>
+            <li class="blue" onclick="changeColor('blue')">blue</li>
+            <li class="burgundy" onclick="changeColor('burgundy')">burgundy</li>
             <li class="default" onclick="changeColor('default')">default</li>
           </ul>
         </div>
@@ -43,8 +46,18 @@ import { Component } from "@angular/core";
   `
 })
 
-export class AuthenticateComponent {
+export class AuthenticateComponent implements AfterViewInit {
   switchToMainPanel(): void {
     signInPage(switchToMainPanel);
+  }
+
+  ngAfterViewInit() {
+    let username = getUsername();
+    let uncryptedData = decryptValue(username);
+    document.getElementById('username').value = uncryptedData.toString(CryptoJS.enc.Utf8);
+
+    let password = getPassword();
+    let uncryptedData = decryptValue(password);
+    document.getElementById('password').value = uncryptedData.toString(CryptoJS.enc.Utf8);
   }
 }

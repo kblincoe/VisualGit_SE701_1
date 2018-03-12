@@ -38,6 +38,8 @@ function getUserInfo(callback) {
       displayModal(err);
     } else {
       avaterImg = Object.values(data)[2]
+      clearStorage();
+      storeEncryptedData();
       // let doc = document.getElementById("avater");
       // doc.innerHTML = "";
       // var elem = document.createElement("img");
@@ -88,6 +90,15 @@ function selectRepo(ele) {
   let butt = document.getElementById("cloneButton");
   butt.innerHTML = 'Clone ' + ele.innerHTML;
   butt.setAttribute('class', 'btn btn-primary');
+}
+
+function storeEncryptedData(){
+  let randomUUID = generateUniqueSecret();
+  storeVariable('secret', randomUUID);
+  let encryptedUser = encryptValue(username);
+  storeUsername(encryptedUser);
+  let encryptedPassword = encryptValue(password);
+  storePassword(encryptedPassword);
 }
 
 function cloneRepo() {
