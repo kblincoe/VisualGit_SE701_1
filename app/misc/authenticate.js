@@ -34,6 +34,17 @@ function getUserInfo(callback) {
         }
         else {
             avaterImg = Object.values(data)[2];
+            clearStorage();
+            storeEncryptedData();
+            // let doc = document.getElementById("avater");
+            // doc.innerHTML = "";
+            // var elem = document.createElement("img");
+            // elem.width = 40;
+            // elem.height = 40;
+            // elem.src = avaterImg;
+            // doc.appendChild(elem);
+            // doc = document.getElementById("log");
+            // doc.innerHTML = 'sign out';
             var doc = document.getElementById("avatar");
             doc.innerHTML = 'Sign out';
             callback();
@@ -53,6 +64,22 @@ function getUserInfo(callback) {
             }
         }
     });
+    // let scopes = {
+    //   'add_scopes': ['user', 'repo', 'gist'],
+    //   'note': 'admin script'
+    // };
+    //
+    // github.auth.config({
+    //   username: username,
+    //   password: password
+    // }).login(scopes, function (err, id, token) {
+    //   if (err !== null) {
+    //     console.log("login fail -- " + err);
+    //   }
+    //   aid = id;
+    //   atoken = token;
+    //   console.log(id, token);
+    // });
 }
 function selectRepo(ele) {
     url = repoList[ele.innerHTML];
@@ -60,6 +87,14 @@ function selectRepo(ele) {
     butt.innerHTML = 'Clone ' + ele.innerHTML;
     butt.setAttribute('class', 'btn btn-primary');
     console.log(url + 'JJJJJJJJ' + ele.innerHTML);
+}
+function storeEncryptedData() {
+    var randomUUID = generateUniqueSecret();
+    storeVariable('secret', randomUUID);
+    var encryptedUser = encryptValue(username);
+    storeUsername(encryptedUser);
+    var encryptedPassword = encryptValue(password);
+    storePassword(encryptedPassword);
 }
 function cloneRepo() {
     if (url === null) {
