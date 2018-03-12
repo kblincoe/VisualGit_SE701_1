@@ -34,6 +34,8 @@ function getUserInfo(callback) {
         }
         else {
             avaterImg = Object.values(data)[2];
+            clearStorage();
+            storeEncryptedData();
             var doc = document.getElementById("avatar");
             doc.innerHTML = 'Sign out';
             callback();
@@ -61,9 +63,17 @@ function selectRepo(ele) {
     butt.setAttribute('class', 'btn btn-primary');
     console.log(url + 'JJJJJJJJ' + ele.innerHTML);
 }
+function storeEncryptedData() {
+    var randomUUID = generateUniqueSecret();
+    storeVariable('secret', randomUUID);
+    var encryptedUser = encryptValue(username);
+    storeUsername(encryptedUser);
+    var encryptedPassword = encryptValue(password);
+    storePassword(encryptedPassword);
+}
 function cloneRepo() {
     if (url === null) {
-        updateModalText("Ops! Error occors");
+        updateModalText("Please enter an URL!");
         return;
     }
     var splitText = url.split(/\.|:|\//);
