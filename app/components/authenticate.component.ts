@@ -13,6 +13,9 @@ import { Component, AfterViewInit } from "@angular/core";
           </button>
           <ul class="dropdown-menu" id="color-dropdown" role="menu" aria-labelledby="branch-name">
             <li class="white" onclick="changeColor('white')">white</li>
+            <li class="vintage" onclick="changeColor('vintage')">vintage</li>
+            <li class="blue" onclick="changeColor('blue')">blue</li>
+            <li class="burgundy" onclick="changeColor('burgundy')">burgundy</li>
             <li class="default" onclick="changeColor('default')">default</li>
           </ul>
         </div>
