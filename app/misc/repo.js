@@ -31,10 +31,8 @@ function downloadFunc(cloneURL, localPath, fullPath) {
             }
         }
     };
-    console.log("cloning into " + fullLocalPath);
     var repository = Git.Clone.clone(cloneURL, fullLocalPath, options)
         .then(function (repository) {
-        console.log("Repo successfully cloned");
         updateModalText("Clone Successful, repository saved under: " + fullLocalPath);
         addCommand("git clone " + cloneURL + " " + localPath);
         repoFullPath = fullLocalPath;
@@ -42,7 +40,7 @@ function downloadFunc(cloneURL, localPath, fullPath) {
         refreshAll(repository);
     }, function (err) {
         updateModalText("Clone Failed - " + err);
-        console.log(err); // TODO show error on screen
+        console.error(err);
     });
 }
 function openRepository() {
@@ -53,14 +51,12 @@ function openRepository() {
         repoFullPath = fullLocalPath;
         if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
             var tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
-            console.log("theirComit: " + tid);
         }
         refreshAll(repository);
-        console.log("Repo successfully opened");
         updateModalText("Repository successfully opened");
     }, function (err) {
         updateModalText("Opening Failed - " + err);
-        console.log(err); // TODO show error on screen
+        console.error(err);
     });
 }
 function addBranchestoNode(thisB) {
@@ -68,7 +64,6 @@ function addBranchestoNode(thisB) {
     elem.innerHTML = '';
     for (var i = 0; i < localBranches.length; i++) {
         if (localBranches[i] !== thisB) {
-            console.log("lalalala   " + localBranches[i]);
             var li = document.createElement("li");
             var a = document.createElement("a");
             a.appendChild(document.createTextNode(localBranches[i]));
@@ -85,10 +80,9 @@ function refreshAll(repository) {
     repository.getCurrentBranch()
         .then(function (reference) {
         var branchParts = reference.name().split("/");
-        console.log(branchParts + "OOOOOOOOOOO");
         branch = branchParts[branchParts.length - 1];
     }, function (err) {
-        console.log(err + "?????"); // TODO show error on screen
+        console.error(err);
     })
         .then(function () {
         return repository.getReferences(Git.Reference.TYPE.LISTALL);
@@ -107,7 +101,6 @@ function refreshAll(repository) {
                 }
                 else {
                     branchCommit.push(branchList[i]);
-                    console.log(bp[bp.length - 1] + "--------" + oid.tostrS());
                     if (oid.tostrS() in bname) {
                         bname[oid.tostrS()].push(branchList[i]);
                     }
@@ -116,7 +109,7 @@ function refreshAll(repository) {
                     }
                 }
             }, function (err) {
-                console.log(err + "?????????");
+                console.error(err);
             });
             if (branchList[i].isRemote()) {
                 if (localBranches.indexOf(bp[bp.length - 1]) < 0) {
@@ -133,7 +126,6 @@ function refreshAll(repository) {
         }
     })
         .then(function () {
-        console.log("Updating the graph and the labels");
         drawGraph();
         document.getElementById("repo-name").innerHTML = repoLocalPath;
         document.getElementById("branch-name").innerHTML = branch + '<span class="caret"></span>';
@@ -149,14 +141,11 @@ function getAllBranches() {
         .then(function (branchList) {
         clearBranchElement();
         for (var i = 0; i < branchList.length; i++) {
-            console.log(branchList[i] + "!!!!");
             var bp = branchList[i].split("/");
             if (bp[1] !== "remotes") {
                 displayBranch(bp[bp.length - 1], "branch-dropdown", "checkoutLocalBranch(this)");
             }
             Git.Reference.nameToId(repos, branchList[i]).then(function (oid) {
-                // Use oid
-                console.log(oid + "  TTTTTTTT");
             });
         }
     });
@@ -178,7 +167,6 @@ function getOtherBranches() {
     })
         .then(function (ref) {
         var name = ref.name().split("/");
-        console.log("&&&&&&&");
         clearBranchElement();
         for (var i = 0; i < list.length; i++) {
             var bp = list[i].split("/");
@@ -212,14 +200,12 @@ function displayBranch(name, id, onclick) {
 }
 function checkoutLocalBranch(element) {
     var bn;
-    console.log(typeof element + "UUUUUUUUU");
     if (typeof element === "string") {
         bn = element;
     }
     else {
         bn = element.innerHTML;
     }
-    console.log(bn + ">>>>>>>>");
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
         addCommand("git checkout " + bn);
@@ -227,7 +213,7 @@ function checkoutLocalBranch(element) {
             .then(function () {
             refreshAll(repo);
         }, function (err) {
-            console.log(err + "<<<<<<<");
+            console.error(err);
         });
     });
 }
@@ -239,7 +225,6 @@ function checkoutRemoteBranch(element) {
     else {
         bn = element.innerHTML;
     }
-    console.log("1.0  " + bn);
     var repos;
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
@@ -247,22 +232,18 @@ function checkoutRemoteBranch(element) {
         addCommand("git fetch");
         addCommand("git checkout -b " + bn);
         var cid = remoteName[bn];
-        console.log("2.0  " + cid);
         return Git.Commit.lookup(repo, cid);
     })
         .then(function (commit) {
-        console.log("3.0");
         return Git.Branch.create(repos, bn, commit, 0);
     })
         .then(function (code) {
-        console.log(bn + "PPPPPPP");
         repos.mergeBranches(bn, "origin/" + bn)
             .then(function () {
             refreshAll(repos);
-            console.log("Pull successful");
         });
     }, function (err) {
-        console.log(err);
+        console.error(err);
     });
 }
 function updateLocalPath() {
