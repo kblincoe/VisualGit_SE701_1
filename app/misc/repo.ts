@@ -20,7 +20,6 @@ function downloadRepository() {
 
 function downloadFunc(cloneURL, localPath, fullPath) {
   let fullLocalPath = require("path").join(fullPath, localPath);
-  console.log("fullLocalPath: " + fullLocalPath)
   let options = {};
 
   displayModal("Cloning Repository...");
@@ -61,6 +60,7 @@ function openRepository() {
     if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
       let tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
     }
+    repoLocalPath = fullLocalPath.replace(/^.*[\\\/]/, '');
     refreshAll(repository);
     updateModalText("Repository successfully opened");
   },

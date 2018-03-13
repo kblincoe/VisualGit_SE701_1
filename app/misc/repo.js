@@ -18,7 +18,6 @@ function downloadRepository() {
 }
 function downloadFunc(cloneURL, localPath, fullPath) {
     var fullLocalPath = require("path").join(fullPath, localPath);
-    console.log("fullLocalPath: " + fullLocalPath);
     var options = {};
     displayModal("Cloning Repository...");
     options = {
@@ -40,23 +39,23 @@ function downloadFunc(cloneURL, localPath, fullPath) {
         refreshAll(repository);
     }, function (err) {
         updateModalText("Clone Failed - " + err);
-        console.error(err);
+        console.error(err); // TODO show error on screen
     });
 }
 function openRepository() {
     var fullLocalPath = document.getElementById("repoOpen").files[0].path;
-    console.log("Trying to open repository at " + fullLocalPath);
     displayModal("Opening Local Repository...");
     Git.Repository.open(fullLocalPath).then(function (repository) {
         repoFullPath = fullLocalPath;
         if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
             var tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
         }
+        repoLocalPath = fullLocalPath.replace(/^.*[\\\/]/, '');
         refreshAll(repository);
         updateModalText("Repository successfully opened");
     }, function (err) {
         updateModalText("Opening Failed - " + err);
-        console.error(err);
+        console.error(err); // TODO show error on screen
     });
 }
 function addBranchestoNode(thisB) {
@@ -82,7 +81,7 @@ function refreshAll(repository) {
         var branchParts = reference.name().split("/");
         branch = branchParts[branchParts.length - 1];
     }, function (err) {
-        console.error(err);
+        console.error(err); // TODO show error on screen
     })
         .then(function () {
         return repository.getReferences(Git.Reference.TYPE.LISTALL);
@@ -91,11 +90,9 @@ function refreshAll(repository) {
         var count = 0;
         clearBranchElement();
         var _loop_1 = function (i) {
-            //console.log(branchList[i].name() + "!!!!");
             var bp = branchList[i].name().split("/");
             Git.Reference.nameToId(repository, branchList[i].name()).then(function (oid) {
                 // Use oid
-                //console.log(oid + "  TTTTTTTT");
                 if (branchList[i].isRemote()) {
                     remoteName[bp[bp.length - 1]] = oid;
                 }
@@ -146,6 +143,7 @@ function getAllBranches() {
                 displayBranch(bp[bp.length - 1], "branch-dropdown", "checkoutLocalBranch(this)");
             }
             Git.Reference.nameToId(repos, branchList[i]).then(function (oid) {
+                // Use oid
             });
         }
     });
