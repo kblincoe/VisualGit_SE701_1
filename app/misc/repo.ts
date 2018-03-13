@@ -258,6 +258,7 @@ function checkoutRemoteBranch(element) {
   })
 }
 
+
 function updateLocalPath() {
   let text = document.getElementById("repoClone").value;
   let splitText = text.split(/\.|:|\//);
