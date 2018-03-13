@@ -22,14 +22,23 @@ import { Component } from "@angular/core";
 
         <div class="block">
           <div class="left">
-            <p>File location to save to</p>
+            <p>Repository Name</p>
           </div>
           <div class="right">
-            <input type="text" name="repositoryLocal" size="40" id="repoSave"/>
-            <input type="file" webkitdirectory directory name="repositoryFull" id="repoSaveLocation"/>
-            <button class="button-clone" (click)="addRepository()">Clone</button>
+            <input type="text" name="repositoryLocal" size="50" id="repoSave"/>
           </div>
         </div>
+          
+        <div class="block">
+            <div class="left">
+                <p>Repository location to save to</p>
+            </div>
+            
+            <div class="right">
+                <input type="file" webkitdirectory directory name="repositoryFull" id="repoSaveLocation"/>
+                <button class="button-clone" (click)="addRepository()">Clone</button>
+            </div>
+        </div>  
 
 
         <div class="title">
