@@ -20,6 +20,7 @@
     <script src="app/misc/router.js"></script>
     <script src="app/misc/authenticate.js"></script>
     <script src="app/misc/color.js"></script>
+    <script src="app/misc/editFile.js"></script>
     <link href="node_modules/vis/dist/vis.min.css" rel="stylesheet" type="text/css">
     <script src="node_modules/jquery/dist/jquery.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
@@ -76,9 +77,28 @@ $('#repo-modal').on('hidden.bs.modal', function (e) {
            name: "Edit",
            icon: "edit",
            callback: function(itemKey, opt) {
-             let content = $trigger.text();
-             console.log(repoFullPath + "/" + content);
-             opn(repoFullPath + "/" + content);
+            let content = $trigger.text();
+            let filepath = repoFullPath + "/" + content;
+             console.log(filepath);
+            // check if diff panel is open, if open close it
+
+            let doc = document.getElementById("diff-panel");
+            console.log(doc.style.width + 'oooooo');
+            if (doc.style.width !== '0px' || doc.style.width !== '') {
+              hideDiffPanel();
+            }
+            console.log("hid diff panel");
+            displayEditorPanel();
+            console.log("display edit panel");
+
+            // read file
+            readFile(filepath);
+            console.log("Read file");
+            // set button for saving changes
+            
+            document.getElementById("save-file").onclick = function(){saveFile(filepath);}
+            
+             //opn(repoFullPath + "/" + content);
            }
          }
        }
