@@ -60,11 +60,14 @@ function displayDiffPanel() {
 function displayEditorPanel() {
   document.getElementById("graph-panel").style.width = "60%";
   document.getElementById("text-editor-panel").style.width = "40%";
+  document.getElementById("text-editor-panel-body").style.visibility = "visible";
+
 }
 
 function hideEditorPanel() {
   document.getElementById("text-editor-panel").style.width = "0";
   document.getElementById("graph-panel").style.width = "100%";
+  document.getElementById("text-editor-panel-body").style.visibility = "hidden";
 }
 
 function hideDiffPanel() {

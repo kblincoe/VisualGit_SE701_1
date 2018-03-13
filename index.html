@@ -69,6 +69,7 @@ $('#repo-modal').on('hidden.bs.modal', function (e) {
   butt.setAttribute('class', 'btn btn-primary disabled');
  });
 
+ // Set for right click to edit files that appear in the diff panel
  $.contextMenu({
    selector: ".file",
    build: function($trigger) {
@@ -81,23 +82,22 @@ $('#repo-modal').on('hidden.bs.modal', function (e) {
            callback: function(itemKey, opt) {
             let content = $trigger.text();
             let filepath = repoFullPath + "/" + content;
-             console.log(filepath);
-            // check if diff panel is open, if open close it
+            console.log(filepath);
 
-            let doc = document.getElementById("diff-panel");
-            console.log(doc.style.width + 'oooooo');
-            if (doc.style.width !== '0px' || doc.style.width !== '') {
+            // check if diff panel is open, if open close it before displaying text editor panel
+            let diffPanel = document.getElementById("diff-panel");
+            console.log(diffPanel.style.width + 'oooooo');
+            if (diffPanel.style.width !== '0px' || diffPanel.style.width !== '') {
               hideDiffPanel();
             }
-            console.log("hid diff panel");
+            console.log("hide diff panel");
             displayEditorPanel();
             console.log("display edit panel");
 
-            // read file
-            readFile(filepath);
+            readFileToTextEditor(filepath);
             console.log("Read file");
-            // set button for saving changes
-            document.getElementById("save-file").onclick = function(){saveFile(filepath);}
+            // set Save button for saving changes
+            document.getElementById("save-file").onclick = function(){ saveFromTextEditorToFile(filepath);}
            }
          }
        }

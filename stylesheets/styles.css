@@ -165,7 +165,7 @@ body {
       height: 100%;
       float: left;
       background-color: #282828; }
-      body .body-panel .text-editor-panel .save-button {
+      body .body-panel .text-editor-panel .editor-button {
         display: inline-block;
         margin-left: auto;
         margin-right: auto;
@@ -177,9 +177,10 @@ body {
         padding: 0 15px;
         background-color: #39c0ba;
         color: #fff; }
-      body .body-panel .text-editor-panel .save-button:hover {
+      body .body-panel .text-editor-panel .editor-button:hover {
         opacity: 0.8; }
       body .body-panel .text-editor-panel .text-editor-panel-body {
+        visibility: hidden;
         width: 100%;
         height: 80vh;
         float: left;
