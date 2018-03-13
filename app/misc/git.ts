@@ -569,19 +569,26 @@ function displayModifiedFiles() {
         document.getElementById("files-changed").appendChild(fileElement);
 
         fileElement.onclick = function() {
+          let textEditorPanel = document.getElementById("text-editor-panel");
           let doc = document.getElementById("diff-panel");
+          console.log(textEditorPanel.style.width + 'oooooo');
           console.log(doc.style.width + 'oooooo');
-          if (doc.style.width === '0px' || doc.style.width === '') {
-            displayDiffPanel();
-            document.getElementById("diff-panel-body").innerHTML = "";
-
-            if (fileElement.className === "file file-created") {
-              printNewFile(file.filePath);
+          
+          if(textEditorPanel.style.width === '0px' || textEditorPanel.style.width === ''){
+            if (doc.style.width === '0px' || doc.style.width === '') {
+              displayDiffPanel();
+              document.getElementById("diff-panel-body").innerHTML = "";
+  
+              if (fileElement.className === "file file-created") {
+                printNewFile(file.filePath);
+              } else {
+                printFileDiff(file.filePath)；
+              }
             } else {
-              printFileDiff(file.filePath)；
+              hideDiffPanel();
             }
-          } else {
-            hideDiffPanel();
+          } else{
+            displayModal("Exit out of edit mode!");
           }
         };
       }

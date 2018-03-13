@@ -1,6 +1,4 @@
-let Git = require("nodegit");
 let fsSync = require("fs-sync");
-
 
 function readFile(filepath) {
     if(doesFileExist(filepath)){
@@ -15,7 +13,8 @@ function saveFile(filepath){
         let content = document.getElementById("text-editor-panel-body").value;
         console.log(content);
         fsSync.write(filepath,content);
-        alert("Saved!");
+        displayModal("Saved!");
+        hideEditorPanel();
     }
 }
 

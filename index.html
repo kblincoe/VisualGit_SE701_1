@@ -95,10 +95,7 @@ $('#repo-modal').on('hidden.bs.modal', function (e) {
             readFile(filepath);
             console.log("Read file");
             // set button for saving changes
-            
             document.getElementById("save-file").onclick = function(){saveFile(filepath);}
-            
-             //opn(repoFullPath + "/" + content);
            }
          }
        }
