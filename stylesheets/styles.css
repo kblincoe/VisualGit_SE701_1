@@ -404,6 +404,12 @@ body .footer .git-command {
   margin: 10px;
 }
 
+.push, .pull {
+  margin: 2px;
+  padding: 0px 8px;
+  height: 48px;
+}
+
 .file-created {
   background-color: #84db00;
 }

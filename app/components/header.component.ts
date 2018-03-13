@@ -41,8 +41,8 @@ import { GraphService } from "../services/graph.service";
           </ul>
 
           <ul class="navbar-nav col-md-4 hidden-xs">
-            <li class="upload"><i class="fa fa-cloud-upload fa-2x col-md-2" aria-hidden="true" style="color:white;cursor:pointer" onclick="pushToRemote()" title="Push"></i></li>
-            <li class="download"><i class="fa fa-cloud-download fa-2x col-md-2" aria-hidden="true" style="color:white;cursor:pointer" onclick="pullFromRemote()" title="Pull"></i></li>
+            <li><img src="./assets/Octopush.svg" class="push" style="cursor:pointer" onclick="pushToRemote()" title="Push"></li>
+            <li><img src="./assets/Octopull.svg" class="push" style="cursor:pointer" onclick="pullFromRemote()" title="Pull"></li>
           </ul>
 
           <ul class="navbar-nav navbar-right hidden-xs">
