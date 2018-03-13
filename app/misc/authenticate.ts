@@ -1,4 +1,5 @@
 let github = require("octonode");
+let opn = require("opn");
 let username;
 let password;
 let aid, atoken;
@@ -20,6 +21,11 @@ function signInPage(callback) {
   getUserInfo(callback);
 }
 
+function openForgotPassword(){
+  opn('https://github.com/password_reset');
+}
+
+
 function getUserInfo(callback) {
   cred = Git.Cred.userpassPlaintextNew(username, password);
 
@@ -33,6 +39,8 @@ function getUserInfo(callback) {
       displayModal(err);
     } else {
       avaterImg = Object.values(data)[2]
+      clearStorage();
+      storeEncryptedData();
       // let doc = document.getElementById("avater");
       // doc.innerHTML = "";
       // var elem = document.createElement("img");
@@ -88,15 +96,24 @@ function selectRepo(ele) {
   console.log(url + 'JJJJJJJJ' + ele.innerHTML);
 }
 
+function storeEncryptedData(){
+  let randomUUID = generateUniqueSecret();
+  storeVariable('secret', randomUUID);
+  let encryptedUser = encryptValue(username);
+  storeUsername(encryptedUser);
+  let encryptedPassword = encryptValue(password);
+  storePassword(encryptedPassword);
+}
+
 function cloneRepo() {
   if (url === null) {
-    updateModalText("Ops! Error occors");
+    updateModalText("Please enter an URL!");
     return;
   }
   let splitText = url.split(/\.|:|\//);
   let local;
   if (splitText.length >= 2) {
-    local = splitText[splitText.length - 2];
+    local = splitText[splitText.length - 1];
   }
   downloadFunc(url, local);
   url = null;

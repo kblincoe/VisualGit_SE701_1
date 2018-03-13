@@ -3,7 +3,7 @@ import { Component } from "@angular/core";
 @Component({
   selector: "file-panel",
   template: `
-  <div class="file-panel" id="file-panel">
+  <div class="file-panel" id="file-panel" style="overflow-y:scroll;">
 
     <div class="modified-files-header" id="modified-files-header">
       <p class="select-all-message" id="select-all-message">Select all</p>

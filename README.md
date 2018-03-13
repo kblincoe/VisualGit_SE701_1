@@ -25,7 +25,7 @@ If you have homebrew installed:
 ````
 brew install npm
 ````
-Otherwise download and install the latest version of [Node.j](https://nodejs.org/en/) (v6.2.1 or later)
+Otherwise download and install the latest version of [Node.js](https://nodejs.org/en/) (v6.2.1 or later)
 
 #### Windows
 Download and install the latest version of  [Node.js](https://nodejs.org/en/) (v6.2.1 or later)
@@ -88,7 +88,7 @@ The pulling and pushing currently works for changes which are made on master and
 We are open to pull requests with new features or improvements.
 
 # Help
-Visualgit utilises a range of libraries and frameworks, more information on them can be found below:
+VisualGit utilises a range of libraries and frameworks, more information on them can be found below:
 
  - [Electron](http://electron.atom.io/)
  - [Node.js](https://nodejs.org/en/about/)
