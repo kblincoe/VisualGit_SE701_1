@@ -14,11 +14,12 @@ let span;
 function downloadRepository() {
   let cloneURL = document.getElementById("repoClone").value;
   let localPath = document.getElementById("repoSave").value;
-  downloadFunc(cloneURL, localPath);
+  let fullPath = document.getElementById("repoSaveLocation").files[0].path
+  downloadFunc(cloneURL, localPath, fullPath);
 }
 
-function downloadFunc(cloneURL, localPath) {
-  let fullLocalPath = require("path").join(__dirname, localPath);
+function downloadFunc(cloneURL, localPath, fullPath) {
+  let fullLocalPath = require("path").join(fullPath, localPath);
   let options = {};
 
   displayModal("Cloning Repository...");
@@ -49,17 +50,17 @@ function downloadFunc(cloneURL, localPath) {
 }
 
 function openRepository() {
-  let localPath = document.getElementById("repoOpen").value;
-  let fullLocalPath = require("path").join(__dirname, localPath);
+
+  let fullLocalPath = document.getElementById("repoOpen").files[0].path;
 
   displayModal("Opening Local Repository...");
 
   Git.Repository.open(fullLocalPath).then(function(repository) {
     repoFullPath = fullLocalPath;
-    repoLocalPath = localPath;
     if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
       let tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
     }
+    repoLocalPath = fullLocalPath.replace(/^.*[\\\/]/, '');
     refreshAll(repository);
     updateModalText("Repository successfully opened");
   },

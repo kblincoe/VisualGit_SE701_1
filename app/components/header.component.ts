@@ -126,7 +126,9 @@ import { GraphService } from "../services/graph.service";
           <ul class="list-group"id="repo-dropdown" role="menu" aria-labelledby="repo-name">
           </ul>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary disabled" id="cloneButton" onclick="cloneRepo()">Clone</button>
+              <label for="repoCloneLocation" style="float: left;">Clone Location:&nbsp;</label>
+              <input type="file" webkitdirectory directory name="repoFullPath" id="repoCloneLocation" style="float: left;"/>
+            <button type="button" class="btn btn-primary disabled" style="float: right" id="cloneButton" onclick="cloneRepo()">Clone</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
