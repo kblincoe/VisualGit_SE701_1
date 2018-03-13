@@ -14,7 +14,7 @@ import { GraphService } from "../services/graph.service";
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <img src="./assets/AddRepositoryFolder.svg" onclick="switchToAddRepositoryPanel()" class="add-repository-button" title="Add Repository">
+          <img src="./assets/AddRepositoryFolder.svg" onclick="switchToAddRepositoryPanel()" class="add-repository-button" title="Add Repository" style="cursor:pointer">
         </div>
         <div class="collapse navbar-collapse" id="navbar">
           <ul class="nav navbar-nav col-md-5 hidden-xs">
@@ -41,13 +41,13 @@ import { GraphService } from "../services/graph.service";
           </ul>
 
           <ul class="navbar-nav col-md-4 hidden-xs">
-            <li class="upload"><i class="fa fa-cloud-upload fa-2x col-md-2" aria-hidden="true" style="color:white" onclick="pushToRemote()" title="Push"></i></li>
-            <li class="download"><i class="fa fa-cloud-download fa-2x col-md-2" aria-hidden="true" style="color:white" onclick="pullFromRemote()" title="Pull"></i></li>
+            <li class="upload"><i class="fa fa-cloud-upload fa-2x col-md-2" aria-hidden="true" style="color:white;cursor:pointer" onclick="pushToRemote()" title="Push"></i></li>
+            <li class="download"><i class="fa fa-cloud-download fa-2x col-md-2" aria-hidden="true" style="color:white;cursor:pointer" onclick="pullFromRemote()" title="Pull"></i></li>
           </ul>
 
           <ul class="navbar-nav navbar-right hidden-xs">
             <li>
-              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="#nav-collapse1" aria-expanded="false" aria-controls="nav-collapse1">Sign in</a>
+              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="." onclick="window.location.reload()" aria-expanded="false" aria-controls="nav-collapse1">Sign in</a>
             </li>
           </ul>
           <div class="collapse nav navbar-nav nav-collapse" id="nav-collapse1">
