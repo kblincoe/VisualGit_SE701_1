@@ -2,6 +2,7 @@ let cred;
 
 function collpaseSignPanel() {
   $('#nav-collapse1').collapse('hide');
+  clearTextBoxes(); // This clears login details from text boxes after user signs in
 }
 
 function switchToMainPanel() {
@@ -67,4 +68,11 @@ function hideAuthenticatePanel() {
 
 function displayAuthenticatePanel() {
   document.getElementById("authenticate").style.zIndex = "20";
+}
+
+// Clears username and password textboxes after use signs in on the top right corner
+// of the main screen
+function clearTextBoxes() {
+  document.getElementById("Email1").value="";
+  document.getElementById("Password1").value="";
 }
