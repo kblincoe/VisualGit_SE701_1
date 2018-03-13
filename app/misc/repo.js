@@ -209,7 +209,7 @@ function checkoutLocalBranch(element) {
             .then(function () {
             refreshAll(repo);
         }, function (err) {
-            console.log(err + "<<<<<<<");
+            console.error(err);
         });
     });
 }
@@ -228,22 +228,18 @@ function checkoutRemoteBranch(element) {
         addCommand("git fetch");
         addCommand("git checkout -b " + bn);
         var cid = remoteName[bn];
-        console.log("2.0  " + cid);
         return Git.Commit.lookup(repo, cid);
     })
         .then(function (commit) {
-        console.log("3.0");
         return Git.Branch.create(repos, bn, commit, 0);
     })
         .then(function (code) {
-        console.log(bn + "PPPPPPP");
         repos.mergeBranches(bn, "origin/" + bn)
             .then(function () {
             refreshAll(repos);
-            console.log("Pull successful");
         });
     }, function (err) {
-        console.log(err);
+        console.error(err);
     });
 }
 function updateLocalPath() {
