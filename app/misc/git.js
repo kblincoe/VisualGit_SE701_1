@@ -16,11 +16,9 @@ function addAndCommit() {
     Git.Repository.open(repoFullPath)
         .then(function (repoResult) {
         repository = repoResult;
-        console.log("1.0");
         return repository.refreshIndex();
     })
         .then(function (indexResult) {
-        console.log("2.0");
         index = indexResult;
         var filesToStage = [];
         filesToAdd = [];
@@ -32,28 +30,22 @@ function addAndCommit() {
                 filesToAdd.push(fileElementChildren[0].innerHTML);
             }
         }
-        console.log("2.1");
         return index.addAll(filesToStage);
     })
         .then(function () {
-        console.log("3.0");
         return index.write();
     })
         .then(function () {
-        console.log("4.0");
         return index.writeTree();
     })
         .then(function (oidResult) {
-        console.log("5.0");
         oid = oidResult;
         return Git.Reference.nameToId(repository, "HEAD");
     })
         .then(function (head) {
-        console.log("6.0");
         return repository.getCommit(head);
     })
         .then(function (parent) {
-        console.log("7.0");
         var sign;
         if (username !== null && password !== null) {
             sign = Git.Signature.now(username, password);
@@ -64,18 +56,14 @@ function addAndCommit() {
         commitMessage = document.getElementById('commit-message-input').value;
         if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
             var tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
-            console.log("theirComit: " + tid);
-            console.log("ourCommit: " + parent.id.toString());
             return repository.createCommit("HEAD", sign, sign, commitMessage, oid, [parent.id().toString(), tid.trim()]);
         }
         else {
-            console.log('no other commit');
             return repository.createCommit("HEAD", sign, sign, commitMessage, oid, [parent]);
         }
     })
         .then(function (oid) {
         theirCommit = null;
-        console.log("Commit successful: " + oid.tostrS());
         hideDiffPanel();
         clearModifiedFilesList();
         clearCommitMessage();
@@ -86,7 +74,7 @@ function addAndCommit() {
         addCommand('git commit -m "' + commitMessage + '"');
         refreshAll(repository);
     }, function (err) {
-        console.log(err);
+        console.error(err);
         updateModalText("Please sign in before committing!");
     });
 }
@@ -111,21 +99,17 @@ function getAllCommits(callback) {
     var repos;
     var allCommits = [];
     var aclist = [];
-    console.log("1.0");
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
         repos = repo;
-        console.log("2.0");
         return repo.getReferences(Git.Reference.TYPE.LISTALL);
     })
         .then(function (refs) {
         var count = 0;
-        console.log("3.0    " + refs.length);
         async.whilst(function () {
             return count < refs.length;
         }, function (cb) {
             if (!refs[count].isRemote()) {
-                console.log("4.0");
                 repos.getReferenceCommit(refs[count])
                     .then(function (commit) {
                     var history = commit.history(Git.Revwalk.SORT.Time);
@@ -137,19 +121,17 @@ function getAllCommits(callback) {
                             }
                         }
                         count++;
-                        console.log(count + "-------" + allCommits.length);
                         cb();
                     });
                     history.start();
                 });
             }
             else {
-                console.log('lalalalalalala');
                 count++;
                 cb();
             }
         }, function (err) {
-            console.log(err);
+            console.error(err);
             callback(allCommits);
         });
     });
@@ -163,7 +145,6 @@ function pullFromRemote() {
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
         repository = repo;
-        console.log("Pulling changes from remote...");
         addCommand("git pull");
         displayModal("Pulling new changes from the remote repository...");
         return repository.fetchAll({
@@ -181,13 +162,11 @@ function pullFromRemote() {
         return Git.Reference.nameToId(repository, "refs/remotes/origin/" + branch);
     })
         .then(function (oid) {
-        console.log("3.0  " + oid);
         return Git.AnnotatedCommit.lookup(repository, oid);
     }, function (err) {
-        console.log(err);
+        console.error(err);
     })
         .then(function (annotated) {
-        console.log("4.0  " + annotated);
         Git.Merge.merge(repository, annotated, null, {
             checkoutStrategy: Git.Checkout.STRATEGY.FORCE,
         });
@@ -208,7 +187,6 @@ function pushToRemote() {
     var branch = document.getElementById("branch-name").innerText;
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
-        console.log("Pushing changes to remote");
         displayModal("Pushing changes to remote...");
         addCommand("git push -u origin " + branch);
         repo.getRemotes()
@@ -224,7 +202,6 @@ function pushToRemote() {
                 });
             })
                 .then(function () {
-                console.log("Push successful");
                 updateModalText("Push successful");
                 refreshAll(repo);
             });
@@ -234,7 +211,6 @@ function pushToRemote() {
 function createBranch() {
     var branchName = document.getElementById("branchName").value;
     var repos;
-    console.log(branchName + "!!!!!!");
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
         repos = repo;
@@ -243,11 +219,10 @@ function createBranch() {
             .then(function (commit) {
             return repo.createBranch(branchName, commit, 0, repo.defaultSignature(), "Created new-branch on HEAD");
         }, function (err) {
-            console.log(err + "LLLLLL");
+            console.error(err);
         });
     }).done(function () {
         refreshAll(repos);
-        console.log("All done!");
     });
 }
 function mergeLocalBranches(element) {
@@ -263,24 +238,20 @@ function mergeLocalBranches(element) {
         return repos.getBranch("refs/heads/" + bn);
     })
         .then(function (branch) {
-        console.log(branch.name());
         fromBranch = branch;
         return repos.getCurrentBranch();
     })
         .then(function (toBranch) {
-        console.log(toBranch.name());
         return repos.mergeBranches(toBranch, fromBranch, repos.defaultSignature(), Git.Merge.PREFERENCE.NONE, null);
     })
         .then(function (index) {
         var text;
-        console.log(index);
         if (index instanceof Git.Index) {
             text = "Conflicts Exist";
         }
         else {
             text = "Merged Successfully";
         }
-        console.log(text);
         updateModalText(text);
         refreshAll(repos);
     });
@@ -295,11 +266,9 @@ function mergeCommits(from) {
         return Git.Reference.nameToId(repos, 'refs/heads/' + from);
     })
         .then(function (oid) {
-        console.log("3.0  " + oid);
         return Git.AnnotatedCommit.lookup(repos, oid);
     })
         .then(function (annotated) {
-        console.log("4.0  " + annotated);
         Git.Merge.merge(repos, annotated, null, {
             checkoutStrategy: Git.Checkout.STRATEGY.FORCE,
         });
@@ -327,24 +296,19 @@ function rebaseCommits(from, to) {
         return Git.Reference.nameToId(repos, 'refs/heads/' + from);
     })
         .then(function (oid) {
-        console.log("3.0  " + oid);
         return Git.AnnotatedCommit.lookup(repos, oid);
     })
         .then(function (annotated) {
-        console.log("4.0  " + annotated);
         branch = annotated;
         return Git.Reference.nameToId(repos, 'refs/heads/' + to);
     })
         .then(function (oid) {
-        console.log("5.0  " + oid);
         return Git.AnnotatedCommit.lookup(repos, oid);
     })
         .then(function (annotated) {
-        console.log("6.0");
         return Git.Rebase.init(repos, branch, annotated, null, null);
     })
         .then(function (rebase) {
-        console.log("7.0");
         return rebase.next();
     })
         .then(function (operation) {
@@ -376,7 +340,6 @@ function resetCommit(name) {
         return Git.Reference.nameToId(repo, name);
     })
         .then(function (id) {
-        console.log('2.0' + id);
         return Git.AnnotatedCommit.lookup(repos, id);
     })
         .then(function (commit) {
@@ -384,7 +347,6 @@ function resetCommit(name) {
         return Git.Reset.fromAnnotated(repos, commit, Git.Reset.TYPE.HARD, checkoutOptions);
     })
         .then(function (number) {
-        console.log(number);
         if (number !== 0) {
             updateModalText("Reset failed, please check if you have already pushed the commit.");
         }
@@ -401,12 +363,10 @@ function revertCommit(name) {
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
         repos = repo;
-        console.log(1.0);
         addCommand("git revert " + name + "~1");
         return Git.Reference.nameToId(repo, name);
     })
         .then(function (id) {
-        console.log('2.0' + id);
         return Git.Commit.lookup(repos, id);
     })
         .then(function (commit) {
@@ -417,7 +377,6 @@ function revertCommit(name) {
         return Git.Revert.revert(repos, commit, revertOptions);
     })
         .then(function (number) {
-        console.log(number);
         if (number === -1) {
             updateModalText("Revert failed, please check if you have already pushed the commit.");
         }
@@ -433,7 +392,6 @@ function displayModifiedFiles() {
     modifiedFiles = [];
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
-        console.log(repo.isMerging() + "ojoijnkbunmm");
         repo.getStatus().then(function (statuses) {
             statuses.forEach(addModifiedFile);
             if (modifiedFiles.length !== 0) {
@@ -502,7 +460,6 @@ function displayModifiedFiles() {
                 document.getElementById("files-changed").appendChild(fileElement);
                 fileElement.onclick = function () {
                     var doc = document.getElementById("diff-panel");
-                    console.log(doc.style.width + 'oooooo');
                     if (doc.style.width === '0px' || doc.style.width === '') {
                         displayDiffPanel();
                         document.getElementById("diff-panel-body").innerHTML = "";
@@ -578,6 +535,6 @@ function displayModifiedFiles() {
             }
         });
     }, function (err) {
-        console.log("waiting for repo to be initialised");
+        console.error(err);
     });
 }
