@@ -13,7 +13,6 @@ function switchToMainPanel() {
 }
 
 function switchToAddRepositoryPanel() {
-  console.log("1111111");
   hideAuthenticatePanel();
   hideFilePanel();
   hideGraphPanel();
