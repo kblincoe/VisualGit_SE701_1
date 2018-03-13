@@ -11,7 +11,6 @@ let green = "#84db00";
 let repo, index, oid, remote, commitMessage;
 let filesToAdd = [];
 let theirCommit = null;
-let modifiedFiles;
 
 function addAndCommit() {
   let repository;
@@ -188,12 +187,15 @@ function getAllCommits(callback) {
     });
 }
 
-function pullFromRemote() {
+function pullFromRemote(e){
   let repository;
-  let branch = document.getElementById("branch-name").innerText;
-  if (modifiedFiles.length > 0) {
-    updateModalText("Please commit your changes before pulling from remote!");
+  toggleCloseButton();
+  if(checkForLocalChanges() && e==null) {
+      $('#OK-button').attr("onclick", "pullFromRemote(this)");
+      displayWarning("Please stash or commit your changes before pulling");
+      return;
   }
+  let branch = document.getElementById("branch-name").innerText;
   Git.Repository.open(repoFullPath)
   .then(function(repo) {
     repository = repo;
