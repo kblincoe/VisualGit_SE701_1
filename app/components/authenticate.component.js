@@ -15,11 +15,17 @@ var AuthenticateComponent = /** @class */ (function () {
     };
     AuthenticateComponent.prototype.ngAfterViewInit = function () {
         var username = getUsername();
-        var uncryptedData = decryptValue(username);
-        document.getElementById('username').value = uncryptedData.toString(CryptoJS.enc.Utf8);
+        if (username != null) {
+            var uncryptedData = decryptValue(username);
+            var usernameField = document.getElementById('username');
+            usernameField.value = uncryptedData.toString(CryptoJS.enc.Utf8);
+        }
         var password = getPassword();
-        var uncryptedData = decryptValue(password);
-        document.getElementById('password').value = uncryptedData.toString(CryptoJS.enc.Utf8);
+        if (password != null) {
+            var uncryptedData = decryptValue(password);
+            var passwordField = document.getElementById('password');
+            passwordField.value = uncryptedData.toString(CryptoJS.enc.Utf8);
+        }
     };
     AuthenticateComponent = __decorate([
         core_1.Component({

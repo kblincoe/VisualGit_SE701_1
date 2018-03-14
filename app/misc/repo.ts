@@ -10,6 +10,7 @@ let readFile = require("fs-sync");
 let repoCurrentBranch = "master";
 let modal;
 let span;
+let modifiedFiles = 0;
 
 function downloadRepository() {
   let cloneURL = document.getElementById("repoClone").value;
@@ -120,11 +121,11 @@ function refreshAll(repository) {
       });
       if (branchList[i].isRemote()) {
         if (localBranches.indexOf(bp[bp.length - 1]) < 0) {
-          displayBranch(bp[bp.length - 1], "branch-dropdown", "checkoutRemoteBranch(this)");
+          displayBranch(bp[bp.length - 1], "branch-dropdown", "canChangeBranch(this,1)");
         }
       } else {
         localBranches.push(bp[bp.length - 1]);
-        displayBranch(bp[bp.length - 1], "branch-dropdown", "checkoutLocalBranch(this)");
+        displayBranch(bp[bp.length - 1], "branch-dropdown", "canChangeBranch(this,2)");
       }
 
     }
@@ -210,53 +211,50 @@ function displayBranch(name, id, onclick) {
   ul.appendChild(li);
 }
 
-function checkoutLocalBranch(element) {
-  let bn;
-  if (typeof element === "string") {
-    bn = element;
-  } else {
-    bn = element.innerHTML;
-  }
-  Git.Repository.open(repoFullPath)
-  .then(function(repo) {
-    addCommand("git checkout " + bn);
-    repo.checkoutBranch("refs/heads/" + bn)
-    .then(function() {
-      refreshAll(repo);
-    }, function(err) {
-      console.error(err);
-    });
-  })
+function checkoutLocalBranch(bn) {
+    toggleCloseButton();
+    console.log(bn + ">>>>>>>>");
+    Git.Repository.open(repoFullPath)
+        .then(function (repo) {
+            addCommand("git checkout " + bn);
+            repo.checkoutBranch("refs/heads/" + bn)
+                .then(function () {
+                    refreshAll(repo);
+                }, function (err) {
+                    console.log(err + "<<<<<<<");
+                });
+        })
 }
 
-function checkoutRemoteBranch(element) {
-  let bn;
-  if (typeof element === "string") {
-    bn = element;
-  } else {
-    bn = element.innerHTML;
-  }
-  let repos;
-  Git.Repository.open(repoFullPath)
-  .then(function(repo) {
-    repos = repo;
-    addCommand("git fetch");
-    addCommand("git checkout -b " + bn);
-    let cid = remoteName[bn];
-    return Git.Commit.lookup(repo, cid);
-  })
-  .then(function(commit) {
-    return Git.Branch.create(repos, bn, commit, 0);
-  })
-  .then(function(code) {
-    repos.mergeBranches(bn, "origin/" + bn)
-    .then(function() {
-        refreshAll(repos);
-    });
-  }, function(err) {
-    console.error(err);
-  })
+function checkoutRemoteBranch(bn) {
+    toggleCloseButton();
+    console.log("1.0  " + bn);
+    let repos;
+    Git.Repository.open(repoFullPath)
+        .then(function (repo) {
+            repos = repo;
+            addCommand("git fetch");
+            addCommand("git checkout -b " + bn);
+            let cid = remoteName[bn];
+            console.log("2.0  " + cid);
+            return Git.Commit.lookup(repo, cid);
+        })
+        .then(function (commit) {
+            console.log("3.0");
+            return Git.Branch.create(repos, bn, commit, 0);
+        })
+        .then(function (code) {
+            console.log(bn + "PPPPPPP");
+            repos.mergeBranches(bn, "origin/" + bn)
+                .then(function () {
+                    refreshAll(repos);
+                    console.log("Pull successful");
+                });
+        }, function (err) {
+            console.log(err);
+        })
 }
+
 
 function updateLocalPath() {
   let text = document.getElementById("repoClone").value;
@@ -293,11 +291,60 @@ function displayModal(text) {
 //  handleModal();
   document.getElementById("modal-text-box").innerHTML = text;
   document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+  document.getElementById("modal-title").innerHTML  = "Info";
   $('#modal').modal('show');
 }
 
 function updateModalText(text) {
   document.getElementById("modal-text-box").innerHTML = text;
   document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+  document.getElementById("modal-title").innerHTML  = "Info";
   $('#modal').modal('show');
+}
+
+function displayWarning(warningMessege){
+    $('#OK-button').removeClass('hide');
+    $('#cancel-button').removeClass('hide');
+    $('#close-button').addClass('hide');
+    document.getElementById("modal-title").innerHTML  = "Warning";
+    document.getElementById("modal-text-box").innerHTML = warningMessege;
+    $('#modal').modal('show');
+}
+
+function checkForLocalChanges() {
+    modifiedFiles = $("#files-changed div").length;
+    if (modifiedFiles > 0) {
+        return true;
+    }
+    return false;
+}
+
+function toggleCloseButton(){
+    $('#OK-button').addClass('hide');
+    $('#cancel-button').addClass('hide');
+    $('#close-button').removeClass('hide');
+}
+
+function canChangeBranch(e,type){
+    let bn;
+    if (typeof e === "string") {
+        bn = e;
+    } else {
+        bn = e.innerHTML;
+    }
+    if(type==1) {
+        $('#OK-button').attr("onclick", "checkoutRemoteBranch('"+bn+"')");
+    }else if(type==2){
+        $('#OK-button').attr("onclick",  "checkoutLocalBranch('"+bn+"')");
+    }
+    if(checkForLocalChanges()) {
+        displayWarning("Please commit or stash your changes before checking out");
+        return;
+    }else{
+        if(type==2) {
+            checkoutLocalBranch(e);
+        }else if(type==1){
+            checkoutRemoteBranch(e);
+        }
+    }
 }
