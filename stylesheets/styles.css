@@ -415,3 +415,7 @@ body .footer .git-command {
 .file-deleted {
   background-color: #ff2448;
 }
+
+#repo-dropdown {
+  list-style-type: none;
+}
