@@ -73,6 +73,7 @@ function addAndCommit() {
     theirCommit = null;
 
     hideDiffPanel();
+    hideTextEditorPanel();
     clearModifiedFilesList();
     clearCommitMessage();
     clearSelectAllCheckbox();
@@ -525,18 +526,30 @@ function displayModifiedFiles() {
         document.getElementById("files-changed").appendChild(fileElement);
 
         fileElement.onclick = function() {
-          let doc = document.getElementById("diff-panel");
-          if (doc.style.width === '0px' || doc.style.width === '') {
-            displayDiffPanel();
-            document.getElementById("diff-panel-body").innerHTML = "";
+          let textEditorPanel = document.getElementById("text-editor-panel");
+          let diffPanel = document.getElementById("diff-panel");
 
-            if (fileElement.className === "file file-created") {
-              printNewFile(file.filePath);
+          console.log('diffPanel width = ' + diffPanel.style.width);
+          console.log('textEditorPanel width = ' + textEditorPanel.style.width);
+          
+          // if EDITOR NOT OPEN
+          if(textEditorPanel.style.width === '0px' || textEditorPanel.style.width === ''){
+            // if DIFF NOT OPEN
+            if (diffPanel.style.width === '0px' || diffPanel.style.width === '') {
+              // OPEN DIFF
+              displayDiffPanel();
+              document.getElementById("diff-panel-body").innerHTML = "";
+  
+              if (fileElement.className === "file file-created") {
+                printNewFile(file.filePath);
+              } else {
+                printFileDiff(file.filePath);
+              }
             } else {
-              printFileDiff(file.filePath);
+              hideDiffPanel();
             }
-          } else {
-            hideDiffPanel();
+          } else{
+            displayExitConfirmationDialog();
           }
         };
       }
