@@ -4,6 +4,7 @@ function readFileToTextEditor(filepath) {
     if(doesFileExist(filepath)){
         let data = fsSync.read(filepath, null);
         document.getElementById("text-editor-panel-body").value = data;
+        document.getElementById("text-editor-panel-body").scrollTop = 0;
     }
 }
 
