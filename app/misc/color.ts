@@ -1,7 +1,6 @@
 let cs = require('color-scheme');
 let before = 'default';;
 function changeColor(color) {
-    console.log(color + '   ' + (color === 'white'));
     let head = document.getElementsByClassName('navbar');
     let headButton = document.getElementsByClassName('navbar-btn');
     let fa = document.getElementsByClassName('fa');
@@ -16,7 +15,6 @@ function changeColor(color) {
     let auth = document.getElementById('authenticate');
     if (color === 'white') {
         for (let i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-white';
         }
         for (let i = 0; i < headButton.length; i++) {
@@ -47,7 +45,6 @@ function changeColor(color) {
         before = 'white';
     } else if (color === 'default') {
         for (let i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-inverse';
         }
         for (let i = 0; i < headButton.length; i++) {
@@ -78,7 +75,6 @@ function changeColor(color) {
         before = 'default';
     } else if (color === 'vintage') {
         for (let i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-vintage';
         }
         for (let i = 0; i < headButton.length; i++) {
@@ -110,7 +106,6 @@ function changeColor(color) {
         before = 'vintage';
     } else if (color === 'blue') {
         for (let i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-blue';
         }
         for (let i = 0; i < headButton.length; i++) {
@@ -143,7 +138,6 @@ function changeColor(color) {
         before = 'blue';
     } else if (color === 'burgundy') {
         for (let i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-burgundy';
         }
         for (let i = 0; i < headButton.length; i++) {
