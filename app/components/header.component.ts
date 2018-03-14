@@ -8,6 +8,12 @@ import { GraphService } from "../services/graph.service";
     <nav class="navbar navbar-inverse" role="navigation">
       <div class="container-fluid row">
         <div class="navbar-header">
+        
+        
+
+          
+
+
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
@@ -18,6 +24,10 @@ import { GraphService } from "../services/graph.service";
         </div>
         <div class="collapse navbar-collapse" id="navbar">
           <ul class="nav navbar-nav col-md-5 hidden-xs">
+
+
+
+
             <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
             <li class="repo-name dropdown-toggle">
                 <a href="#" id="repo-name" data-toggle="modal" data-target="#repo-modal">repository</a>
@@ -38,6 +48,24 @@ import { GraphService } from "../services/graph.service";
                 </li>
               </ul>
             </li>
+
+            <li class="color-name dropdown">
+              
+
+              <button class="btn btn-inverse dropdown-toggle btn-sm navbar-btn" id="color-name" data-toggle="dropdown">
+            color
+            <span class="caret"></span>
+          </button>
+
+            <ul class="dropdown-menu" id="color-dropdown" role="menu" aria-labelledby="color-name">
+            <li class="white" onclick="changeColor('white')">white</li>
+            <li class="vintage" onclick="changeColor('vintage')">vintage</li>
+            <li class="blue" onclick="changeColor('blue')">blue</li>
+            <li class="burgundy" onclick="changeColor('burgundy')">burgundy</li>
+            <li class="default" onclick="changeColor('default')">default</li>
+            </ul>
+
+
           </ul>
 
           <ul class="navbar-nav col-md-4 hidden-xs">

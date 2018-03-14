@@ -11,7 +11,7 @@ import { Component, AfterViewInit } from "@angular/core";
             color
             <span class="caret"></span>
           </button>
-          <ul class="dropdown-menu" id="color-dropdown" role="menu" aria-labelledby="branch-name">
+          <ul class="dropdown-menu" id="color-dropdown" role="menu" aria-labelledby="color-scheme">
             <li class="white" onclick="changeColor('white')">white</li>
             <li class="vintage" onclick="changeColor('vintage')">vintage</li>
             <li class="blue" onclick="changeColor('blue')">blue</li>
