@@ -87,6 +87,7 @@ function addAndCommit() {
     console.log("Commit successful: " + oid.tostrS());
 
     hideDiffPanel();
+    hideTextEditorPanel();
     clearModifiedFilesList();
     clearCommitMessage();
     clearSelectAllCheckbox();
@@ -570,25 +571,29 @@ function displayModifiedFiles() {
 
         fileElement.onclick = function() {
           let textEditorPanel = document.getElementById("text-editor-panel");
-          let doc = document.getElementById("diff-panel");
-          console.log(textEditorPanel.style.width + 'oooooo');
-          console.log(doc.style.width + 'oooooo');
+          let diffPanel = document.getElementById("diff-panel");
+
+          console.log('diffPanel width = ' + diffPanel.style.width);
+          console.log('textEditorPanel width = ' + textEditorPanel.style.width);
           
+          // if EDITOR NOT OPEN
           if(textEditorPanel.style.width === '0px' || textEditorPanel.style.width === ''){
-            if (doc.style.width === '0px' || doc.style.width === '') {
+            // if DIFF NOT OPEN
+            if (diffPanel.style.width === '0px' || diffPanel.style.width === '') {
+              // OPEN DIFF
               displayDiffPanel();
               document.getElementById("diff-panel-body").innerHTML = "";
   
               if (fileElement.className === "file file-created") {
                 printNewFile(file.filePath);
               } else {
-                printFileDiff(file.filePath)；
+                printFileDiff(file.filePath);
               }
             } else {
               hideDiffPanel();
             }
           } else{
-            displayModal("Exit out of edit mode!");
+            displayExitConfirmationDialog();
           }
         };
       }

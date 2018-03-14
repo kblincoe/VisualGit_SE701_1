@@ -13,10 +13,14 @@ function saveFromTextEditorToFile(filepath){
         let content = document.getElementById("text-editor-panel-body").value;
         fsSync.write(filepath,content);
         displayModal("Saved!");
-        hideEditorPanel();
+        hideTextEditorPanel();
     }
 }
 
 function doesFileExist(filepath) : boolean {
     return fsSync.exists(filepath);
+}
+
+function displayExitConfirmationDialog(){
+    $('#text-editor-modal').modal('show');
 }
