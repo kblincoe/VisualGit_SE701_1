@@ -8,12 +8,6 @@ import { GraphService } from "../services/graph.service";
     <nav class="navbar navbar-inverse" role="navigation">
       <div class="container-fluid row">
         <div class="navbar-header">
-        
-        
-
-          
-
-
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
@@ -24,10 +18,6 @@ import { GraphService } from "../services/graph.service";
         </div>
         <div class="collapse navbar-collapse" id="navbar">
           <ul class="nav navbar-nav col-md-5 hidden-xs">
-
-
-
-
             <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
             <li class="repo-name dropdown-toggle">
                 <a href="#" id="repo-name" data-toggle="modal" data-target="#repo-modal">repository</a>
@@ -48,31 +38,23 @@ import { GraphService } from "../services/graph.service";
                 </li>
               </ul>
             </li>
-
-            <li class="color-name dropdown">
-              
-
+            <li class="color-name dropdown">       
               <button class="btn btn-inverse dropdown-toggle btn-sm navbar-btn" id="color-name" data-toggle="dropdown">
             color
             <span class="caret"></span>
           </button>
-
             <ul class="dropdown-menu" id="color-dropdown" role="menu" aria-labelledby="color-name">
-            <li class="white" onclick="changeColor('white')">white</li>
-            <li class="vintage" onclick="changeColor('vintage')">vintage</li>
-            <li class="blue" onclick="changeColor('blue')">blue</li>
-            <li class="burgundy" onclick="changeColor('burgundy')">burgundy</li>
-            <li class="default" onclick="changeColor('default')">default</li>
+              <li class="white" onclick="changeColor('white')">white</li>
+              <li class="vintage" onclick="changeColor('vintage')">vintage</li>
+              <li class="blue" onclick="changeColor('blue')">blue</li>
+              <li class="burgundy" onclick="changeColor('burgundy')">burgundy</li>
+              <li class="default" onclick="changeColor('default')">default</li>
             </ul>
-
-
           </ul>
-
           <ul class="navbar-nav col-md-4 hidden-xs">
             <li class="upload"><i class="fa fa-cloud-upload fa-2x col-md-2" aria-hidden="true" style="color:white;cursor:pointer" onclick="pushToRemote()" title="Push"></i></li>
             <li class="download"><i class="fa fa-cloud-download fa-2x col-md-2" aria-hidden="true" style="color:white;cursor:pointer" onclick="pullFromRemote()" title="Pull"></i></li>
           </ul>
-
           <ul class="navbar-nav navbar-right hidden-xs">
             <li>
               <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="." onclick="window.location.reload()" aria-expanded="false" aria-controls="nav-collapse1">Sign in</a>
