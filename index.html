@@ -69,7 +69,7 @@ $('#repo-modal').on('hidden.bs.modal', function (e) {
   butt.setAttribute('class', 'btn btn-primary disabled');
  });
 
- // Set for right click to EDIT FILES that appear in the diff panel
+ // Set for right click to EDIT FILES
  $.contextMenu({
    selector: ".file",
    build: function($trigger) {
@@ -118,6 +118,7 @@ $('#repo-modal').on('hidden.bs.modal', function (e) {
               document.getElementById("exit-edit-mode-button").onclick = function () {
                 hideTextEditorPanel();
               }
+              setTextEditorPanelTitle(content);
               readFileToTextEditor(filepath);
               displayTextEditorPanel();
 

@@ -24,3 +24,7 @@ function doesFileExist(filepath) : boolean {
 function displayExitConfirmationDialog(){
     $('#text-editor-modal').modal('show');
 }
+
+function setTextEditorPanelTitle(title){
+    document.getElementById("text-editor-panel-title").innerHTML = title;
+}
