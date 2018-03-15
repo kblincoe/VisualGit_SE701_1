@@ -8,7 +8,7 @@ import { Component } from "@angular/core";
 
       <div class="add-repository-body">
         <div class="title">
-          <h1 class="clone-title">Clone from Internet</h1>
+          <h2 class="clone-title">Clone from Internet</h2>
         </div>
 
         <div class="block">
@@ -32,7 +32,7 @@ import { Component } from "@angular/core";
 
 
         <div class="title">
-          <h1 class="open-local-repo">Open Local Repository</h1>
+          <h2 class="open-local-repo">Open Local Repository</h2>
         </div>
 
         <div class="block">

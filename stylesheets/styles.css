@@ -65,6 +65,29 @@ p, h1 {
   border-bottom: 2px solid #181818;
 }
 
+.navbar-burgundy {
+  background-color: #572219;
+  border-bottom: 2px solid #181818;
+}
+.navbar-burgundy .navbar-nav > li > a {
+  color: #F4EDE9;
+}
+.navbar-blue {
+  background-color: #112D32;
+  border-bottom: 2px solid #181818;
+}
+.navbar-blue .navbar-nav > li > a {
+  color: #fff;
+}
+
+.navbar-vintage {
+  background-color: #212617;
+  border-bottom: 2px solid #181818;
+}
+.navbar-vintage .navbar-nav > li > a {
+  color: #E9E7DA;
+}
+
 #branchOptions {
   position: absolute;
   display:none;
@@ -391,4 +414,8 @@ body .footer .git-command {
 
 .file-deleted {
   background-color: #ff2448;
+}
+
+#repo-dropdown {
+  list-style-type: none;
 }
