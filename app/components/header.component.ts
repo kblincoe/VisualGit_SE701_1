@@ -124,27 +124,6 @@ import { GraphService } from "../services/graph.service";
         </div>
       </div>
     </div>
-
-    <div id="text-editor-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-      <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <h4 class="modal-title">Warning</h4>
-          </div>
-          <div class="modal-body" id="modal-text-box">
-            Are you sure that you want to stop editing the file? All unsaved changes will be lost!
-          </div>
-          <div class="modal-footer">
-            <button type="button" id="exit-edit-mode-button" class="btn btn-primary" onclick=hideTextEditorPanel() data-dismiss="modal">Yes</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div id="repo-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
