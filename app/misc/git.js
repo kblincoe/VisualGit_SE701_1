@@ -435,108 +435,109 @@ function displayModifiedFiles() {
                     return "IGNORED";
                 }
             }
-            var fileContainer = document.createElement("div");
-            var filePath = document.createElement("p");
-            filePath.className = "file-path";
-            filePath.innerHTML = file.filePath;
-            var fileElement = document.createElement("div");
-            var checkboxElement = document.createElement("div");
-            fileContainer.appendChild(checkboxElement);
-            fileContainer.appendChild(fileElement);
-            fileContainer.style.display = 'flex';
-            if (file.fileModification === "NEW") {
-                fileElement.className = "file file-created";
-            }
-            else if (file.fileModification === "MODIFIED") {
-                fileElement.className = "file file-modified";
-            }
-            else if (file.fileModification === "DELETED") {
-                fileElement.className = "file file-deleted";
-            }
-            else {
-                fileElement.className = "file";
-            }
-            fileElement.appendChild(filePath);
-            var checkbox = document.createElement("input");
-            checkboxElement.style.margin = '5px';
-            checkbox.type = "checkbox";
-            checkbox.className = "checkbox";
-            checkboxElement.appendChild(checkbox);
-            document.getElementById("files-changed").appendChild(fileContainer);
-            fileElement.onclick = function () {
-                var doc = document.getElementById("diff-panel");
-                if (doc.style.width === '0px' || doc.style.width === '') {
-                    displayDiffPanel();
-                    document.getElementById("diff-panel-body").innerHTML = "";
-                    if (fileElement.className === "file file-created") {
-                        printNewFile(file.filePath);
-                    }
-                    else {
-                        printFileDiff(file.filePath);
-                    }
+            function displayModifiedFile(file) {
+                var fileContainer = document.createElement("div");
+                var filePath = document.createElement("p");
+                filePath.className = "file-path";
+                filePath.innerHTML = file.filePath;
+                var fileElement = document.createElement("div");
+                var checkboxElement = document.createElement("div");
+                fileContainer.appendChild(checkboxElement);
+                fileContainer.appendChild(fileElement);
+                fileContainer.style.display = 'flex';
+                if (file.fileModification === "NEW") {
+                    fileElement.className = "file file-created";
+                }
+                else if (file.fileModification === "MODIFIED") {
+                    fileElement.className = "file file-modified";
+                }
+                else if (file.fileModification === "DELETED") {
+                    fileElement.className = "file file-deleted";
                 }
                 else {
-                    hideDiffPanel();
+                    fileElement.className = "file";
                 }
-            };
+                fileElement.appendChild(filePath);
+                var checkbox = document.createElement("input");
+                checkboxElement.style.margin = '5px';
+                checkbox.type = "checkbox";
+                checkbox.className = "checkbox";
+                checkboxElement.appendChild(checkbox);
+                document.getElementById("files-changed").appendChild(fileContainer);
+                fileElement.onclick = function () {
+                    var doc = document.getElementById("diff-panel");
+                    if (doc.style.width === '0px' || doc.style.width === '') {
+                        displayDiffPanel();
+                        document.getElementById("diff-panel-body").innerHTML = "";
+                        if (fileElement.className === "file file-created") {
+                            printNewFile(file.filePath);
+                        }
+                        else {
+                            printFileDiff(file.filePath);
+                        }
+                    }
+                    else {
+                        hideDiffPanel();
+                    }
+                };
             }
             function printNewFile(filePath) {
-            var fileLocation = require("path").join(repoFullPath, filePath);
-            var lineReader = require("readline").createInterface({
-                input: fs.createReadStream(fileLocation)
-            });
-            lineReader.on("line", function (line) {
-                formatNewFileLine(line);
-            });
+                var fileLocation = require("path").join(repoFullPath, filePath);
+                var lineReader = require("readline").createInterface({
+                    input: fs.createReadStream(fileLocation)
+                });
+                lineReader.on("line", function (line) {
+                    formatNewFileLine(line);
+                });
             }
             function printFileDiff(filePath) {
-            repo.getHeadCommit().then(function (commit) {
-                getCurrentDiff(commit, filePath, function (line) {
-                    formatLine(line);
+                repo.getHeadCommit().then(function (commit) {
+                    getCurrentDiff(commit, filePath, function (line) {
+                        formatLine(line);
+                    });
                 });
-            });
             }
             function getCurrentDiff(commit, filePath, callback) {
-            commit.getTree().then(function (tree) {
-                Git.Diff.treeToWorkdir(repo, tree, null).then(function (diff) {
-                    diff.patches().then(function (patches) {
-                        patches.forEach(function (patch) {
-                            patch.hunks().then(function (hunks) {
-                                hunks.forEach(function (hunk) {
-                                    hunk.lines().then(function (lines) {
-                                        var oldFilePath = patch.oldFile().path();
-                                        var newFilePath = patch.newFile().path();
-                                        if (newFilePath === filePath) {
-                                            lines.forEach(function (line) {
-                                                callback(String.fromCharCode(line.origin()) + line.content());
-                                            });
-                                        }
+                commit.getTree().then(function (tree) {
+                    Git.Diff.treeToWorkdir(repo, tree, null).then(function (diff) {
+                        diff.patches().then(function (patches) {
+                            patches.forEach(function (patch) {
+                                patch.hunks().then(function (hunks) {
+                                    hunks.forEach(function (hunk) {
+                                        hunk.lines().then(function (lines) {
+                                            var oldFilePath = patch.oldFile().path();
+                                            var newFilePath = patch.newFile().path();
+                                            if (newFilePath === filePath) {
+                                                lines.forEach(function (line) {
+                                                    callback(String.fromCharCode(line.origin()) + line.content());
+                                                });
+                                            }
+                                        });
                                     });
                                 });
                             });
                         });
                     });
                 });
-            });
             }
             function formatLine(line) {
-            var element = document.createElement("div");
-            if (line.charAt(0) === "+") {
-                element.style.backgroundColor = "#84db00";
-                line = line.slice(1, line.length);
-            }
-            else if (line.charAt(0) === "-") {
-                element.style.backgroundColor = "#ff2448";
-                line = line.slice(1, line.length);
-            }
-            element.innerText = line;
-            document.getElementById("diff-panel-body").appendChild(element);
+                var element = document.createElement("div");
+                if (line.charAt(0) === "+") {
+                    element.style.backgroundColor = "#84db00";
+                    line = line.slice(1, line.length);
+                }
+                else if (line.charAt(0) === "-") {
+                    element.style.backgroundColor = "#ff2448";
+                    line = line.slice(1, line.length);
+                }
+                element.innerText = line;
+                document.getElementById("diff-panel-body").appendChild(element);
             }
             function formatNewFileLine(text) {
-            var element = document.createElement("div");
-            element.style.backgroundColor = green;
-            element.innerHTML = text;
-            document.getElementById("diff-panel-body").appendChild(element);
+                var element = document.createElement("div");
+                element.style.backgroundColor = green;
+                element.innerHTML = text;
+                document.getElementById("diff-panel-body").appendChild(element);
             }
         });
     }, function (err) {

@@ -499,7 +499,7 @@ function displayModifiedFiles() {
       }
 
       // Add the modified file to the left file panel
-      function displayModifiedFile(file)
+      function displayModifiedFile(file){
         let fileContainer = document.createElement("div");
         let filePath = document.createElement("p");
         filePath.className = "file-path";
