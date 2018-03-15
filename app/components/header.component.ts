@@ -40,9 +40,9 @@ import { GraphService } from "../services/graph.service";
             </li>
           </ul>
 
-          <ul class="navbar-nav col-md-4 hidden-xs">
-            <li><img src="./assets/Octopush.svg" class="nav push" style="cursor:pointer" onclick="pushToRemote()" title="Push"></li>
-            <li><img src="./assets/Octopull.svg" class="nav pull" style="cursor:pointer" onclick="pullFromRemote()" title="Pull"></li>
+          <ul class="nav navbar-nav col-md-4 hidden-xs">
+            <li><img src="./assets/Octopush.svg" class="push" style="cursor:pointer" onclick="pushToRemote()" title="Push"></li>
+            <li><img src="./assets/Octopull.svg" class="pull" style="cursor:pointer" onclick="pullFromRemote()" title="Pull"></li>
           </ul>
 
           <ul class="nav navbar-nav navbar-right hidden-xs">
