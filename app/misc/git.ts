@@ -500,11 +500,16 @@ function displayModifiedFiles() {
       }
 
       // Add the modified file to the left file panel
-      function displayModifiedFile(file) {
+      function displayModifiedFile(file){
+        let fileContainer = document.createElement("div");
         let filePath = document.createElement("p");
         filePath.className = "file-path";
         filePath.innerHTML = file.filePath;
         let fileElement = document.createElement("div");
+        let checkboxElement = document.createElement("div");
+        fileContainer.appendChild(checkboxElement);
+        fileContainer.appendChild(fileElement);
+        fileContainer.style.display='flex';
         // Set how the file has been modified
         if (file.fileModification === "NEW") {
           fileElement.className = "file file-created";
@@ -517,13 +522,14 @@ function displayModifiedFiles() {
         }
 
         fileElement.appendChild(filePath);
-
+        
         let checkbox = document.createElement("input");
+        checkboxElement.style.margin='5px';
         checkbox.type = "checkbox";
         checkbox.className = "checkbox";
-        fileElement.appendChild(checkbox);
+        checkboxElement.appendChild(checkbox);
 
-        document.getElementById("files-changed").appendChild(fileElement);
+        document.getElementById("files-changed").appendChild(fileContainer);
 
         fileElement.onclick = function() {
           let textEditorPanel = document.getElementById("text-editor-panel");
