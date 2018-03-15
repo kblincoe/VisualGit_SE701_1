@@ -271,6 +271,9 @@ body {
   background-color: #ff7514; }
 
 .file-deleted {
-  background-color: #ff2448; }
+  background-color: #ff2448;
+}
 
-/*# sourceMappingURL=styles.css.map */
+#repo-dropdown {
+  list-style-type: none;
+}

@@ -24,7 +24,7 @@ import { GraphService } from "../services/graph.service";
             </li>
             <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
             <li class="branch-name dropdown">
-              <a class="dropdown-toggle" id="branch-name" data-toggle="dropdown">
+              <a class="dropdown-toggle" id="branch-name" data-toggle="dropdown" style="cursor: pointer">
                 branch<span class="caret"></span>
               </a>
               <ul class="dropdown-menu" id="branch-dropdown" role="menu" aria-labelledby="branch-name">
@@ -45,20 +45,24 @@ import { GraphService } from "../services/graph.service";
             <li><img src="./assets/Octopull.svg" class="push" style="cursor:pointer" onclick="pullFromRemote()" title="Pull"></li>
           </ul>
 
-          <ul class="navbar-nav navbar-right hidden-xs">
+          <ul class="nav navbar-nav navbar-right hidden-xs">
             <li>
-              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="." onclick="window.location.reload()" aria-expanded="false" aria-controls="nav-collapse1">Sign in</a>
+              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="." onclick="signOut()" aria-expanded="false" aria-controls="nav-collapse1">Sign in</a>
             </li>
           </ul>
           <div class="collapse nav navbar-nav nav-collapse" id="nav-collapse1">
             <form class="navbar-form navbar-right form-inline" role="form">
               <div class="form-group">
                 <label class="sr-only" for="Email">User name</label>
-                <input type="text" class="form-control" id="Email1" placeholder="Email" autofocus required />
+                <input type="text" class="form-control" id="Email1" placeholder="Username/Email" autofocus required />
               </div>
               <div class="form-group">
                 <label class="sr-only" for="Password">Password</label>
                 <input type="password" class="form-control" id="Password1" placeholder="Password" required />
+              </div>
+              <div class="form-group">
+                  <label class="sr-only" for="tfa-code">2FA code</label>
+                  <input type="text" name="tfa-code" class="form-control" id="tfa-code" placeholder="2FA code (optional)" />
               </div>
               <button type="submit" class="btn btn-success" (click)="switchToMainPanel()">Sign in</button>
             </form>

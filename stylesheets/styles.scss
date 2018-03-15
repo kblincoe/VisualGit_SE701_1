@@ -125,6 +125,36 @@ body {
     border-bottom: 2px solid #181818;
   }
 
+  .navbar-burgundy {
+    background-color: #572219;
+    border-bottom: 2px solid #181818;
+
+    .navbar-nav > li > a {
+      color: #F4EDE9;
+    }
+
+  }
+
+  .navbar-blue {
+    background-color: #112D32;
+    border-bottom: 2px solid #181818;
+
+    .navbar-nav > li > a {
+      color: #fff;
+    }
+
+  }
+
+  .navbar-vintage {
+    background-color: #212617;
+    border-bottom: 2px solid #181818;
+
+    .navbar-nav > li > a {
+      color: #E9E7DA;
+    }
+
+  }
+
   .add-repository-button {
     position: relative;
     z-index: 2;
