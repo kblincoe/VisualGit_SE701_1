@@ -44,8 +44,7 @@ function downloadFunc(cloneURL, localPath) {
     refreshAll(repository);
   },
   function(err) {
-    updateModalText("Clone Failed - " + err);
-    console.error(err); // TODO show error on screen
+    displayErrorMessage("Clone Failed - " + err);
   });
 }
 
@@ -65,8 +64,7 @@ function openRepository() {
     updateModalText("Repository successfully opened");
   },
   function(err) {
-    updateModalText("Opening Failed - " + err);
-    console.error(err); // TODO show error on screen
+    displayErrorMessage("Opening Failed - " + err);
   });
 }
 
@@ -94,7 +92,7 @@ function refreshAll(repository) {
     let branchParts = reference.name().split("/");
     branch = branchParts[branchParts.length - 1];
   },function(err) {
-    console.error(err); // TODO show error on screen
+      displayErrorMessage("There was an issue with that operation - " + err);
   })
   .then(function() {
     return repository.getReferences(Git.Reference.TYPE.LISTALL);
@@ -117,7 +115,7 @@ function refreshAll(repository) {
           }
         }
       }, function(err) {
-        console.error(err);
+          displayErrorMessage("There was an issue with that operation - " + err);
       });
       if (branchList[i].isRemote()) {
         if (localBranches.indexOf(bp[bp.length - 1]) < 0) {
@@ -213,7 +211,6 @@ function displayBranch(name, id, onclick) {
 
 function checkoutLocalBranch(bn) {
     toggleCloseButton();
-    console.log(bn + ">>>>>>>>");
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
             addCommand("git checkout " + bn);
@@ -221,7 +218,7 @@ function checkoutLocalBranch(bn) {
                 .then(function () {
                     refreshAll(repo);
                 }, function (err) {
-                    console.log(err + "<<<<<<<");
+                    displayErrorMessage("Issue with checking out local branch - " + err);
                 });
         })
 }
@@ -236,22 +233,18 @@ function checkoutRemoteBranch(bn) {
         addCommand("git fetch");
         addCommand("git checkout -b " + bn);
         let cid = remoteName[bn];
-        console.log("2.0  " + cid);
         return Git.Commit.lookup(repo, cid);
       })
       .then(function (commit) {
-        console.log("3.0");
         return Git.Branch.create(repos, bn, commit, 0);
       })
       .then(function (code) {
-        console.log(bn + "PPPPPPP");
         repos.mergeBranches(bn, "origin/" + bn)
             .then(function () {
               refreshAll(repos);
-              console.log("Pull successful");
             });
         }, function (err) {
-        console.log(err);
+        displayErrorMessage("Issue with checking out remote branch - " + err);
       })
 }
 
@@ -295,10 +288,18 @@ function displayModal(text) {
 }
 
 function updateModalText(text) {
-  document.getElementById("modal-text-box").innerHTML = text;
-  document.getElementById("modal-text-box").style.wordWrap = 'break-word';
-  document.getElementById("modal-title").innerHTML  = "Info";
-  $('#modal').modal('show');
+    document.getElementById("modal-text-box").innerHTML = text;
+    document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+    document.getElementById("modal-title").innerHTML = "Info";
+    $('#modal').modal('show');
+}
+
+//Display error messages on screen
+function displayErrorMessage(errorMessage) {
+    document.getElementById("modal-title").innerHTML = "Error";
+    document.getElementById("modal-text-box").innerHTML = errorMessage;
+    document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+    $('#modal').modal('show');
 }
 
 function displayWarning(warningMessege){
