@@ -10,6 +10,7 @@ var readFile = require("fs-sync");
 var repoCurrentBranch = "master";
 var modal;
 var span;
+var modifiedFiles = 0;
 function downloadRepository() {
     var cloneURL = document.getElementById("repoClone").value;
     var localPath = document.getElementById("repoSave").value;
@@ -109,12 +110,12 @@ function refreshAll(repository) {
             });
             if (branchList[i].isRemote()) {
                 if (localBranches.indexOf(bp[bp.length - 1]) < 0) {
-                    displayBranch(bp[bp.length - 1], "branch-dropdown", "checkoutRemoteBranch(this)");
+                    displayBranch(bp[bp.length - 1], "branch-dropdown", "canChangeBranch(this,1)");
                 }
             }
             else {
                 localBranches.push(bp[bp.length - 1]);
-                displayBranch(bp[bp.length - 1], "branch-dropdown", "checkoutLocalBranch(this)");
+                displayBranch(bp[bp.length - 1], "branch-dropdown", "canChangeBranch(this,2)");
             }
         };
         for (var i = 0; i < branchList.length; i++) {
@@ -194,14 +195,9 @@ function displayBranch(name, id, onclick) {
     li.appendChild(a);
     ul.appendChild(li);
 }
-function checkoutLocalBranch(element) {
-    var bn;
-    if (typeof element === "string") {
-        bn = element;
-    }
-    else {
-        bn = element.innerHTML;
-    }
+function checkoutLocalBranch(bn) {
+    toggleCloseButton();
+    console.log(bn + ">>>>>>>>");
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
         addCommand("git checkout " + bn);
@@ -209,18 +205,13 @@ function checkoutLocalBranch(element) {
             .then(function () {
             refreshAll(repo);
         }, function (err) {
-            console.error(err);
+            console.log(err + "<<<<<<<");
         });
     });
 }
-function checkoutRemoteBranch(element) {
-    var bn;
-    if (typeof element === "string") {
-        bn = element;
-    }
-    else {
-        bn = element.innerHTML;
-    }
+function checkoutRemoteBranch(bn) {
+    toggleCloseButton();
+    console.log("1.0  " + bn);
     var repos;
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
@@ -228,18 +219,22 @@ function checkoutRemoteBranch(element) {
         addCommand("git fetch");
         addCommand("git checkout -b " + bn);
         var cid = remoteName[bn];
+        console.log("2.0  " + cid);
         return Git.Commit.lookup(repo, cid);
     })
         .then(function (commit) {
+        console.log("3.0");
         return Git.Branch.create(repos, bn, commit, 0);
     })
         .then(function (code) {
+        console.log(bn + "PPPPPPP");
         repos.mergeBranches(bn, "origin/" + bn)
             .then(function () {
             refreshAll(repos);
+            console.log("Pull successful");
         });
     }, function (err) {
-        console.error(err);
+        console.log(err);
     });
 }
 function updateLocalPath() {
@@ -252,10 +247,60 @@ function updateLocalPath() {
 function displayModal(text) {
     document.getElementById("modal-text-box").innerHTML = text;
     document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+    document.getElementById("modal-title").innerHTML = "Info";
     $('#modal').modal('show');
 }
 function updateModalText(text) {
     document.getElementById("modal-text-box").innerHTML = text;
     document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+    document.getElementById("modal-title").innerHTML = "Info";
     $('#modal').modal('show');
+}
+function displayWarning(warningMessege) {
+    $('#OK-button').removeClass('hide');
+    $('#cancel-button').removeClass('hide');
+    $('#close-button').addClass('hide');
+    document.getElementById("modal-title").innerHTML = "Warning";
+    document.getElementById("modal-text-box").innerHTML = warningMessege;
+    document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+    $('#modal').modal('show');
+}
+function checkForLocalChanges() {
+    modifiedFiles = $("#files-changed div").length;
+    if (modifiedFiles > 0) {
+        return true;
+    }
+    return false;
+}
+function toggleCloseButton() {
+    $('#OK-button').addClass('hide');
+    $('#cancel-button').addClass('hide');
+    $('#close-button').removeClass('hide');
+}
+function canChangeBranch(e, type) {
+    var bn;
+    if (typeof e === "string") {
+        bn = e;
+    }
+    else {
+        bn = e.innerHTML;
+    }
+    if (type == 1) {
+        $('#OK-button').attr("onclick", "checkoutRemoteBranch('" + bn + "')");
+    }
+    else if (type == 2) {
+        $('#OK-button').attr("onclick", "checkoutLocalBranch('" + bn + "')");
+    }
+    if (checkForLocalChanges()) {
+        displayWarning("Please commit or stash your changes before checking out");
+        return;
+    }
+    else {
+        if (type == 2) {
+            checkoutLocalBranch(e);
+        }
+        else if (type == 1) {
+            checkoutRemoteBranch(e);
+        }
+    }
 }
