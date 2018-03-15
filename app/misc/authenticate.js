@@ -56,8 +56,8 @@ function getUserInfo(callback) {
         else {
             for (var i = 0; i < data.length; i++) {
                 var rep = Object.values(data)[i];
-                displayBranch(rep['full_name'], "repo-dropdown", "selectRepo(this)");
-                repoList[rep['full_name']] = rep['html_url'];
+                displayBranch(rep['name'], "repo-dropdown", "selectRepo(this)");
+                repoList[rep['name']] = rep['html_url'];
             }
         }
     });

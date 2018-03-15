@@ -10,7 +10,6 @@ var green = "#84db00";
 var repo, index, oid, remote, commitMessage;
 var filesToAdd = [];
 var theirCommit = null;
-var modifiedFiles;
 function addAndCommit() {
     var repository;
     Git.Repository.open(repoFullPath)
@@ -136,12 +135,15 @@ function getAllCommits(callback) {
         });
     });
 }
-function pullFromRemote() {
+function pullFromRemote(e) {
     var repository;
-    var branch = document.getElementById("branch-name").innerText;
-    if (modifiedFiles.length > 0) {
-        updateModalText("Please commit your changes before pulling from remote!");
+    toggleCloseButton();
+    if (checkForLocalChanges() && e == null) {
+        $('#OK-button').attr("onclick", "pullFromRemote(this)");
+        displayWarning("Please stash or commit your changes before pulling");
+        return;
     }
+    var branch = document.getElementById("branch-name").innerText;
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
         repository = repo;
@@ -436,15 +438,10 @@ function displayModifiedFiles() {
                 }
             }
             function displayModifiedFile(file) {
-                var fileContainer = document.createElement("div");
                 var filePath = document.createElement("p");
                 filePath.className = "file-path";
                 filePath.innerHTML = file.filePath;
                 var fileElement = document.createElement("div");
-                var checkboxElement = document.createElement("div");
-                fileContainer.appendChild(checkboxElement);
-                fileContainer.appendChild(fileElement);
-                fileContainer.style.display = 'flex';
                 if (file.fileModification === "NEW") {
                     fileElement.className = "file file-created";
                 }
@@ -459,11 +456,10 @@ function displayModifiedFiles() {
                 }
                 fileElement.appendChild(filePath);
                 var checkbox = document.createElement("input");
-                checkboxElement.style.margin = '5px';
                 checkbox.type = "checkbox";
                 checkbox.className = "checkbox";
-                checkboxElement.appendChild(checkbox);
-                document.getElementById("files-changed").appendChild(fileContainer);
+                fileElement.appendChild(checkbox);
+                document.getElementById("files-changed").appendChild(fileElement);
                 fileElement.onclick = function () {
                     var doc = document.getElementById("diff-panel");
                     if (doc.style.width === '0px' || doc.style.width === '') {

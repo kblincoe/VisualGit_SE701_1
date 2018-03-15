@@ -11,7 +11,6 @@ let green = "#84db00";
 let repo, index, oid, remote, commitMessage;
 let filesToAdd = [];
 let theirCommit = null;
-let modifiedFiles;
 
 function addAndCommit() {
   let repository;
@@ -73,7 +72,6 @@ function addAndCommit() {
     theirCommit = null;
 
     hideDiffPanel();
-    hideTextEditorPanel();
     clearModifiedFilesList();
     clearCommitMessage();
     clearSelectAllCheckbox();
@@ -169,12 +167,15 @@ function getAllCommits(callback) {
     });
 }
 
-function pullFromRemote() {
+function pullFromRemote(e) {
   let repository;
-  let branch = document.getElementById("branch-name").innerText;
-  if (modifiedFiles.length > 0) {
-    updateModalText("Please commit your changes before pulling from remote!");
+  toggleCloseButton();
+  if(checkForLocalChanges() && e==null) {
+    $('#OK-button').attr("onclick", "pullFromRemote(this)");
+    displayWarning("Please stash or commit your changes before pulling");
+    return;
   }
+  let branch = document.getElementById("branch-name").innerText;
   Git.Repository.open(repoFullPath)
   .then(function(repo) {
     repository = repo;
@@ -500,16 +501,11 @@ function displayModifiedFiles() {
       }
 
       // Add the modified file to the left file panel
-      function displayModifiedFile(file){
-        let fileContainer = document.createElement("div");
+      function displayModifiedFile(file) {
         let filePath = document.createElement("p");
         filePath.className = "file-path";
         filePath.innerHTML = file.filePath;
         let fileElement = document.createElement("div");
-        let checkboxElement = document.createElement("div");
-        fileContainer.appendChild(checkboxElement);
-        fileContainer.appendChild(fileElement);
-        fileContainer.style.display='flex';
         // Set how the file has been modified
         if (file.fileModification === "NEW") {
           fileElement.className = "file file-created";
@@ -522,40 +518,27 @@ function displayModifiedFiles() {
         }
 
         fileElement.appendChild(filePath);
-        
+
         let checkbox = document.createElement("input");
-        checkboxElement.style.margin='5px';
         checkbox.type = "checkbox";
         checkbox.className = "checkbox";
-        checkboxElement.appendChild(checkbox);
+        fileElement.appendChild(checkbox);
 
-        document.getElementById("files-changed").appendChild(fileContainer);
+        document.getElementById("files-changed").appendChild(fileElement);
 
         fileElement.onclick = function() {
-          let textEditorPanel = document.getElementById("text-editor-panel");
-          let diffPanel = document.getElementById("diff-panel");
+          let doc = document.getElementById("diff-panel");
+          if (doc.style.width === '0px' || doc.style.width === '') {
+            displayDiffPanel();
+            document.getElementById("diff-panel-body").innerHTML = "";
 
-          console.log('diffPanel width = ' + diffPanel.style.width);
-          console.log('textEditorPanel width = ' + textEditorPanel.style.width);
-          
-          // if EDITOR NOT OPEN
-          if(textEditorPanel.style.width === '0px' || textEditorPanel.style.width === ''){
-            // if DIFF NOT OPEN
-            if (diffPanel.style.width === '0px' || diffPanel.style.width === '') {
-              // OPEN DIFF
-              displayDiffPanel();
-              document.getElementById("diff-panel-body").innerHTML = "";
-  
-              if (fileElement.className === "file file-created") {
-                printNewFile(file.filePath);
-              } else {
-                printFileDiff(file.filePath);
-              }
+            if (fileElement.className === "file file-created") {
+              printNewFile(file.filePath);
             } else {
-              hideDiffPanel();
+              printFileDiff(file.filePath);
             }
-          } else{
-            displayExitConfirmationDialog();
+          } else {
+            hideDiffPanel();
           }
         };
       }
