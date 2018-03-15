@@ -88,6 +88,8 @@ function doLogin(username: string, password: string, callback: Function) {
       storeEncryptedData(username, password);
       let doc = <HTMLElement>document.getElementById("avatar");
       doc.innerHTML = 'Sign out';
+      let usernameTitle = document.getElementById("usernameTitle");
+      usernameTitle.innerHTML = username;
       callback();
     }
   });
