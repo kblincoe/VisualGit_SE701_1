@@ -9,24 +9,22 @@ p, h1 {
   width: 100px; }
 
 .push, .pull {
-  margin: 2px;
-  padding: 0px 8px;
-  height: 48px; }
+    margin: 2px;
+    padding: 0px 8px;
+    height: 48px; }
 
 @media screen and (max-width: 767px) {
   .navbar .navbar-collapse .navbar-right > li:last-child {
     padding-left: 15px;
     padding-right: 15px; }
-
   .navbar .nav-collapse {
     margin: 7.5px auto;
     padding: 0; }
-
   .navbar .nav-collapse .navbar-form {
     margin: 0; }
-
   .nav-collapse > li {
     float: none; } }
+
 #branchOptions {
   position: absolute;
   display: none; }
@@ -167,6 +165,38 @@ body {
           font-family: monospace; }
       body .body-panel .diff-panel .diff-panel-minimise:hover {
         background-color: #404040; }
+    body .body-panel .text-editor-panel {
+      width: 0;
+      height: 100%;
+      float: left;
+      background-color: #282828; }
+      body .body-panel .text-editor-panel #text-editor-panel-title {
+        color: #ffffff;
+        margin-left: 10px;
+        margin-right: 10px; }
+      body .body-panel .text-editor-panel .editor-button {
+        display: inline-block;
+        margin-left: 8px;
+        margin-right: 8px;
+        margin-top: 6px;
+        margin-bottom: 8px;
+        height: 30px;
+        border-radius: 10px;
+        border: 0;
+        padding: 0 13px;
+        background-color: #39c0ba;
+        color: #fff; }
+      body .body-panel .text-editor-panel .editor-button:hover {
+        opacity: 0.8; }
+      body .body-panel .text-editor-panel .text-editor-panel-body {
+        visibility: hidden;
+        width: 100%;
+        height: 80vh;
+        float: left;
+        background-color: #282828;
+        color: #fff;
+        overflow-y: scroll;
+        outline: 1px solid #181818; }
     body .body-panel .graph-panel {
       width: 100%;
       float: right; }
