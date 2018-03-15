@@ -87,6 +87,7 @@ function addAndCommit() {
     console.log("Commit successful: " + oid.tostrS());
 
     hideDiffPanel();
+    hideTextEditorPanel();
     clearModifiedFilesList();
     clearCommitMessage();
     clearSelectAllCheckbox();
@@ -543,11 +544,16 @@ function displayModifiedFiles() {
       }
 
       // Add the modified file to the left file panel
-      function displayModifiedFile(file) {
+      function displayModifiedFile(file){
+        let fileContainer = document.createElement("div");
         let filePath = document.createElement("p");
         filePath.className = "file-path";
         filePath.innerHTML = file.filePath;
         let fileElement = document.createElement("div");
+        let checkboxElement = document.createElement("div");
+        fileContainer.appendChild(checkboxElement);
+        fileContainer.appendChild(fileElement);
+        fileContainer.style.display='flex';
         // Set how the file has been modified
         if (file.fileModification === "NEW") {
           fileElement.className = "file file-created";
@@ -560,32 +566,44 @@ function displayModifiedFiles() {
         }
 
         fileElement.appendChild(filePath);
-
+        
         let checkbox = document.createElement("input");
+        checkboxElement.style.margin='5px';
         checkbox.type = "checkbox";
         checkbox.className = "checkbox";
-        fileElement.appendChild(checkbox);
+        checkboxElement.appendChild(checkbox);
 
-        document.getElementById("files-changed").appendChild(fileElement);
-
+        document.getElementById("files-changed").appendChild(fileContainer);
         fileElement.onclick = function() {
-          let doc = document.getElementById("diff-panel");
-          console.log(doc.style.width + 'oooooo');
-          if (doc.style.width === '0px' || doc.style.width === '') {
-            displayDiffPanel();
-            document.getElementById("diff-panel-body").innerHTML = "";
 
-            if (fileElement.className === "file file-created") {
-              printNewFile(file.filePath);
+          let textEditorPanel = document.getElementById("text-editor-panel");
+          let diffPanel = document.getElementById("diff-panel");
+
+          console.log('diffPanel width = ' + diffPanel.style.width);
+          console.log('textEditorPanel width = ' + textEditorPanel.style.width);
+          
+          // if EDITOR NOT OPEN
+          if(textEditorPanel.style.width === '0px' || textEditorPanel.style.width === ''){
+            // if DIFF NOT OPEN
+            if (diffPanel.style.width === '0px' || diffPanel.style.width === '') {
+              // OPEN DIFF
+              displayDiffPanel();
+              document.getElementById("diff-panel-body").innerHTML = "";
+  
+              if (fileElement.className === "file file-created") {
+                printNewFile(file.filePath);
+              } else {
+                printFileDiff(file.filePath);
+              }
             } else {
-              printFileDiff(file.filePath)；
+              hideDiffPanel();
+
             }
-          } else {
-            hideDiffPanel();
+          } else{
+            displayExitConfirmationDialog();
           }
         };
       }
-
       function printNewFile(filePath) {
         let fileLocation = require("path").join(repoFullPath, filePath);
         let lineReader = require("readline").createInterface({

@@ -477,10 +477,15 @@ function displayModifiedFiles() {
                 }
             }
             function displayModifiedFile(file) {
+                var fileContainer = document.createElement("div");
                 var filePath = document.createElement("p");
                 filePath.className = "file-path";
                 filePath.innerHTML = file.filePath;
                 var fileElement = document.createElement("div");
+                var checkboxElement = document.createElement("div");
+                fileContainer.appendChild(checkboxElement);
+                fileContainer.appendChild(fileElement);
+                fileContainer.style.display = 'flex';
                 if (file.fileModification === "NEW") {
                     fileElement.className = "file file-created";
                 }
@@ -495,10 +500,11 @@ function displayModifiedFiles() {
                 }
                 fileElement.appendChild(filePath);
                 var checkbox = document.createElement("input");
+                checkboxElement.style.margin = '5px';
                 checkbox.type = "checkbox";
                 checkbox.className = "checkbox";
-                fileElement.appendChild(checkbox);
-                document.getElementById("files-changed").appendChild(fileElement);
+                checkboxElement.appendChild(checkbox);
+                document.getElementById("files-changed").appendChild(fileContainer);
                 fileElement.onclick = function () {
                     var doc = document.getElementById("diff-panel");
                     console.log(doc.style.width + 'oooooo');
