@@ -250,11 +250,13 @@ function updateLocalPath() {
 function displayModal(text) {
     document.getElementById("modal-text-box").innerHTML = text;
     document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+    document.getElementById("modal-title").innerHTML = "Info";
     $('#modal').modal('show');
 }
 function updateModalText(text) {
     document.getElementById("modal-text-box").innerHTML = text;
     document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+    document.getElementById("modal-title").innerHTML = "Info";
     $('#modal').modal('show');
 }
 function displayErrorMessage(errorMessage) {

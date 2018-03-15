@@ -291,14 +291,18 @@ function displayModal(text) {
 //  handleModal();
   document.getElementById("modal-text-box").innerHTML = text;
   document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+  document.getElementById("modal-title").innerHTML = "Info";
   $('#modal').modal('show');
 }
 
 function updateModalText(text) {
     document.getElementById("modal-text-box").innerHTML = text;
     document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+    document.getElementById("modal-title").innerHTML = "Info";
     $('#modal').modal('show');
 }
+
+//Display error messages on screen
 function displayErrorMessage(errorMessage) {
     document.getElementById("modal-title").innerHTML = "Error";
     document.getElementById("modal-text-box").innerHTML = errorMessage;
