@@ -180,16 +180,19 @@ body {
     float: left;
     z-index: 10;
 
-    .modified-files-header {
+    hr {
+      opacity: 0.5;
+      margin: 20px;
+    }
 
-      .select-all-message {
+    .files-header {
+
+      .section-heading {
         width: 77.5%;
         display: inline-block;
-        margin-left: 10px;
+        margin-left: 15px;
         vertical-align: middle;
-      }
-
-      .select-all-checkbox {
+        font-size: 20px;
 
       }
     }
@@ -210,8 +213,9 @@ body {
       // }
 
       .file {
-        width: 100% - 1;
+        width: 100% - 15;
         height: 10%;
+
         position: relative;
         overflow: hidden;
         border: 1px solid $white;
@@ -246,7 +250,7 @@ body {
       }
     }
 
-    .commit-panel {
+    .button-panel {
 
       .commit-message-input {
         resize: none;
@@ -261,11 +265,11 @@ body {
         padding: 5px;
       }
 
-      .commit-button {
+      .file-panel-button {
         display: block;
         margin-left: auto;
         margin-right: auto;
-        margin-top: 10px;
+        margin-top: 17px;
         margin-bottom: 10px;
         height: 30px;
         border-radius: 10px;
@@ -276,11 +280,15 @@ body {
         opacity: 1.0;
       }
 
-      .commit-button:disabled {
+      .file-panel-button:disabled {
         opacity: 0.3;
       }
 
-      .commit-button:hover:enabled {
+      .file-panel-button:hover:enabled {
+        width:28%;
+      }
+
+      .file-panel-button:hover {
         opacity: 0.8;
       }
 
