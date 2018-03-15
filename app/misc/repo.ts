@@ -43,8 +43,7 @@ function downloadFunc(cloneURL, localPath) {
     refreshAll(repository);
   },
   function(err) {
-    updateModalText("Clone Failed - " + err);
-    console.error(err); // TODO show error on screen
+    displayErrorMessage("Clone Failed - " + err);
   });
 }
 
@@ -64,8 +63,7 @@ function openRepository() {
     updateModalText("Repository successfully opened");
   },
   function(err) {
-    updateModalText("Opening Failed - " + err);
-    console.error(err); // TODO show error on screen
+    displayErrorMessage("Opening Failed - " + err);
   });
 }
 
@@ -93,7 +91,7 @@ function refreshAll(repository) {
     let branchParts = reference.name().split("/");
     branch = branchParts[branchParts.length - 1];
   },function(err) {
-    console.error(err); // TODO show error on screen
+      displayErrorMessage("There was an issue with that operation - " + err);
   })
   .then(function() {
     return repository.getReferences(Git.Reference.TYPE.LISTALL);
@@ -116,7 +114,7 @@ function refreshAll(repository) {
           }
         }
       }, function(err) {
-        console.error(err);
+          displayErrorMessage("There was an issue with that operation - " + err);
       });
       if (branchList[i].isRemote()) {
         if (localBranches.indexOf(bp[bp.length - 1]) < 0) {
@@ -224,7 +222,7 @@ function checkoutLocalBranch(element) {
     .then(function() {
       refreshAll(repo);
     }, function(err) {
-      console.error(err);
+        displayErrorMessage("Issue with checking out local branch - " + err);
     });
   })
 }
@@ -254,7 +252,7 @@ function checkoutRemoteBranch(element) {
         refreshAll(repos);
     });
   }, function(err) {
-    console.error(err);
+      displayErrorMessage("Issue with checking out remote branch - " + err);
   })
 }
 
@@ -297,7 +295,13 @@ function displayModal(text) {
 }
 
 function updateModalText(text) {
-  document.getElementById("modal-text-box").innerHTML = text;
-  document.getElementById("modal-text-box").style.wordWrap = 'break-word';
-  $('#modal').modal('show');
+    document.getElementById("modal-text-box").innerHTML = text;
+    document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+    $('#modal').modal('show');
+}
+function displayErrorMessage(errorMessage) {
+    document.getElementById("modal-title").innerHTML = "Error";
+    document.getElementById("modal-text-box").innerHTML = errorMessage;
+    document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+    $('#modal').modal('show');
 }
