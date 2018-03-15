@@ -123,8 +123,8 @@ function commitFiles() {
 
   .then(function(parent) {
     let sign;
-    if (username !== null && password !== null) {
-      sign = Git.Signature.now(username, password);
+    if (username !== null && email !== null) {
+      sign = Git.Signature.now(username, email);
     } else {
       sign = Git.Signature.default(repository);
     }

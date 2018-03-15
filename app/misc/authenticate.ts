@@ -2,6 +2,7 @@ let github = require("octonode");
 let opn = require("opn");
 let username;
 let password;
+let email;
 let aid, atoken;
 let client;
 let avatarImg;
@@ -85,6 +86,14 @@ function doLogin(username: string, password: string, callback: Function) {
     if (err) {
       displayModal(err);
     } else {
+      if (username.indexOf("@") > -1) {
+        email = username;
+      } else {
+        email = data['email']
+        if (email == null) {
+          email = data['login'] + "@github.com";
+        }
+      }
       avatarImg = Object.values(data)[2];
       clearStorage();
       storeEncryptedData(username, password);
