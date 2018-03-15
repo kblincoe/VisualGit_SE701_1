@@ -255,26 +255,54 @@ function pushToRemote() {
 function createBranch() {
   let branchName = document.getElementById("branchName").value;
   let repos;
+
   Git.Repository.open(repoFullPath)
-  .then(function(repo) {
-    // Create a new branch on head
-    repos = repo;
-    addCommand("git branch " + branchName);
-    return repo.getHeadCommit()
-    .then(function(commit) {
-      return repo.createBranch(
-        branchName,
-        commit,
-        0,
-        repo.defaultSignature(),
-        "Created new-branch on HEAD");
-    }, function(err) {
-      console.error(err);
+    .then(function (repo) {
+      // Create a new branch on head
+      repos = repo;
+      var flag = false;
+
+      repo.getReferenceNames(Git.Reference.TYPE.LISTALL)
+        .then(function (arrayReference) {
+          for (var i = 0; i < arrayReference.length; i++) {
+            var shortName = arrayReference[i].replace(/^.*[\\\/]/, '');
+            if (shortName === branchName) {
+              flag = true;
+            }            
+          }
+          
+          if (!flag) {
+            if (confirm("Would you like to make a branch called " + branchName + "?")) {
+              return true;
+            }
+          } else {
+            alert("There is an existing local/remote branch with the name " + branchName + ".");
+            return false;
+          }
+
+        })
+        .then(function (verdict) {
+          if (verdict) {
+            addCommand("git branch " + branchName);
+            return repo.getHeadCommit()
+              .then(function (commit) {
+                return repo.createBranch(
+                  branchName,
+                  commit,
+                  0,
+                  repo.defaultSignature(),
+                  "Created new-branch on HEAD");
+              }, function (err) {
+                console.error(err);
+              })
+              .then(function () {
+                refreshAll(repos);
+              });
+          }
+        });
     });
-  }).done(function() {
-    refreshAll(repos);
-  });
 }
+
 
 function mergeLocalBranches(element) {
   let bn = element.innerHTML;
