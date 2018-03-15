@@ -69,5 +69,9 @@ export class AuthenticateComponent implements AfterViewInit {
       let passwordField : HTMLInputElement = document.getElementById('password');
       passwordField.value = uncryptedData.toString(CryptoJS.enc.Utf8);
     }
+    let currColor = sessionStorage.getItem("currColor");
+    if (currColor != null) {
+      changeColor(currColor);
+    }
   }
 }
