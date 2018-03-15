@@ -56,6 +56,19 @@ function displayDiffPanel() {
   document.getElementById("diff-panel").style.width = "40%";
 }
 
+function displayTextEditorPanel() {
+  document.getElementById("graph-panel").style.width = "60%";
+  document.getElementById("text-editor-panel").style.width = "40%";
+  document.getElementById("text-editor-panel-body").style.visibility = "visible";
+
+}
+
+function hideTextEditorPanel() {
+  document.getElementById("text-editor-panel").style.width = "0";
+  document.getElementById("graph-panel").style.width = "100%";
+  document.getElementById("text-editor-panel-body").style.visibility = "hidden";
+}
+
 function hideDiffPanel() {
   document.getElementById("diff-panel").style.width = "0";
   document.getElementById("graph-panel").style.width = "100%";
