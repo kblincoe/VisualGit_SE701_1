@@ -16,7 +16,6 @@ function imageForUser(name, email, callback) {
     var pic;
     githubAvatarUrl(email, { token: 'foo' }, function (err, avatarURL) {
         if (!err) {
-            console.log(avatarURL);
             pic = avatarURL;
         }
         else {

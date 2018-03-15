@@ -10,7 +10,6 @@ var url;
 function signInHead(callback) {
     username = document.getElementById("Email1").value;
     password = document.getElementById("Password1").value;
-    console.log(username + '      ' + password);
     getUserInfo(callback);
 }
 function signInPage(callback) {
@@ -34,6 +33,8 @@ function getUserInfo(callback) {
         }
         else {
             avaterImg = Object.values(data)[2];
+            clearStorage();
+            storeEncryptedData();
             var doc = document.getElementById("avatar");
             doc.innerHTML = 'Sign out';
             callback();
@@ -44,10 +45,8 @@ function getUserInfo(callback) {
             return;
         }
         else {
-            console.log(data.length);
             for (var i = 0; i < data.length; i++) {
                 var rep = Object.values(data)[i];
-                console.log(rep['html_url']);
                 displayBranch(rep['name'], "repo-dropdown", "selectRepo(this)");
                 repoList[rep['name']] = rep['html_url'];
             }
@@ -59,11 +58,18 @@ function selectRepo(ele) {
     var butt = document.getElementById("cloneButton");
     butt.innerHTML = 'Clone ' + ele.innerHTML;
     butt.setAttribute('class', 'btn btn-primary');
-    console.log(url + 'JJJJJJJJ' + ele.innerHTML);
+}
+function storeEncryptedData() {
+    var randomUUID = generateUniqueSecret();
+    storeVariable('secret', randomUUID);
+    var encryptedUser = encryptValue(username);
+    storeUsername(encryptedUser);
+    var encryptedPassword = encryptValue(password);
+    storePassword(encryptedPassword);
 }
 function cloneRepo() {
     if (url === null) {
-        updateModalText("Ops! Error occors");
+        updateModalText("Please enter an URL!");
         return;
     }
     var splitText = url.split(/\.|:|\//);

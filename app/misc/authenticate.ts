@@ -11,7 +11,6 @@ let url;
 function signInHead(callback) {
   username = document.getElementById("Email1").value;
   password = document.getElementById("Password1").value;
-  console.log(username + '      ' + password);
   getUserInfo(callback);
 }
 
@@ -39,6 +38,8 @@ function getUserInfo(callback) {
       displayModal(err);
     } else {
       avaterImg = Object.values(data)[2]
+      clearStorage();
+      storeEncryptedData();
       // let doc = document.getElementById("avater");
       // doc.innerHTML = "";
       // var elem = document.createElement("img");
@@ -58,10 +59,8 @@ function getUserInfo(callback) {
     if (err) {
       return;
     } else {
-      console.log(data.length);
       for (let i = 0; i < data.length; i++) {
         let rep = Object.values(data)[i];
-        console.log(rep['html_url']);
         displayBranch(rep['name'], "repo-dropdown", "selectRepo(this)");
         repoList[rep['name']] = rep['html_url'];
       }
@@ -91,12 +90,20 @@ function selectRepo(ele) {
   let butt = document.getElementById("cloneButton");
   butt.innerHTML = 'Clone ' + ele.innerHTML;
   butt.setAttribute('class', 'btn btn-primary');
-  console.log(url + 'JJJJJJJJ' + ele.innerHTML);
+}
+
+function storeEncryptedData(){
+  let randomUUID = generateUniqueSecret();
+  storeVariable('secret', randomUUID);
+  let encryptedUser = encryptValue(username);
+  storeUsername(encryptedUser);
+  let encryptedPassword = encryptValue(password);
+  storePassword(encryptedPassword);
 }
 
 function cloneRepo() {
   if (url === null) {
-    updateModalText("Ops! Error occors");
+    updateModalText("Please enter an URL!");
     return;
   }
   let splitText = url.split(/\.|:|\//);
