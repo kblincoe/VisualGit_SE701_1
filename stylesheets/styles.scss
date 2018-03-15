@@ -14,6 +14,12 @@ p, h1 {
   width: 100px;
 }
 
+.push, .pull {
+  margin: 2px;
+  padding: 0px 8px;
+  height: 48px;
+}
+
 @media screen and (max-width: 767px) {
   .navbar .navbar-collapse .navbar-right > li:last-child {
     padding-left: 15px;
