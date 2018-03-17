@@ -1,4 +1,5 @@
 var github = require("octonode");
+var opn = require("opn");
 var username;
 var password;
 var aid, atoken;
@@ -9,13 +10,15 @@ var url;
 function signInHead(callback) {
     username = document.getElementById("Email1").value;
     password = document.getElementById("Password1").value;
-    console.log(username + '      ' + password);
     getUserInfo(callback);
 }
 function signInPage(callback) {
     username = document.getElementById("username").value;
     password = document.getElementById("password").value;
     getUserInfo(callback);
+}
+function openForgotPassword() {
+    opn('https://github.com/password_reset');
 }
 function getUserInfo(callback) {
     cred = Git.Cred.userpassPlaintextNew(username, password);
@@ -30,6 +33,17 @@ function getUserInfo(callback) {
         }
         else {
             avaterImg = Object.values(data)[2];
+            clearStorage();
+            storeEncryptedData();
+            // let doc = document.getElementById("avater");
+            // doc.innerHTML = "";
+            // var elem = document.createElement("img");
+            // elem.width = 40;
+            // elem.height = 40;
+            // elem.src = avaterImg;
+            // doc.appendChild(elem);
+            // doc = document.getElementById("log");
+            // doc.innerHTML = 'sign out';
             var doc = document.getElementById("avatar");
             doc.innerHTML = 'Sign out';
             callback();
@@ -40,26 +54,47 @@ function getUserInfo(callback) {
             return;
         }
         else {
-            console.log(data.length);
             for (var i = 0; i < data.length; i++) {
                 var rep = Object.values(data)[i];
-                console.log(rep['html_url']);
-                displayBranch(rep['name'], "repo-dropdown", "selectRepo(this)");
-                repoList[rep['name']] = rep['html_url'];
+                displayBranch(rep['full_name'], "repo-dropdown", "selectRepo(this)");
+                repoList[rep['full_name']] = rep['html_url'];
             }
         }
     });
+    // let scopes = {
+    //   'add_scopes': ['user', 'repo', 'gist'],
+    //   'note': 'admin script'
+    // };
+    //
+    // github.auth.config({
+    //   username: username,
+    //   password: password
+    // }).login(scopes, function (err, id, token) {
+    //   if (err !== null) {
+    //     console.log("login fail -- " + err);
+    //   }
+    //   aid = id;
+    //   atoken = token;
+    //   console.log(id, token);
+    // });
 }
 function selectRepo(ele) {
     url = repoList[ele.innerHTML];
     var butt = document.getElementById("cloneButton");
     butt.innerHTML = 'Clone ' + ele.innerHTML;
     butt.setAttribute('class', 'btn btn-primary');
-    console.log(url + 'JJJJJJJJ' + ele.innerHTML);
+}
+function storeEncryptedData() {
+    var randomUUID = generateUniqueSecret();
+    storeVariable('secret', randomUUID);
+    var encryptedUser = encryptValue(username);
+    storeUsername(encryptedUser);
+    var encryptedPassword = encryptValue(password);
+    storePassword(encryptedPassword);
 }
 function cloneRepo() {
     if (url === null) {
-        updateModalText("Ops! Error occors");
+        updateModalText("Please enter an URL!");
         return;
     }
     var splitText = url.split(/\.|:|\//);

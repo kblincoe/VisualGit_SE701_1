@@ -24,7 +24,7 @@ import { GraphService } from "../services/graph.service";
             </li>
             <li><img src="./assets/RightArrow.svg" class="right-arrow"></li>
             <li class="branch-name dropdown">
-              <a class="dropdown-toggle" id="branch-name" data-toggle="dropdown">
+              <a class="dropdown-toggle" id="branch-name" data-toggle="dropdown" style="cursor: pointer">
                 branch<span class="caret"></span>
               </a>
               <ul class="dropdown-menu" id="branch-dropdown" role="menu" aria-labelledby="branch-name">
@@ -40,25 +40,29 @@ import { GraphService } from "../services/graph.service";
             </li>
           </ul>
 
-          <ul class="navbar-nav col-md-4 hidden-xs">
+          <ul class="nav navbar-nav col-md-4 hidden-xs">
             <li class="upload"><i class="fa fa-cloud-upload fa-2x col-md-2" aria-hidden="true" style="color:white;cursor:pointer" onclick="pushToRemote()" title="Push"></i></li>
             <li class="download"><i class="fa fa-cloud-download fa-2x col-md-2" aria-hidden="true" style="color:white;cursor:pointer" onclick="pullFromRemote()" title="Pull"></i></li>
           </ul>
 
-          <ul class="navbar-nav navbar-right hidden-xs">
+          <ul class="nav navbar-nav navbar-right hidden-xs">
             <li>
-              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="." onclick="window.location.reload()" aria-expanded="false" aria-controls="nav-collapse1">Sign in</a>
+              <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="." onclick="signOut()" aria-expanded="false" aria-controls="nav-collapse1">Sign in</a>
             </li>
           </ul>
           <div class="collapse nav navbar-nav nav-collapse" id="nav-collapse1">
             <form class="navbar-form navbar-right form-inline" role="form">
               <div class="form-group">
                 <label class="sr-only" for="Email">User name</label>
-                <input type="text" class="form-control" id="Email1" placeholder="Email" autofocus required />
+                <input type="text" class="form-control" id="Email1" placeholder="Username/Email" autofocus required />
               </div>
               <div class="form-group">
                 <label class="sr-only" for="Password">Password</label>
                 <input type="password" class="form-control" id="Password1" placeholder="Password" required />
+              </div>
+              <div class="form-group">
+                  <label class="sr-only" for="tfa-code">2FA code</label>
+                  <input type="text" name="tfa-code" class="form-control" id="tfa-code" placeholder="2FA code (optional)" />
               </div>
               <button type="submit" class="btn btn-success" (click)="switchToMainPanel()">Sign in</button>
             </form>
@@ -109,7 +113,7 @@ import { GraphService } from "../services/graph.service";
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title">Info</h4>
+            <h4 class="modal-title" id="modal-title">Info</h4>
           </div>
           <div class="modal-body" id="modal-text-box">
             unset
@@ -120,6 +124,27 @@ import { GraphService } from "../services/graph.service";
         </div>
       </div>
     </div>
+
+    <div id="text-editor-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Warning</h4>
+          </div>
+          <div class="modal-body" id="modal-text-box">
+            Are you sure that you want to stop editing the file? All unsaved changes will be lost!
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="exit-edit-mode-button" class="btn btn-primary" onclick=hideTextEditorPanel() data-dismiss="modal">Yes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="repo-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
