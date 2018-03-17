@@ -36,6 +36,7 @@ function downloadFunc(cloneURL, localPath) {
         repoFullPath = fullLocalPath;
         repoLocalPath = localPath;
         refreshAll(repository);
+        isRepositoryLoaded = true;
     }, function (err) {
         displayErrorMessage("Clone Failed - " + err);
     });
@@ -47,11 +48,9 @@ function openRepository() {
     Git.Repository.open(fullLocalPath).then(function (repository) {
         repoFullPath = fullLocalPath;
         repoLocalPath = localPath;
-        if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
-            var tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
-        }
         refreshAll(repository);
         updateModalText("Repository successfully opened");
+        isRepositoryLoaded = true;
     }, function (err) {
         displayErrorMessage("Opening Failed - " + err);
     });
