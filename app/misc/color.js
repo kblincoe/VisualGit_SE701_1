@@ -78,7 +78,6 @@ function changeColor(color) {
     }
     else if (color === 'vintage') {
         for (var i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-vintage';
         }
         for (var i = 0; i < headButton.length; i++) {
@@ -110,7 +109,6 @@ function changeColor(color) {
     }
     else if (color === 'blue') {
         for (var i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-blue';
         }
         for (var i = 0; i < headButton.length; i++) {
@@ -142,7 +140,6 @@ function changeColor(color) {
     }
     else if (color === 'burgundy') {
         for (var i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-burgundy';
         }
         for (var i = 0; i < headButton.length; i++) {
@@ -172,4 +169,5 @@ function changeColor(color) {
         auth.style.backgroundColor = '#C9A2A3';
         before = 'burgundy';
     }
+    sessionStorage.setItem('currColor', color);
 }
