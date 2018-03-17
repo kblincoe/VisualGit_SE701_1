@@ -4,17 +4,29 @@ var username;
 var password;
 var aid, atoken;
 var client;
-var avaterImg;
+var avatarImg;
+var tfa;
 var repoList = {};
 var url;
+var fs = require("fs");
 function signInHead(callback) {
     username = document.getElementById("Email1").value;
     password = document.getElementById("Password1").value;
+    tfa = document.getElementById("tfa-code").value;
     getUserInfo(callback);
+}
+function signOut() {
+    username = null;
+    password = null;
+    aid = null;
+    atoken = null;
+    displayModal("You can revoke your Personal Access Token now");
+    setTimeout(function (e) { return window.location.reload(); }, 5000);
 }
 function signInPage(callback) {
     username = document.getElementById("username").value;
     password = document.getElementById("password").value;
+    tfa = document.getElementById("tfa-code").value;
     getUserInfo(callback);
 }
 function openForgotPassword() {
@@ -22,6 +34,37 @@ function openForgotPassword() {
 }
 function getUserInfo(callback) {
     cred = Git.Cred.userpassPlaintextNew(username, password);
+    var scopes = {
+        'scopes': ['user', 'repo', 'gist'],
+        'note': generateUniqueSecret()
+    };
+    if (tfa) {
+        getTFAToken(username, password, tfa, scopes).then(function (token) {
+            atoken = token;
+            doLogin(username, token, callback);
+        }, function (error) {
+            displayModal(error);
+        });
+    }
+    else {
+        doLogin(username, password, callback);
+    }
+}
+function getTFAToken(uname, pass, tfa, scopes) {
+    var config = {
+        username: uname,
+        password: pass,
+        otp: tfa
+    };
+    return new Promise((function (resolve, reject) {
+        github.auth.config(config).login(scopes, function (err, id, token, headers) {
+            if (err)
+                reject(err);
+            resolve(token);
+        });
+    }));
+}
+function doLogin(username, password, callback) {
     client = github.client({
         username: username,
         password: password
@@ -32,20 +75,15 @@ function getUserInfo(callback) {
             displayModal(err);
         }
         else {
-            avaterImg = Object.values(data)[2];
+            avatarImg = Object.values(data)[2];
             clearStorage();
-            storeEncryptedData();
-            // let doc = document.getElementById("avater");
-            // doc.innerHTML = "";
-            // var elem = document.createElement("img");
-            // elem.width = 40;
-            // elem.height = 40;
-            // elem.src = avaterImg;
-            // doc.appendChild(elem);
-            // doc = document.getElementById("log");
-            // doc.innerHTML = 'sign out';
+            storeEncryptedData(username, password);
             var doc = document.getElementById("avatar");
             doc.innerHTML = 'Sign out';
+            var usernameTitle = document.getElementById("usernameTitle");
+            if (username != "") {
+                usernameTitle.innerHTML = username;
+            }
             callback();
         }
     });
@@ -61,22 +99,6 @@ function getUserInfo(callback) {
             }
         }
     });
-    // let scopes = {
-    //   'add_scopes': ['user', 'repo', 'gist'],
-    //   'note': 'admin script'
-    // };
-    //
-    // github.auth.config({
-    //   username: username,
-    //   password: password
-    // }).login(scopes, function (err, id, token) {
-    //   if (err !== null) {
-    //     console.log("login fail -- " + err);
-    //   }
-    //   aid = id;
-    //   atoken = token;
-    //   console.log(id, token);
-    // });
 }
 function selectRepo(ele) {
     url = repoList[ele.innerHTML];
@@ -84,12 +106,12 @@ function selectRepo(ele) {
     butt.innerHTML = 'Clone ' + ele.innerHTML;
     butt.setAttribute('class', 'btn btn-primary');
 }
-function storeEncryptedData() {
+function storeEncryptedData(uname, pass) {
     var randomUUID = generateUniqueSecret();
     storeVariable('secret', randomUUID);
-    var encryptedUser = encryptValue(username);
+    var encryptedUser = encryptValue(uname);
     storeUsername(encryptedUser);
-    var encryptedPassword = encryptValue(password);
+    var encryptedPassword = encryptValue(pass);
     storePassword(encryptedPassword);
 }
 function cloneRepo() {
