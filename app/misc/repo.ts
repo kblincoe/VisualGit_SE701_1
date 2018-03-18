@@ -18,6 +18,11 @@ function downloadRepository() {
   let cloneURL = document.getElementById("repoClone").value;
   let localPath = document.getElementById("repoSave").value;
   let fullPath = document.getElementById("repoSaveLocation").files[0].path
+  let splitText = cloneURL.split(/\.|:|\//); 
+  let local;
+  local = splitText[splitText.length-2] + "/" + splitText[splitText.length - 1];
+  var ghrepo = getRepo(local);
+  getIssues(ghrepo);
   downloadFunc(cloneURL, localPath, fullPath);
 }
 
@@ -56,8 +61,18 @@ function openRepository() {
   let fullLocalPath = document.getElementById("repoOpen").files[0].path;
 
   displayModal("Opening Local Repository...");
-
   Git.Repository.open(fullLocalPath).then(function(repository) {
+    repository.getRemotes().then(function(remoteArray) {
+        repository.getRemote(remoteArray[0]).then(function(remote) {
+            let remoteUrl = remote.url();
+            let local;
+            let splitText = remoteUrl.split(/\.|:|\//); //split up the url by any '.', ':', '/' to get the words in the url
+            local = splitText[splitText.length-2] + "/" + splitText[splitText.length - 1];
+            var ghrepo = getRepo(local);
+            getIssues(ghrepo);
+        });
+    });
+
     repoFullPath = fullLocalPath;
     setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
     repoLocalPath = fullLocalPath.replace(/^.*[\\\/]/, '');
@@ -250,6 +265,7 @@ function displayBranch(name, id, onclick) {
   a.setAttribute("class", "list-group-item");
   a.setAttribute("onclick", onclick);
   li.setAttribute("role", "presentation")
+  li.setAttribute("id", name);
   a.appendChild(document.createTextNode(name));
   li.appendChild(a);
   ul.appendChild(li);

@@ -62,6 +62,9 @@ import { GraphService } from "../services/graph.service";
               <a id="usernameTitle"></a>
             </li>
             <li>
+              <a class="btn btn-default btn-outline btn-circle"  id="issuesButton" data-toggle="collapse" (click)="toggleIssuesPanel()" aria-expanded="false" aria-controls="nav-collapse1">Issues</a>
+            </li>
+            <li>
               <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="." onclick="signOut()" aria-expanded="false" aria-controls="nav-collapse1">Sign in</a>
             </li>
           </ul>
@@ -183,6 +186,7 @@ export class HeaderComponent   {
   repoName: string = "Repo name";
   repoBranch: string = "Repo branch";
   repository: any;
+  issueOpen: boolean = false;
 
   promptUserToAddRepository(): void {
     switchToAddRepositoryPanel();
@@ -190,5 +194,15 @@ export class HeaderComponent   {
 
   switchToMainPanel(): void {
     signInHead(collpaseSignPanel);
+  }
+
+  toggleIssuesPanel(): void {
+    if (!this.issueOpen) {
+      switchToIssuesPanel();
+      this.issueOpen = true;
+    } else {
+      switchFromIssuesPanel();
+      this.issueOpen = false;
+    }
   }
 }
