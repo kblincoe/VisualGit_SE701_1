@@ -211,6 +211,5 @@ function drawGraph() {
         else {
             toNode = undefined;
         }
-        console.log("toNode:  " + toNode);
     });
 }
