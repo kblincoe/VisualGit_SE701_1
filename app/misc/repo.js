@@ -13,10 +13,11 @@ var span;
 function downloadRepository() {
     var cloneURL = document.getElementById("repoClone").value;
     var localPath = document.getElementById("repoSave").value;
-    downloadFunc(cloneURL, localPath);
+    var fullPath = document.getElementById("repoSaveLocation").files[0].path;
+    downloadFunc(cloneURL, localPath, fullPath);
 }
-function downloadFunc(cloneURL, localPath) {
-    var fullLocalPath = require("path").join(__dirname, localPath);
+function downloadFunc(cloneURL, localPath, fullPath) {
+    var fullLocalPath = require("path").join(fullPath, localPath);
     var options = {};
     displayModal("Cloning Repository...");
     options = {
@@ -41,12 +42,11 @@ function downloadFunc(cloneURL, localPath) {
     });
 }
 function openRepository() {
-    var localPath = document.getElementById("repoOpen").value;
-    var fullLocalPath = require("path").join(__dirname, localPath);
+    var fullLocalPath = document.getElementById("repoOpen").files[0].path;
     displayModal("Opening Local Repository...");
     Git.Repository.open(fullLocalPath).then(function (repository) {
         repoFullPath = fullLocalPath;
-        repoLocalPath = localPath;
+        repoLocalPath = fullLocalPath.replace(/^.*[\\\/]/, '');
         if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
             var tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
         }
@@ -90,6 +90,7 @@ function refreshAll(repository) {
         var _loop_1 = function (i) {
             var bp = branchList[i].name().split("/");
             Git.Reference.nameToId(repository, branchList[i].name()).then(function (oid) {
+                // Use oid
                 if (branchList[i].isRemote()) {
                     remoteName[bp[bp.length - 1]] = oid;
                 }
@@ -140,6 +141,7 @@ function getAllBranches() {
                 displayBranch(bp[bp.length - 1], "branch-dropdown", "checkoutLocalBranch(this)");
             }
             Git.Reference.nameToId(repos, branchList[i]).then(function (oid) {
+                // Use oid
             });
         }
     });
@@ -247,7 +249,29 @@ function updateLocalPath() {
         document.getElementById("repoSave").value = splitText[splitText.length - 2];
     }
 }
+// function initModal() {
+//   modal = document.getElementById("modal");
+//   btn = document.getElementById("new-repo-button");
+//   confirmBtn = document.getElementById("confirm-button");
+//   span = document.getElementsByClassName("close")[0];
+// }
+// function handleModal() {
+//   // When the user clicks on <span> (x), close the modal
+//   span.onclick = function() {
+//     modal.style.display = "none";
+//   };
+//
+//   // When the user clicks anywhere outside of the modal, close it
+//   window.onclick = function(event) {
+//
+//     if (event.target === modal) {
+//       modal.style.display = "none";
+//     }
+//   };
+// }
 function displayModal(text) {
+    //  initModal();
+    //  handleModal();
     document.getElementById("modal-text-box").innerHTML = text;
     document.getElementById("modal-text-box").style.wordWrap = 'break-word';
     document.getElementById("modal-title").innerHTML = "Info";
@@ -259,6 +283,7 @@ function updateModalText(text) {
     document.getElementById("modal-title").innerHTML = "Info";
     $('#modal').modal('show');
 }
+//Display error messages on screen
 function displayErrorMessage(errorMessage) {
     document.getElementById("modal-title").innerHTML = "Error";
     document.getElementById("modal-text-box").innerHTML = errorMessage;
