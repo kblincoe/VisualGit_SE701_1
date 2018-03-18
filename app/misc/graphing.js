@@ -1,5 +1,5 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+
 var vis = require("vis");
 var github1 = require("octonode");
 var nodeId = 1;
@@ -290,7 +290,6 @@ function makeBasicNode(c, column) {
             id: id,
             name: name,
             email: email,
-            username: c.author().toString(),
             shape: "circularImage",
             title: title,
             image: img4User(name),
@@ -366,7 +365,6 @@ function makeAbsNode(c, column) {
             id: id,
             name: name,
             email: email,
-            username: c.author().toString(),
             shape: "circularImage",
             title: title,
             image: img4User(name),
@@ -425,7 +423,6 @@ function makeNode(c, column) {
         id: id,
         name: name,
         email: email,
-        username: c.author().toString(),
         shape: "circularImage",
         title: title,
         image: img4User(name),
@@ -468,7 +465,6 @@ function makeNode(c, column) {
         reference: reference,
         branch: flag
     });
-    //console.log(commitList[id-1]['id'] + '   ' + id);
 }
 function makeEdge(sha, parentSha) {
     var fromNode = getNodeId(parentSha.toString());
