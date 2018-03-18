@@ -65,6 +65,7 @@ function addAndCommit() {
         .then(function (oid) {
         theirCommit = null;
         hideDiffPanel();
+        hideTextEditorPanel();
         clearModifiedFilesList();
         clearCommitMessage();
         clearSelectAllCheckbox();
@@ -465,19 +466,27 @@ function displayModifiedFiles() {
                 checkboxElement.appendChild(checkbox);
                 document.getElementById("files-changed").appendChild(fileContainer);
                 fileElement.onclick = function () {
-                    var doc = document.getElementById("diff-panel");
-                    if (doc.style.width === '0px' || doc.style.width === '') {
-                        displayDiffPanel();
-                        document.getElementById("diff-panel-body").innerHTML = "";
-                        if (fileElement.className === "file file-created") {
-                            printNewFile(file.filePath);
+                    var textEditorPanel = document.getElementById("text-editor-panel");
+                    var diffPanel = document.getElementById("diff-panel");
+                    console.log('diffPanel width = ' + diffPanel.style.width);
+                    console.log('textEditorPanel width = ' + textEditorPanel.style.width);
+                    if (textEditorPanel.style.width === '0px' || textEditorPanel.style.width === '') {
+                        if (diffPanel.style.width === '0px' || diffPanel.style.width === '') {
+                            displayDiffPanel();
+                            document.getElementById("diff-panel-body").innerHTML = "";
+                            if (fileElement.className === "file file-created") {
+                                printNewFile(file.filePath);
+                            }
+                            else {
+                                printFileDiff(file.filePath);
+                            }
                         }
                         else {
-                            printFileDiff(file.filePath);
+                            hideDiffPanel();
                         }
                     }
                     else {
-                        hideDiffPanel();
+                        displayExitConfirmationDialog();
                     }
                 };
             }

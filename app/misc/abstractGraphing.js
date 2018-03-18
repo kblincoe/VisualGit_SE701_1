@@ -9,7 +9,6 @@ function populateAbstract() {
     parentCount = {};
     columns = [];
     for (var i = 0; i < commitHistory.length; i++) {
-        console.log(i + " / " + commitHistory.length);
         var parents = commitHistory[i].parents();
         var nodeColumn = void 0;
         for (var j = 0; j < parents.length; j++) {

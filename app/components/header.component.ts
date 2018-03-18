@@ -38,14 +38,27 @@ import { GraphService } from "../services/graph.service";
                 </li>
               </ul>
             </li>
+            <li class="color-name dropdown">       
+              <button class="btn btn-inverse dropdown-toggle btn-sm navbar-btn" id="color-name" data-toggle="dropdown">
+            color
+            <span class="caret"></span>
+          </button>
+            <ul class="dropdown-menu" id="color-dropdown" role="menu" aria-labelledby="color-name">
+              <li class="white" onclick="changeColor('white')">white</li>
+              <li class="vintage" onclick="changeColor('vintage')">vintage</li>
+              <li class="blue" onclick="changeColor('blue')">blue</li>
+              <li class="burgundy" onclick="changeColor('burgundy')">burgundy</li>
+              <li class="default" onclick="changeColor('default')">default</li>
+            </ul>
           </ul>
 
-          <ul class="nav navbar-nav col-md-4 hidden-xs">
+          <ul class=" navbar-nav col-md-4 hidden-xs">
             <li class="upload"><i class="fa fa-cloud-upload fa-2x col-md-2" aria-hidden="true" style="color:white;cursor:pointer" onclick="pushToRemote()" title="Push"></i></li>
             <li class="download"><i class="fa fa-cloud-download fa-2x col-md-2" aria-hidden="true" style="color:white;cursor:pointer" onclick="pullFromRemote()" title="Pull"></i></li>
           </ul>
 
-          <ul class="nav navbar-nav navbar-right hidden-xs">
+          <ul class=" navbar-nav navbar-right hidden-xs">
+
             <li>
               <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="." onclick="signOut()" aria-expanded="false" aria-controls="nav-collapse1">Sign in</a>
             </li>
