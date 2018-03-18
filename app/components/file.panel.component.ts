@@ -17,11 +17,11 @@ import { StashPanelComponent } from "./stash.panel.component";
       <div class="file" *ngFor="let file of files">
         <p>{{file}}</p>
       </div>
-    </div>
 
-    <div class="commit-panel" id="commit-panel">
-      <textarea placeholder="Describe your changes here..." class="commit-message-input" id="commit-message-input"></textarea>
-      <button class="commit-button" id="commit-button" disabled>Commit</button>
+      <div class="commit-panel" id="commit-panel">
+        <textarea placeholder="Describe your changes here..." class="commit-message-input" id="commit-message-input"></textarea>
+        <button class="commit-button" id="commit-button">Commit</button>
+      </div>
     </div>
   </div>
 

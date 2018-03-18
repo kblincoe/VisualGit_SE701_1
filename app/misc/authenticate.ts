@@ -9,6 +9,7 @@ let tfa;
 let repoList = {};
 let url;
 let fs = require("fs");
+let repoPath;
 
 function signInHead(callback) {
   username = (<HTMLInputElement>document.getElementById("Email1")).value;
@@ -78,6 +79,7 @@ function doLogin(username: string, password: string, callback: Function) {
     username: username,
     password: password
   });
+  setClient(client);
   var ghme = client.me();
   ghme.info(function(err, data, head) {
     if (err) {
@@ -112,6 +114,7 @@ function doLogin(username: string, password: string, callback: Function) {
 
 function selectRepo(ele) {
   url = repoList[ele.innerHTML];
+  repoPath = ele.innerHTML
   let butt = <HTMLElement>document.getElementById("cloneButton");
   butt.innerHTML = 'Clone ' + ele.innerHTML;
   butt.setAttribute('class', 'btn btn-primary');
@@ -139,6 +142,14 @@ function cloneRepo() {
     local = splitText[splitText.length - 1];
   }
   downloadFunc(url, local, fullPath);
+  var ghrepo = getRepo(repoPath);
+  getIssues(ghrepo);
+
   url = null;
   $('#repo-modal').modal('hide');
+}
+
+function getRepo(openRepo) {
+  var ghrepo = client.repo(openRepo);
+  return ghrepo;
 }
