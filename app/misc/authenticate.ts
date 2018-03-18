@@ -127,12 +127,13 @@ function cloneRepo() {
     updateModalText("Please enter an URL!");
     return;
   }
+  let fullPath = document.getElementById("repoCloneLocation").files[0].path
   let splitText = url.split(/\.|:|\//);
   let local;
   if (splitText.length >= 2) {
     local = splitText[splitText.length - 1];
   }
-  downloadFunc(url, local);
+  downloadFunc(url, local, fullPath);
   url = null;
   $('#repo-modal').modal('hide');
 }

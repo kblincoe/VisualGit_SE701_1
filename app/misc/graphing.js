@@ -1,5 +1,4 @@
 "use strict";
-
 var vis = require("vis");
 var github1 = require("octonode");
 var nodeId = 1;
