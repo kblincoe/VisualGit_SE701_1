@@ -80,6 +80,10 @@ function doLogin(username, password, callback) {
             storeEncryptedData(username, password);
             var doc = document.getElementById("avatar");
             doc.innerHTML = 'Sign out';
+            var usernameTitle = document.getElementById("usernameTitle");
+            if (username != "") {
+                usernameTitle.innerHTML = username;
+            }
             callback();
         }
     });
