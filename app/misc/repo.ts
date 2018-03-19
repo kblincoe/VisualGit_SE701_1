@@ -228,24 +228,24 @@ function checkoutRemoteBranch(bn) {
   console.log("1.0  " + bn);
   let repos;
   Git.Repository.open(repoFullPath)
-      .then(function (repo) {
-        repos = repo;
-        addCommand("git fetch");
-        addCommand("git checkout -b " + bn);
-        let cid = remoteName[bn];
-        return Git.Commit.lookup(repo, cid);
-      })
-      .then(function (commit) {
-        return Git.Branch.create(repos, bn, commit, 0);
-      })
-      .then(function (code) {
-        repos.mergeBranches(bn, "origin/" + bn)
-            .then(function () {
-              refreshAll(repos);
-            });
-        }, function (err) {
-          displayErrorMessage("Issue with checking out remote branch - " + err);
-      })
+  .then(function(repo) {
+    repos = repo;
+    addCommand("git fetch");
+    addCommand("git checkout -b " + bn);
+    let cid = remoteName[bn];
+    return Git.Commit.lookup(repo, cid);
+  })
+  .then(function(commit) {
+    return Git.Branch.create(repos, bn, commit, 0);
+  })
+  .then(function(code) {
+    repos.mergeBranches(bn, "origin/" + bn)
+    .then(function() {
+        refreshAll(repos);
+    });
+  }, function(err) {
+      displayErrorMessage("Issue with checking out remote branch - " + err);
+  })
 }
 
 function updateLocalPath() {
