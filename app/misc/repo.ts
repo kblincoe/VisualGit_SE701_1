@@ -1,5 +1,7 @@
 let Git = require("nodegit");
 let $ = require('jQuery');
+let chokidar = require("chokidar")
+let path = require("path")
 let repoFullPath;
 let repoLocalPath;
 let bname = {};
@@ -42,6 +44,7 @@ function downloadFunc(cloneURL, localPath, fullPath) {
     addCommand("git clone " + cloneURL + " " + localPath);
     repoFullPath = fullLocalPath;
     repoLocalPath = localPath;
+    setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
     refreshAll(repository);
   },
   function(err) {
@@ -56,6 +59,7 @@ function openRepository() {
 
   Git.Repository.open(fullLocalPath).then(function(repository) {
     repoFullPath = fullLocalPath;
+    setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
     repoLocalPath = fullLocalPath.replace(/^.*[\\\/]/, '');
     if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
       let tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
@@ -65,6 +69,33 @@ function openRepository() {
   },
   function(err) {
     displayErrorMessage("Opening Failed - " + err);
+  });
+}
+
+// Sets up a watcher for the local git repo directory
+// that notifies when a file gets deleted.
+// When it detects that an untracked file gets deleted,
+// it also removes it from within the VisualGit file view.
+function setupWatcher(repoFullPath) {
+  let watcher = chokidar.watch(repoFullPath, {ignored: [repoFullPath + "\\.git"], persistent: true});
+  watcher
+  .on('unlink', function(deletedPath) {
+    let neutralDeletedPath = deletedPath.replace(/[\/\\]/g, " "); // Remove "\" or "/" from pathname to be os independent
+    console.log("DELETED PATH IS " + neutralDeletedPath);
+    let filePanel = document.getElementById("files-changed");
+    let childNodes = filePanel.childNodes;
+    let filePaths = document.getElementsByClassName("file-path");
+    for (let i = 0; i < filePaths.length; i++) { // Matches the deleted file name to the file component and remove it
+
+      let subPath = filePaths[i].innerHTML;
+      subPath = subPath.replace(/[\/\\]/g, " "); // Remove "\" or "/" from pathname to be os independent
+      console.log("SUBPATH IS " + subPath);
+      if (neutralDeletedPath.indexOf(subPath) !== -1) {
+        let fileElement = filePaths[i].parentNode;
+        filePanel.removeChild(fileElement.parentNode);
+        return;
+      }
+    }
   });
 }
 
@@ -228,24 +259,24 @@ function checkoutRemoteBranch(bn) {
   console.log("1.0  " + bn);
   let repos;
   Git.Repository.open(repoFullPath)
-      .then(function (repo) {
-        repos = repo;
-        addCommand("git fetch");
-        addCommand("git checkout -b " + bn);
-        let cid = remoteName[bn];
-        return Git.Commit.lookup(repo, cid);
-      })
-      .then(function (commit) {
-        return Git.Branch.create(repos, bn, commit, 0);
-      })
-      .then(function (code) {
-        repos.mergeBranches(bn, "origin/" + bn)
-            .then(function () {
-              refreshAll(repos);
-            });
-        }, function (err) {
-          displayErrorMessage("Issue with checking out remote branch - " + err);
-      })
+  .then(function(repo) {
+    repos = repo;
+    addCommand("git fetch");
+    addCommand("git checkout -b " + bn);
+    let cid = remoteName[bn];
+    return Git.Commit.lookup(repo, cid);
+  })
+  .then(function(commit) {
+    return Git.Branch.create(repos, bn, commit, 0);
+  })
+  .then(function(code) {
+    repos.mergeBranches(bn, "origin/" + bn)
+    .then(function() {
+        refreshAll(repos);
+    });
+  }, function(err) {
+      displayErrorMessage("Issue with checking out remote branch - " + err);
+  })
 }
 
 function updateLocalPath() {

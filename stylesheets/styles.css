@@ -17,13 +17,13 @@ p, h1 {
   .navbar .navbar-collapse .navbar-right > li:last-child {
     padding-left: 15px;
     padding-right: 15px; }
-
   .navbar .nav-collapse {
     margin: 7.5px auto;
     padding: 0; }
-
   .navbar .nav-collapse .navbar-form {
     margin: 0; }
+  .nav-collapse > li {
+    float: none; } }
 
   .nav-collapse > li {
     float: none; } }
@@ -263,7 +263,7 @@ body {
       margin: 15px 30px;
       border-radius: 10px;
       border: 0;
-      height: 10px;
+      height: 30px;
       padding: 10px; }
     body .add-repository-panel .button-clone, body .add-repository-panel .button-open {
       display: inline-block;
@@ -318,7 +318,9 @@ body {
   background-color: #ff7514; }
 
 .file-deleted {
-  background-color: #ff2448; }
+  background-color: #ff2448;
+}
 
 #repo-dropdown {
-  list-style-type: none; }
+  list-style-type: none;
+}

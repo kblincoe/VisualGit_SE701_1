@@ -83,7 +83,7 @@ function addAndCommit() {
     refreshAll(repository);
   }, function(err) {
     console.error(err);
-    updateModalText("Oops, error occours! If u haven't login, please login and try again.");
+    updateModalText("Please sign in before committing!");
   });
 }
 
@@ -270,8 +270,9 @@ function createBranch() {
             var shortName = arrayReference[i].replace(/^.*[\\\/]/, '');
             if (shortName === branchName) {
               flag = true;
-            }
+            }            
           }
+          
 
           if (!flag) {
             if (confirm("Would you like to make a branch called " + branchName + "?")) {
@@ -552,7 +553,7 @@ function displayModifiedFiles() {
         }
 
         fileElement.appendChild(filePath);
-
+        
         let checkbox = document.createElement("input");
         checkboxElement.style.margin='5px';
         checkbox.type = "checkbox";
@@ -567,7 +568,7 @@ function displayModifiedFiles() {
 
           console.log('diffPanel width = ' + diffPanel.style.width);
           console.log('textEditorPanel width = ' + textEditorPanel.style.width);
-
+          
           // if EDITOR NOT OPEN
           if(textEditorPanel.style.width === '0px' || textEditorPanel.style.width === ''){
             // if DIFF NOT OPEN

@@ -103,8 +103,8 @@ import { GraphService } from "../services/graph.service";
               <ul class="dropdown-menu" id="merge-dropdown" role="menu" >
               </ul>
             </li>
-            <li class="upload" onclick="pushToRemote()"><a href="#">&nbsp;&nbsp;pull</a></li>
-            <li class="download"onclick="pullFromRemote()"><a href="#">&nbsp;&nbsp;push</a></li>
+            <li class="upload" onclick="pullFromRemote()"><a href="#">&nbsp;&nbsp;pull</a></li>
+            <li class="download"onclick="pushToRemote()"><a href="#">&nbsp;&nbsp;push</a></li>
           </ul>
         </div>
       </div>
@@ -145,11 +145,11 @@ import { GraphService } from "../services/graph.service";
           <div class="modal-footer">
             <button type="button" id="exit-edit-mode-button" class="btn btn-primary" onclick=hideTextEditorPanel() data-dismiss="modal">Yes</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+
           </div>
         </div>
       </div>
     </div>
-
     <div id="repo-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
