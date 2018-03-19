@@ -273,6 +273,7 @@ function createBranch() {
             }            
           }
           
+
           if (!flag) {
             if (confirm("Would you like to make a branch called " + branchName + "?")) {
               return true;
@@ -575,7 +576,7 @@ function displayModifiedFiles() {
               // OPEN DIFF
               displayDiffPanel();
               document.getElementById("diff-panel-body").innerHTML = "";
-  
+
               if (fileElement.className === "file file-created") {
                 printNewFile(file.filePath);
               } else {

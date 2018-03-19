@@ -8,6 +8,11 @@ p, h1 {
 #Password1 {
   width: 100px; }
 
+.push, .pull {
+  margin: 2px;
+  padding: 0px 8px;
+  height: 48px; }
+
 @media screen and (max-width: 767px) {
   .navbar .navbar-collapse .navbar-right > li:last-child {
     padding-left: 15px;
@@ -20,6 +25,8 @@ p, h1 {
   .nav-collapse > li {
     float: none; } }
 
+  .nav-collapse > li {
+    float: none; } }
 #branchOptions {
   position: absolute;
   display: none; }
@@ -76,6 +83,21 @@ body {
   body .navbar-white {
     background-color: #E3E3E3;
     border-bottom: 2px solid #181818; }
+  body .navbar-burgundy {
+    background-color: #572219;
+    border-bottom: 2px solid #181818; }
+    body .navbar-burgundy .navbar-nav > li > a {
+      color: #F4EDE9; }
+  body .navbar-blue {
+    background-color: #112D32;
+    border-bottom: 2px solid #181818; }
+    body .navbar-blue .navbar-nav > li > a {
+      color: #fff; }
+  body .navbar-vintage {
+    background-color: #212617;
+    border-bottom: 2px solid #181818; }
+    body .navbar-vintage .navbar-nav > li > a {
+      color: #E9E7DA; }
   body .add-repository-button {
     position: relative;
     z-index: 2; }
