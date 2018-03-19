@@ -1,5 +1,7 @@
 var Git = require("nodegit");
 var $ = require('jQuery');
+var chokidar = require("chokidar");
+var path = require("path");
 var repoFullPath;
 var repoLocalPath;
 var bname = {};
@@ -37,6 +39,7 @@ function downloadFunc(cloneURL, localPath, fullPath) {
         addCommand("git clone " + cloneURL + " " + localPath);
         repoFullPath = fullLocalPath;
         repoLocalPath = localPath;
+        setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
         refreshAll(repository);
     }, function (err) {
         displayErrorMessage("Clone Failed - " + err);
@@ -47,6 +50,7 @@ function openRepository() {
     displayModal("Opening Local Repository...");
     Git.Repository.open(fullLocalPath).then(function (repository) {
         repoFullPath = fullLocalPath;
+        setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
         repoLocalPath = fullLocalPath.replace(/^.*[\\\/]/, '');
         if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
             var tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
@@ -55,6 +59,31 @@ function openRepository() {
         updateModalText("Repository successfully opened");
     }, function (err) {
         displayErrorMessage("Opening Failed - " + err);
+    });
+}
+// Sets up a watcher for the local git repo directory
+// that notifies when a file gets deleted.
+// When it detects that an untracked file gets deleted,
+// it also removes it from within the VisualGit file view.
+function setupWatcher(repoFullPath) {
+    var watcher = chokidar.watch(repoFullPath, { ignored: [repoFullPath + "\\.git"], persistent: true });
+    watcher
+        .on('unlink', function (deletedPath) {
+        var neutralDeletedPath = deletedPath.replace(/[\/\\]/g, " "); // Remove "\" or "/" from pathname to be os independent
+        console.log("DELETED PATH IS " + neutralDeletedPath);
+        var filePanel = document.getElementById("files-changed");
+        var childNodes = filePanel.childNodes;
+        var filePaths = document.getElementsByClassName("file-path");
+        for (var i = 0; i < filePaths.length; i++) {
+            var subPath = filePaths[i].innerHTML;
+            subPath = subPath.replace(/[\/\\]/g, " "); // Remove "\" or "/" from pathname to be os independent
+            console.log("SUBPATH IS " + subPath);
+            if (neutralDeletedPath.indexOf(subPath) !== -1) {
+                var fileElement = filePaths[i].parentNode;
+                filePanel.removeChild(fileElement.parentNode);
+                return;
+            }
+        }
     });
 }
 function addBranchestoNode(thisB) {
