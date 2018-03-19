@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var opn = require('opn');
 var $ = require("jquery");
 var Git = require("nodegit");
@@ -10,7 +8,6 @@ var green = "#84db00";
 var repo, index, oid, remote, commitMessage;
 var filesToAdd = [];
 var theirCommit = null;
-var modifiedFiles;
 function addAndCommit() {
     var repository;
     Git.Repository.open(repoFullPath)
@@ -65,6 +62,7 @@ function addAndCommit() {
         .then(function (oid) {
         theirCommit = null;
         hideDiffPanel();
+        hideTextEditorPanel();
         clearModifiedFilesList();
         clearCommitMessage();
         clearSelectAllCheckbox();
@@ -78,6 +76,7 @@ function addAndCommit() {
         updateModalText("Please sign in before committing!");
     });
 }
+// Clear all modified files from the left file panel
 function clearModifiedFilesList() {
     var filePanel = document.getElementById("files-changed");
     while (filePanel.firstChild) {
@@ -96,6 +95,19 @@ function clearSelectAllCheckbox() {
     document.getElementById('select-all-checkbox').checked = false;
 }
 function getAllCommits(callback) {
+    // Git.Repository.open(repoFullPath)
+    // .then(function(repo) {
+    //   return repo.getHeadCommit();
+    // })
+    // .then(function(firstCommitOnMaster){
+    //   let history = firstCommitOnMaster.history(Git.Revwalk.SORT.Time);
+    //
+    //   history.on("end", function(commits) {
+    //     callback(commits);
+    //   });
+    //
+    //   history.start();
+    // });
     var repos;
     var allCommits = [];
     var aclist = [];
@@ -136,12 +148,15 @@ function getAllCommits(callback) {
         });
     });
 }
-function pullFromRemote() {
+function pullFromRemote(e) {
     var repository;
-    var branch = document.getElementById("branch-name").innerText;
-    if (modifiedFiles.length > 0) {
-        updateModalText("Please commit your changes before pulling from remote!");
+    toggleCloseButton();
+    if (checkForLocalChanges() && e == null) {
+        $('#OK-button').attr("onclick", "pullFromRemote(this)");
+        displayWarning("Please stash or commit your changes before pulling");
+        return;
     }
+    var branch = document.getElementById("branch-name").innerText;
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
         repository = repo;
@@ -168,7 +183,7 @@ function pullFromRemote() {
     })
         .then(function (annotated) {
         Git.Merge.merge(repository, annotated, null, {
-            checkoutStrategy: Git.Checkout.STRATEGY.FORCE,
+            checkoutStrategy: Git.Checkout.STRATEGY.FORCE
         });
         theirCommit = annotated;
     })
@@ -182,6 +197,9 @@ function pullFromRemote() {
             refreshAll(repository);
         }
     });
+    //   .then(function(updatedRepository) {
+    //     refreshAll(updatedRepository);
+    // });
 }
 function pushToRemote() {
     var branch = document.getElementById("branch-name").innerText;
@@ -213,16 +231,41 @@ function createBranch() {
     var repos;
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
+        // Create a new branch on head
         repos = repo;
-        addCommand("git branch " + branchName);
-        return repo.getHeadCommit()
-            .then(function (commit) {
-            return repo.createBranch(branchName, commit, 0, repo.defaultSignature(), "Created new-branch on HEAD");
-        }, function (err) {
-            console.error(err);
+        var flag = false;
+        repo.getReferenceNames(Git.Reference.TYPE.LISTALL)
+            .then(function (arrayReference) {
+            for (var i = 0; i < arrayReference.length; i++) {
+                var shortName = arrayReference[i].replace(/^.*[\\\/]/, '');
+                if (shortName === branchName) {
+                    flag = true;
+                }
+            }
+            if (!flag) {
+                if (confirm("Would you like to make a branch called " + branchName + "?")) {
+                    return true;
+                }
+            }
+            else {
+                alert("There is an existing local/remote branch with the name " + branchName + ".");
+                return false;
+            }
+        })
+            .then(function (verdict) {
+            if (verdict) {
+                addCommand("git branch " + branchName);
+                return repo.getHeadCommit()
+                    .then(function (commit) {
+                    return repo.createBranch(branchName, commit, 0, repo.defaultSignature(), "Created new-branch on HEAD");
+                }, function (err) {
+                    console.error(err);
+                })
+                    .then(function () {
+                    refreshAll(repos);
+                });
+            }
         });
-    }).done(function () {
-        refreshAll(repos);
     });
 }
 function mergeLocalBranches(element) {
@@ -262,6 +305,7 @@ function mergeCommits(from) {
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
         repos = repo;
+        //return repos.getCommit(fromSha);
         addCommand("git merge " + from);
         return Git.Reference.nameToId(repos, 'refs/heads/' + from);
     })
@@ -270,7 +314,7 @@ function mergeCommits(from) {
     })
         .then(function (annotated) {
         Git.Merge.merge(repos, annotated, null, {
-            checkoutStrategy: Git.Checkout.STRATEGY.FORCE,
+            checkoutStrategy: Git.Checkout.STRATEGY.FORCE
         });
         theirCommit = annotated;
     })
@@ -292,6 +336,7 @@ function rebaseCommits(from, to) {
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
         repos = repo;
+        //return repos.getCommit(fromSha);
         addCommand("git rebase " + to);
         return Git.Reference.nameToId(repos, 'refs/heads/' + from);
     })
@@ -401,7 +446,9 @@ function displayModifiedFiles() {
                 }
             }
             modifiedFiles.forEach(displayModifiedFile);
+            // Add modified file to array of modified files 'modifiedFiles'
             function addModifiedFile(file) {
+                // Check if modified file is already being displayed
                 var filePaths = document.getElementsByClassName('file-path');
                 for (var i = 0; i < filePaths.length; i++) {
                     if (filePaths[i].innerHTML === file.path()) {
@@ -415,6 +462,7 @@ function displayModifiedFiles() {
                     fileModification: modification
                 });
             }
+            // Find HOW the file has been modified
             function calculateModification(status) {
                 if (status.isNew()) {
                     return "NEW";
@@ -435,6 +483,7 @@ function displayModifiedFiles() {
                     return "IGNORED";
                 }
             }
+            // Add the modified file to the left file panel
             function displayModifiedFile(file) {
                 var fileContainer = document.createElement("div");
                 var filePath = document.createElement("p");
@@ -445,6 +494,7 @@ function displayModifiedFiles() {
                 fileContainer.appendChild(checkboxElement);
                 fileContainer.appendChild(fileElement);
                 fileContainer.style.display = 'flex';
+                // Set how the file has been modified
                 if (file.fileModification === "NEW") {
                     fileElement.className = "file file-created";
                 }
@@ -465,19 +515,30 @@ function displayModifiedFiles() {
                 checkboxElement.appendChild(checkbox);
                 document.getElementById("files-changed").appendChild(fileContainer);
                 fileElement.onclick = function () {
-                    var doc = document.getElementById("diff-panel");
-                    if (doc.style.width === '0px' || doc.style.width === '') {
-                        displayDiffPanel();
-                        document.getElementById("diff-panel-body").innerHTML = "";
-                        if (fileElement.className === "file file-created") {
-                            printNewFile(file.filePath);
+                    var textEditorPanel = document.getElementById("text-editor-panel");
+                    var diffPanel = document.getElementById("diff-panel");
+                    console.log('diffPanel width = ' + diffPanel.style.width);
+                    console.log('textEditorPanel width = ' + textEditorPanel.style.width);
+                    // if EDITOR NOT OPEN
+                    if (textEditorPanel.style.width === '0px' || textEditorPanel.style.width === '') {
+                        // if DIFF NOT OPEN
+                        if (diffPanel.style.width === '0px' || diffPanel.style.width === '') {
+                            // OPEN DIFF
+                            displayDiffPanel();
+                            document.getElementById("diff-panel-body").innerHTML = "";
+                            if (fileElement.className === "file file-created") {
+                                printNewFile(file.filePath);
+                            }
+                            else {
+                                printFileDiff(file.filePath);
+                            }
                         }
                         else {
-                            printFileDiff(file.filePath);
+                            hideDiffPanel();
                         }
                     }
                     else {
-                        hideDiffPanel();
+                        displayExitConfirmationDialog();
                     }
                 };
             }

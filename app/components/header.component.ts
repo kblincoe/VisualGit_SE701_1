@@ -47,6 +47,9 @@ import { GraphService } from "../services/graph.service";
 
           <ul class="nav navbar-nav navbar-right hidden-xs">
             <li>
+              <a id="usernameTitle"></a>
+            </li>
+            <li>
               <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="." onclick="signOut()" aria-expanded="false" aria-controls="nav-collapse1">Sign in</a>
             </li>
           </ul>
@@ -119,7 +122,9 @@ import { GraphService } from "../services/graph.service";
             unset
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" id="close-button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" id="cancel-button" class="btn btn-secondary hide" data-dismiss="modal" onclick="toggleCloseButton()">Cancel</button>
+            <button type="button" id="OK-button" class="btn btn-primary hide" data-dismiss="modal">Continue anyway</button>
           </div>
         </div>
       </div>
@@ -151,7 +156,9 @@ import { GraphService } from "../services/graph.service";
           <ul class="list-group"id="repo-dropdown" role="menu" aria-labelledby="repo-name">
           </ul>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary disabled" id="cloneButton" onclick="cloneRepo()">Clone</button>
+            <label for="repoCloneLocation" style="float: left;padding-right: 5px;">Clone Location:</label>
+            <input type="file" webkitdirectory directory name="repoFullPath" id="repoCloneLocation" style="float: left;"/>
+            <button type="button" class="btn btn-primary disabled" style="float: right" id="cloneButton" onclick="cloneRepo()">Clone</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
