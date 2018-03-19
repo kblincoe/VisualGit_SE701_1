@@ -119,12 +119,13 @@ function cloneRepo() {
         updateModalText("Please enter an URL!");
         return;
     }
+    var fullPath = document.getElementById("repoCloneLocation").files[0].path;
     var splitText = url.split(/\.|:|\//);
     var local;
     if (splitText.length >= 2) {
         local = splitText[splitText.length - 1];
     }
-    downloadFunc(url, local);
+    downloadFunc(url, local, fullPath);
     url = null;
     $('#repo-modal').modal('hide');
 }

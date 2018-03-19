@@ -241,7 +241,7 @@ body {
       margin: 15px 30px;
       border-radius: 10px;
       border: 0;
-      height: 10px;
+      height: 30px;
       padding: 10px; }
     body .add-repository-panel .button-clone, body .add-repository-panel .button-open {
       display: inline-block;
