@@ -103,8 +103,8 @@ import { GraphService } from "../services/graph.service";
               <ul class="dropdown-menu" id="merge-dropdown" role="menu" >
               </ul>
             </li>
-            <li class="upload" onclick="pushToRemote()"><a href="#">&nbsp;&nbsp;pull</a></li>
-            <li class="download"onclick="pullFromRemote()"><a href="#">&nbsp;&nbsp;push</a></li>
+            <li class="upload" onclick="pullFromRemote()"><a href="#">&nbsp;&nbsp;pull</a></li>
+            <li class="download"onclick="pushToRemote()"><a href="#">&nbsp;&nbsp;push</a></li>
           </ul>
         </div>
       </div>
