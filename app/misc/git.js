@@ -8,7 +8,6 @@ var green = "#84db00";
 var repo, index, oid, remote, commitMessage;
 var filesToAdd = [];
 var theirCommit = null;
-var modifiedFiles;
 function addAndCommit() {
     var repository;
     Git.Repository.open(repoFullPath)
@@ -149,12 +148,15 @@ function getAllCommits(callback) {
         });
     });
 }
-function pullFromRemote() {
+function pullFromRemote(e) {
     var repository;
-    var branch = document.getElementById("branch-name").innerText;
-    if (modifiedFiles.length > 0) {
-        updateModalText("Please commit your changes before pulling from remote!");
+    toggleCloseButton();
+    if (checkForLocalChanges() && e == null) {
+        $('#OK-button').attr("onclick", "pullFromRemote(this)");
+        displayWarning("Please stash or commit your changes before pulling");
+        return;
     }
+    var branch = document.getElementById("branch-name").innerText;
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
         repository = repo;
