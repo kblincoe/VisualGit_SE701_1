@@ -113,24 +113,49 @@ import { GraphService } from "../services/graph.service";
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-            <h4 class="modal-title">Info</h4>
+            <h4 class="modal-title" id="modal-title">Info</h4>
           </div>
           <div class="modal-body" id="modal-text-box">
             unset
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" id="close-button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" id="cancel-button" class="btn btn-secondary hide" data-dismiss="modal" onclick="toggleCloseButton()">Cancel</button>
+            <button type="button" id="OK-button" class="btn btn-primary hide" data-dismiss="modal">Continue anyway</button>
           </div>
         </div>
       </div>
     </div>
+
+    <div id="text-editor-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">Warning</h4>
+          </div>
+          <div class="modal-body" id="modal-text-box">
+            Are you sure that you want to stop editing the file? All unsaved changes will be lost!
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="exit-edit-mode-button" class="btn btn-primary" onclick=hideTextEditorPanel() data-dismiss="modal">Yes</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="repo-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <ul class="list-group"id="repo-dropdown" role="menu" aria-labelledby="repo-name">
           </ul>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary disabled" id="cloneButton" onclick="cloneRepo()">Clone</button>
+            <label for="repoCloneLocation" style="float: left;padding-right: 5px;">Clone Location:</label>
+            <input type="file" webkitdirectory directory name="repoFullPath" id="repoCloneLocation" style="float: left;"/>
+            <button type="button" class="btn btn-primary disabled" style="float: right" id="cloneButton" onclick="cloneRepo()">Clone</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

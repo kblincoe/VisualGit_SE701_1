@@ -98,8 +98,8 @@ function doLogin(username: string, password: string, callback: Function) {
     } else {
       for (let i = 0; i < data.length; i++) {
         let rep = Object.values(data)[i];
-        displayBranch(rep['name'], "repo-dropdown", "selectRepo(this)");
-        repoList[rep['name']] = rep['html_url'];
+        displayBranch(rep['full_name'], "repo-dropdown", "selectRepo(this)");
+        repoList[rep['full_name']] = rep['html_url'];
       }
     }
   });
@@ -127,12 +127,13 @@ function cloneRepo() {
     updateModalText("Please enter an URL!");
     return;
   }
+  let fullPath = document.getElementById("repoCloneLocation").files[0].path
   let splitText = url.split(/\.|:|\//);
   let local;
   if (splitText.length >= 2) {
     local = splitText[splitText.length - 1];
   }
-  downloadFunc(url, local);
+  downloadFunc(url, local, fullPath);
   url = null;
   $('#repo-modal').modal('hide');
 }
