@@ -14,6 +14,12 @@ p, h1 {
   width: 100px;
 }
 
+.push, .pull {
+  margin: 2px;
+  padding: 0px 8px;
+  height: 48px;
+}
+
 @media screen and (max-width: 767px) {
   .navbar .navbar-collapse .navbar-right > li:last-child {
     padding-left: 15px;
@@ -244,9 +250,14 @@ body {
         padding: 0 15px;
         background-color: $teal;
         color: $white;
+        opacity: 1.0;
       }
 
-      .commit-button:hover {
+      .commit-button:disabled {
+        opacity: 0.3;
+      }
+
+      .commit-button:hover:enabled {
         opacity: 0.8;
       }
     }
@@ -296,7 +307,6 @@ body {
         margin-left: 10px;
         margin-right: 10px;
       }
-      
       .editor-button{
         display: inline-block;
         margin-left: 8px;
@@ -483,4 +493,8 @@ body {
 
 .file-deleted {
   background-color: $file-deleted;
+}
+
+#repo-dropdown {
+  list-style-type: none;
 }
