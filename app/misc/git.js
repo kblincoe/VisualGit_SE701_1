@@ -1,3 +1,4 @@
+"use strict";
 var opn = require('opn');
 var $ = require("jquery");
 var Git = require("nodegit");
@@ -48,7 +49,7 @@ function addAndCommit() {
             sign = Git.Signature.now(username, password);
         }
         else {
-            sign = Git.Signature.default(repository);
+            sign = Git.Signature["default"](repository);
         }
         commitMessage = document.getElementById('commit-message-input').value;
         if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {

@@ -1,3 +1,4 @@
+"use strict";
 var vis = require("vis");
 var github1 = require("octonode");
 var nodeId = 1;
@@ -286,6 +287,8 @@ function makeBasicNode(c, column) {
         var title = "Number of Commits: " + count;
         bsNodes.add({
             id: id,
+            name: name,
+            email: email,
             shape: "circularImage",
             title: title,
             image: img4User(name),
@@ -359,6 +362,8 @@ function makeAbsNode(c, column) {
         var title = "Author: " + email + "<br>" + "Number of Commits: " + count;
         abNodes.add({
             id: id,
+            name: name,
+            email: email,
             shape: "circularImage",
             title: title,
             image: img4User(name),
@@ -415,6 +420,8 @@ function makeNode(c, column) {
     var flag = false;
     nodes.add({
         id: id,
+        name: name,
+        email: email,
         shape: "circularImage",
         title: title,
         image: img4User(name),
