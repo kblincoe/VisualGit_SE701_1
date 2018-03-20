@@ -41,11 +41,14 @@ import { GraphService } from "../services/graph.service";
           </ul>
 
           <ul class="nav navbar-nav col-md-4 hidden-xs">
-            <li class="upload"><i class="fa fa-cloud-upload fa-2x col-md-2" aria-hidden="true" style="color:white;cursor:pointer" onclick="pushToRemote()" title="Push"></i></li>
-            <li class="download"><i class="fa fa-cloud-download fa-2x col-md-2" aria-hidden="true" style="color:white;cursor:pointer" onclick="pullFromRemote()" title="Pull"></i></li>
-          </ul>
+          <li><img src="./assets/Octopush.svg" class="push" style="cursor:pointer" onclick="pushToRemote()" title="Push"></li>
+          <li><img src="./assets/Octopull.svg" class="pull" style="cursor:pointer" onclick="pullFromRemote()" title="Pull"></li>
+         </ul>
 
           <ul class="nav navbar-nav navbar-right hidden-xs">
+            <li>
+              <a id="usernameTitle"></a>
+            </li>
             <li>
               <a class="btn btn-default btn-outline btn-circle"  id="avatar" data-toggle="collapse" href="." onclick="signOut()" aria-expanded="false" aria-controls="nav-collapse1">Sign in</a>
             </li>
@@ -100,8 +103,8 @@ import { GraphService } from "../services/graph.service";
               <ul class="dropdown-menu" id="merge-dropdown" role="menu" >
               </ul>
             </li>
-            <li class="upload" onclick="pushToRemote()"><a href="#">&nbsp;&nbsp;pull</a></li>
-            <li class="download"onclick="pullFromRemote()"><a href="#">&nbsp;&nbsp;push</a></li>
+            <li class="upload" onclick="pullFromRemote()"><a href="#">&nbsp;&nbsp;pull</a></li>
+            <li class="download"onclick="pushToRemote()"><a href="#">&nbsp;&nbsp;push</a></li>
           </ul>
         </div>
       </div>
@@ -119,7 +122,9 @@ import { GraphService } from "../services/graph.service";
             unset
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" id="close-button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" id="cancel-button" class="btn btn-secondary hide" data-dismiss="modal" onclick="toggleCloseButton()">Cancel</button>
+            <button type="button" id="OK-button" class="btn btn-primary hide" data-dismiss="modal">Continue anyway</button>
           </div>
         </div>
       </div>
@@ -140,18 +145,20 @@ import { GraphService } from "../services/graph.service";
           <div class="modal-footer">
             <button type="button" id="exit-edit-mode-button" class="btn btn-primary" onclick=hideTextEditorPanel() data-dismiss="modal">Yes</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+
           </div>
         </div>
       </div>
     </div>
-
     <div id="repo-modal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <ul class="list-group"id="repo-dropdown" role="menu" aria-labelledby="repo-name">
           </ul>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary disabled" id="cloneButton" onclick="cloneRepo()">Clone</button>
+            <label for="repoCloneLocation" style="float: left;padding-right: 5px;">Clone Location:</label>
+            <input type="file" webkitdirectory directory name="repoFullPath" id="repoCloneLocation" style="float: left;"/>
+            <button type="button" class="btn btn-primary disabled" style="float: right" id="cloneButton" onclick="cloneRepo()">Clone</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

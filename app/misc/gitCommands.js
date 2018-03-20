@@ -5,5 +5,5 @@ function addCommand(command) {
     gitCommand.innerHTML = command;
     var footer = document.getElementById("footer");
     footer.appendChild(gitCommand);
-    footer.scrollTop = footer.scrollHeight; // This ensures the git command console scrolls to the bottom for every new command insert
+    footer.scrollTop = footer.scrollHeight;
 }

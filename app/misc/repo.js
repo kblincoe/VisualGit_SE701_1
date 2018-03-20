@@ -1,5 +1,7 @@
 var Git = require("nodegit");
 var $ = require('jQuery');
+var chokidar = require("chokidar");
+var path = require("path");
 var repoFullPath;
 var repoLocalPath;
 var bname = {};
@@ -10,13 +12,15 @@ var readFile = require("fs-sync");
 var repoCurrentBranch = "master";
 var modal;
 var span;
+var modifiedFiles = 0;
 function downloadRepository() {
     var cloneURL = document.getElementById("repoClone").value;
     var localPath = document.getElementById("repoSave").value;
-    downloadFunc(cloneURL, localPath);
+    var fullPath = document.getElementById("repoSaveLocation").files[0].path;
+    downloadFunc(cloneURL, localPath, fullPath);
 }
-function downloadFunc(cloneURL, localPath) {
-    var fullLocalPath = require("path").join(__dirname, localPath);
+function downloadFunc(cloneURL, localPath, fullPath) {
+    var fullLocalPath = require("path").join(fullPath, localPath);
     var options = {};
     displayModal("Cloning Repository...");
     options = {
@@ -35,18 +39,19 @@ function downloadFunc(cloneURL, localPath) {
         addCommand("git clone " + cloneURL + " " + localPath);
         repoFullPath = fullLocalPath;
         repoLocalPath = localPath;
+        setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
         refreshAll(repository);
     }, function (err) {
         displayErrorMessage("Clone Failed - " + err);
     });
 }
 function openRepository() {
-    var localPath = document.getElementById("repoOpen").value;
-    var fullLocalPath = require("path").join(__dirname, localPath);
+    var fullLocalPath = document.getElementById("repoOpen").files[0].path;
     displayModal("Opening Local Repository...");
     Git.Repository.open(fullLocalPath).then(function (repository) {
         repoFullPath = fullLocalPath;
-        repoLocalPath = localPath;
+        setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
+        repoLocalPath = fullLocalPath.replace(/^.*[\\\/]/, '');
         if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
             var tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
         }
@@ -54,6 +59,31 @@ function openRepository() {
         updateModalText("Repository successfully opened");
     }, function (err) {
         displayErrorMessage("Opening Failed - " + err);
+    });
+}
+// Sets up a watcher for the local git repo directory
+// that notifies when a file gets deleted.
+// When it detects that an untracked file gets deleted,
+// it also removes it from within the VisualGit file view.
+function setupWatcher(repoFullPath) {
+    var watcher = chokidar.watch(repoFullPath, { ignored: [repoFullPath + "\\.git"], persistent: true });
+    watcher
+        .on('unlink', function (deletedPath) {
+        var neutralDeletedPath = deletedPath.replace(/[\/\\]/g, " "); // Remove "\" or "/" from pathname to be os independent
+        console.log("DELETED PATH IS " + neutralDeletedPath);
+        var filePanel = document.getElementById("files-changed");
+        var childNodes = filePanel.childNodes;
+        var filePaths = document.getElementsByClassName("file-path");
+        for (var i = 0; i < filePaths.length; i++) {
+            var subPath = filePaths[i].innerHTML;
+            subPath = subPath.replace(/[\/\\]/g, " "); // Remove "\" or "/" from pathname to be os independent
+            console.log("SUBPATH IS " + subPath);
+            if (neutralDeletedPath.indexOf(subPath) !== -1) {
+                var fileElement = filePaths[i].parentNode;
+                filePanel.removeChild(fileElement.parentNode);
+                return;
+            }
+        }
     });
 }
 function addBranchestoNode(thisB) {
@@ -90,6 +120,7 @@ function refreshAll(repository) {
         var _loop_1 = function (i) {
             var bp = branchList[i].name().split("/");
             Git.Reference.nameToId(repository, branchList[i].name()).then(function (oid) {
+                // Use oid
                 if (branchList[i].isRemote()) {
                     remoteName[bp[bp.length - 1]] = oid;
                 }
@@ -107,12 +138,12 @@ function refreshAll(repository) {
             });
             if (branchList[i].isRemote()) {
                 if (localBranches.indexOf(bp[bp.length - 1]) < 0) {
-                    displayBranch(bp[bp.length - 1], "branch-dropdown", "checkoutRemoteBranch(this)");
+                    displayBranch(bp[bp.length - 1], "branch-dropdown", "canChangeBranch(this,1)");
                 }
             }
             else {
                 localBranches.push(bp[bp.length - 1]);
-                displayBranch(bp[bp.length - 1], "branch-dropdown", "checkoutLocalBranch(this)");
+                displayBranch(bp[bp.length - 1], "branch-dropdown", "canChangeBranch(this,2)");
             }
         };
         for (var i = 0; i < branchList.length; i++) {
@@ -140,6 +171,7 @@ function getAllBranches() {
                 displayBranch(bp[bp.length - 1], "branch-dropdown", "checkoutLocalBranch(this)");
             }
             Git.Reference.nameToId(repos, branchList[i]).then(function (oid) {
+                // Use oid
             });
         }
     });
@@ -192,14 +224,8 @@ function displayBranch(name, id, onclick) {
     li.appendChild(a);
     ul.appendChild(li);
 }
-function checkoutLocalBranch(element) {
-    var bn;
-    if (typeof element === "string") {
-        bn = element;
-    }
-    else {
-        bn = element.innerHTML;
-    }
+function checkoutLocalBranch(bn) {
+    toggleCloseButton();
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
         addCommand("git checkout " + bn);
@@ -211,14 +237,9 @@ function checkoutLocalBranch(element) {
         });
     });
 }
-function checkoutRemoteBranch(element) {
-    var bn;
-    if (typeof element === "string") {
-        bn = element;
-    }
-    else {
-        bn = element.innerHTML;
-    }
+function checkoutRemoteBranch(bn) {
+    toggleCloseButton();
+    console.log("1.0  " + bn);
     var repos;
     Git.Repository.open(repoFullPath)
         .then(function (repo) {
@@ -247,7 +268,29 @@ function updateLocalPath() {
         document.getElementById("repoSave").value = splitText[splitText.length - 2];
     }
 }
+// function initModal() {
+//   modal = document.getElementById("modal");
+//   btn = document.getElementById("new-repo-button");
+//   confirmBtn = document.getElementById("confirm-button");
+//   span = document.getElementsByClassName("close")[0];
+// }
+// function handleModal() {
+//   // When the user clicks on <span> (x), close the modal
+//   span.onclick = function() {
+//     modal.style.display = "none";
+//   };
+//
+//   // When the user clicks anywhere outside of the modal, close it
+//   window.onclick = function(event) {
+//
+//     if (event.target === modal) {
+//       modal.style.display = "none";
+//     }
+//   };
+// }
 function displayModal(text) {
+    //  initModal();
+    //  handleModal();
     document.getElementById("modal-text-box").innerHTML = text;
     document.getElementById("modal-text-box").style.wordWrap = 'break-word';
     document.getElementById("modal-title").innerHTML = "Info";
@@ -259,9 +302,58 @@ function updateModalText(text) {
     document.getElementById("modal-title").innerHTML = "Info";
     $('#modal').modal('show');
 }
+//Display error messages on screen
 function displayErrorMessage(errorMessage) {
     document.getElementById("modal-title").innerHTML = "Error";
     document.getElementById("modal-text-box").innerHTML = errorMessage;
     document.getElementById("modal-text-box").style.wordWrap = 'break-word';
     $('#modal').modal('show');
+}
+function displayWarning(warningMessege) {
+    $('#OK-button').removeClass('hide');
+    $('#cancel-button').removeClass('hide');
+    $('#close-button').addClass('hide');
+    document.getElementById("modal-title").innerHTML = "Warning";
+    document.getElementById("modal-text-box").innerHTML = warningMessege;
+    document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+    $('#modal').modal('show');
+}
+function checkForLocalChanges() {
+    modifiedFiles = $("#files-changed div").length;
+    if (modifiedFiles > 0) {
+        return true;
+    }
+    return false;
+}
+function toggleCloseButton() {
+    $('#OK-button').addClass('hide');
+    $('#cancel-button').addClass('hide');
+    $('#close-button').removeClass('hide');
+}
+function canChangeBranch(e, type) {
+    var bn;
+    if (typeof e === "string") {
+        bn = e;
+    }
+    else {
+        bn = e.innerHTML;
+    }
+    if (type == 1) {
+        $('#OK-button').attr("onclick", "checkoutRemoteBranch('" + bn + "')");
+    }
+    else if (type == 2) {
+        $('#OK-button').attr("onclick", "checkoutLocalBranch('" + bn + "')");
+    }
+    if (checkForLocalChanges()) {
+        displayWarning("Please commit or stash your changes before checking out");
+        return;
+    }
+    else {
+        if (type == 2) {
+            checkoutLocalBranch(e);
+        }
+        else if (type == 1) {
+            checkoutRemoteBranch(e);
+        }
+    }
 }
