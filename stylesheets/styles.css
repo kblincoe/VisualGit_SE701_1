@@ -157,8 +157,11 @@ body {
       border: 0;
       padding: 0 15px;
       background-color: #39c0ba;
-      color: #fff; }
-    body .file-panel .commit-panel .commit-button:hover {
+      color: #fff;
+      opacity: 1.0; }
+    body .file-panel .commit-panel .commit-button:disabled {
+      opacity: 0.3; }
+    body .file-panel .commit-panel .commit-button:hover:enabled {
       opacity: 0.8; }
   body .body-panel {
     width: 80%;
@@ -318,9 +321,4 @@ body {
   background-color: #ff7514; }
 
 .file-deleted {
-  background-color: #ff2448;
-}
-
-#repo-dropdown {
-  list-style-type: none;
-}
+  background-color: #ff2448; }

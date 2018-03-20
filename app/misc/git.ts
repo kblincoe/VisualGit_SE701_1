@@ -591,6 +591,8 @@ function displayModifiedFiles() {
         };
       }
 
+      
+
       function printNewFile(filePath) {
         let fileLocation = require("path").join(repoFullPath, filePath);
         let lineReader = require("readline").createInterface({
@@ -655,7 +657,23 @@ function displayModifiedFiles() {
         element.innerHTML = text;
         document.getElementById("diff-panel-body").appendChild(element);
       }
+      
+      // If files on the left panel exist, enable commit button
+      disableOrEnableCommitButton();
+      
+      function disableOrEnableCommitButton(){
+        let filesOnPanel = document.getElementsByClassName("file");
+        let commitButton = (document.getElementById("commit-button") as HTMLButtonElement);
+        console.log("Files to enable commit button: " + filesOnPanel.length);
+        if(filesOnPanel.length == 0){
+          commitButton.disabled = true;
+        } else{
+          commitButton.disabled = false;
+        }
+      }
+
     });
+    
   },
   function(err) {
     console.error(err);

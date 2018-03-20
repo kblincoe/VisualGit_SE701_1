@@ -250,9 +250,14 @@ body {
         padding: 0 15px;
         background-color: $teal;
         color: $white;
+        opacity: 1.0;
       }
 
-      .commit-button:hover {
+      .commit-button:disabled {
+        opacity: 0.3;
+      }
+
+      .commit-button:hover:enabled {
         opacity: 0.8;
       }
     }
