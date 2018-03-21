@@ -203,4 +203,5 @@ function changeColor(color) {
         auth.style.backgroundColor = '#C9A2A3';
         before = 'burgundy';
     }
+    sessionStorage.setItem('currColor', color);
 }
