@@ -60,13 +60,25 @@ import { Component } from "@angular/core";
 export class AddRepositoryComponent {
 
   addRepository(): void {
-    downloadRepository();
-    switchToMainPanel();
+    if (document.getElementById("repoSave").value === "") {
+      displayModal("Please enter a repo name!");
+    } else if (document.getElementById("repoClone").value === "") {
+      displayModal("Please enter a remote URL!");
+    } else if (document.getElementById("repoSaveLocation").value === "") {
+       displayModal("Please enter a save location!");
+    } else {
+      downloadRepository();
+      switchToMainPanel();
+    }
   }
 
   openRepository(): void {
-    openRepository();
-    switchToMainPanel();
+    if (document.getElementById("repoOpen").value === "") {
+      displayModal("Please enter a local path!");
+    } else {
+      openRepository();
+      switchToMainPanel();
+    }
   }
 
   returnToMainPanel(): void {

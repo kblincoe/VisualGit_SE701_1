@@ -6,19 +6,33 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 
-exports.__esModule = true;
-
 var core_1 = require("@angular/core");
 var AddRepositoryComponent = /** @class */ (function () {
     function AddRepositoryComponent() {
     }
     AddRepositoryComponent.prototype.addRepository = function () {
-        downloadRepository();
-        switchToMainPanel();
+        if (document.getElementById("repoSave").value === "") {
+            displayModal("Please enter a local path!");
+        }
+        else if (document.getElementById("repoClone").value === "") {
+            displayModal("Please enter a remote URL!");
+        }
+        else if (document.getElementById("repoSaveLocation").value === "") {
+            displayModal("Please enter a save location!");
+        }
+        else {
+            downloadRepository();
+            switchToMainPanel();
+        }
     };
     AddRepositoryComponent.prototype.openRepository = function () {
-        openRepository();
-        switchToMainPanel();
+        if (document.getElementById("repoOpen").value === "") {
+            displayModal("Please enter a local path!");
+        }
+        else {
+            openRepository();
+            switchToMainPanel();
+        }
     };
     AddRepositoryComponent.prototype.returnToMainPanel = function () {
         switchToMainPanel();
