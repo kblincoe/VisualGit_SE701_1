@@ -14,6 +14,10 @@ function changeColor(color) {
     var footer = document.getElementById('footer');
     var arp = document.getElementById('add-repository-panel');
     var auth = document.getElementById('authenticate');
+    var push = document.getElementsByClassName('push');
+    var pull = document.getElementsByClassName('pull');
+    var rightArrows = document.getElementsByClassName('right-arrow');
+    var addRepo = document.getElementsByClassName('add-repository-button');
     if (color === 'white') {
         for (var i = 0; i < head.length; i++) {
             head[i].className = 'navbar navbar-white';
@@ -36,6 +40,18 @@ function changeColor(color) {
         }
         for (var i = 0; i < h2.length; i++) {
             h2[i].style.color = '#5E5E5E';
+        }
+        for (var i = 0; i < push.length; i++) {
+            push[i].setAttribute('src', './assets/OctopushDark.svg');
+        }
+        for (var i = 0; i < pull.length; i++) {
+            pull[i].setAttribute('src', './assets/OctopullDark.svg');
+        }
+        for (var i = 0; i < rightArrows.length; i++) {
+            rightArrows[i].setAttribute('src', './assets/RightArrowDark.svg');
+        }
+        for (var i = 0; i < addRepo.length; i++) {
+            addRepo[i].setAttribute('src', './assets/AddRepositoryFolderDark.svg');
         }
         diffp.style.color = '#D2D3D4';
         diffp.style.backgroundColor = '#616161';
@@ -68,6 +84,18 @@ function changeColor(color) {
         for (var i = 0; i < h2.length; i++) {
             h2[i].style.color = '#ccc';
         }
+        for (var i = 0; i < push.length; i++) {
+            push[i].setAttribute('src', './assets/Octopush.svg');
+        }
+        for (var i = 0; i < pull.length; i++) {
+            pull[i].setAttribute('src', './assets/Octopull.svg');
+        }
+        for (var i = 0; i < rightArrows.length; i++) {
+            rightArrows[i].setAttribute('src', './assets/RightArrow.svg');
+        }
+        for (var i = 0; i < addRepo.length; i++) {
+            addRepo[i].setAttribute('src', './assets/AddRepositoryFolder.svg');
+        }
         diffp.style.color = '#fff';
         diffp.style.backgroundColor = '#282828';
         network.style.backgroundColor = '#181818';
@@ -78,7 +106,6 @@ function changeColor(color) {
     }
     else if (color === 'vintage') {
         for (var i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-vintage';
         }
         for (var i = 0; i < headButton.length; i++) {
@@ -100,6 +127,18 @@ function changeColor(color) {
         for (var i = 0; i < h2.length; i++) {
             h2[i].style.color = '#E9E7DA';
         }
+        for (var i = 0; i < push.length; i++) {
+            push[i].setAttribute('src', './assets/Octopush.svg');
+        }
+        for (var i = 0; i < pull.length; i++) {
+            pull[i].setAttribute('src', './assets/Octopull.svg');
+        }
+        for (var i = 0; i < rightArrows.length; i++) {
+            rightArrows[i].setAttribute('src', './assets/RightArrow.svg');
+        }
+        for (var i = 0; i < addRepo.length; i++) {
+            addRepo[i].setAttribute('src', './assets/AddRepositoryFolder.svg');
+        }
         diffp.style.color = '#fff';
         diffp.style.backgroundColor = '#282828';
         network.style.backgroundColor = '#E9E7DA';
@@ -110,7 +149,6 @@ function changeColor(color) {
     }
     else if (color === 'blue') {
         for (var i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-blue';
         }
         for (var i = 0; i < headButton.length; i++) {
@@ -132,6 +170,18 @@ function changeColor(color) {
         for (var i = 0; i < h2.length; i++) {
             h2[i].style.color = '#f2f2f2';
         }
+        for (var i = 0; i < push.length; i++) {
+            push[i].setAttribute('src', './assets/Octopush.svg');
+        }
+        for (var i = 0; i < pull.length; i++) {
+            pull[i].setAttribute('src', './assets/Octopull.svg');
+        }
+        for (var i = 0; i < rightArrows.length; i++) {
+            rightArrows[i].setAttribute('src', './assets/RightArrow.svg');
+        }
+        for (var i = 0; i < addRepo.length; i++) {
+            addRepo[i].setAttribute('src', './assets/AddRepositoryFolder.svg');
+        }
         diffp.style.color = '#fff';
         diffp.style.backgroundColor = '#282828';
         network.style.backgroundColor = '#88BDBC';
@@ -142,7 +192,6 @@ function changeColor(color) {
     }
     else if (color === 'burgundy') {
         for (var i = 0; i < head.length; i++) {
-            console.log(head[i]);
             head[i].className = 'navbar navbar-burgundy';
         }
         for (var i = 0; i < headButton.length; i++) {
@@ -164,6 +213,18 @@ function changeColor(color) {
         for (var i = 0; i < h2.length; i++) {
             h2[i].style.color = '#F4EDE9';
         }
+        for (var i = 0; i < push.length; i++) {
+            push[i].setAttribute('src', './assets/Octopush.svg');
+        }
+        for (var i = 0; i < pull.length; i++) {
+            pull[i].setAttribute('src', './assets/Octopull.svg');
+        }
+        for (var i = 0; i < rightArrows.length; i++) {
+            rightArrows[i].setAttribute('src', './assets/RightArrow.svg');
+        }
+        for (var i = 0; i < addRepo.length; i++) {
+            addRepo[i].setAttribute('src', './assets/AddRepositoryFolder.svg');
+        }
         diffp.style.color = '#fff';
         diffp.style.backgroundColor = '#282828';
         network.style.backgroundColor = '#C9A2A3';
@@ -172,4 +233,5 @@ function changeColor(color) {
         auth.style.backgroundColor = '#C9A2A3';
         before = 'burgundy';
     }
+    sessionStorage.setItem('currColor', color);
 }

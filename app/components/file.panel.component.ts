@@ -19,7 +19,7 @@ import { Component } from "@angular/core";
 
     <div class="commit-panel" id="commit-panel">
       <textarea placeholder="Describe your changes here..." class="commit-message-input" id="commit-message-input"></textarea>
-      <button class="commit-button" id="commit-button">Commit</button>
+      <button class="commit-button" id="commit-button" disabled>Commit</button>
     </div>
 
   </div>

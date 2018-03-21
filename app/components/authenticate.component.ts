@@ -26,12 +26,17 @@ import { Component, AfterViewInit } from "@angular/core";
         </label>
         <br><br>
         <div class="input-group" style="width:280px;">
-          <input id="username" type="text" class="form-control" placeholder="username" aria-describedby="basic-addon1">
+          <input id="username" class="form-control" placeholder="username" aria-describedby="basic-addon1">
         </div>
         <br>
 
         <div class="input-group" style="width:280px;">
           <input id="password" type="password" class="form-control" placeholder="password" aria-describedby="basic-addon1">
+        </div>
+        <br>
+
+        <div class="input-group" style="width:280px;">
+            <input id="tfa-code" class="form-control" placeholder="2fa code" aria-describedby="basic-addon1">
         </div>
         <br>
         <div>
@@ -63,6 +68,10 @@ export class AuthenticateComponent implements AfterViewInit {
       let uncryptedData = decryptValue(password);
       let passwordField : HTMLInputElement = document.getElementById('password');
       passwordField.value = uncryptedData.toString(CryptoJS.enc.Utf8);
+    }
+    let currColor = sessionStorage.getItem('currColor');
+    if (currColor != null) {
+      changeColor(currColor);
     }
   }
 }

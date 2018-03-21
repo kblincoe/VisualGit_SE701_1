@@ -11,7 +11,6 @@ let green = "#84db00";
 let repo, index, oid, remote, commitMessage;
 let filesToAdd = [];
 let theirCommit = null;
-let modifiedFiles;
 
 function addAndCommit() {
   let repository;
@@ -73,6 +72,7 @@ function addAndCommit() {
     theirCommit = null;
 
     hideDiffPanel();
+    hideTextEditorPanel();
     clearModifiedFilesList();
     clearCommitMessage();
     clearSelectAllCheckbox();
@@ -168,12 +168,15 @@ function getAllCommits(callback) {
     });
 }
 
-function pullFromRemote() {
+function pullFromRemote(e) {
   let repository;
-  let branch = document.getElementById("branch-name").innerText;
-  if (modifiedFiles.length > 0) {
-    updateModalText("Please commit your changes before pulling from remote!");
+  toggleCloseButton();
+  if(checkForLocalChanges() && e==null) {
+    $('#OK-button').attr("onclick", "pullFromRemote(this)");
+    displayWarning("Please stash or commit your changes before pulling");
+    return;
   }
+  let branch = document.getElementById("branch-name").innerText;
   Git.Repository.open(repoFullPath)
   .then(function(repo) {
     repository = repo;
@@ -254,26 +257,55 @@ function pushToRemote() {
 function createBranch() {
   let branchName = document.getElementById("branchName").value;
   let repos;
+
   Git.Repository.open(repoFullPath)
-  .then(function(repo) {
-    // Create a new branch on head
-    repos = repo;
-    addCommand("git branch " + branchName);
-    return repo.getHeadCommit()
-    .then(function(commit) {
-      return repo.createBranch(
-        branchName,
-        commit,
-        0,
-        repo.defaultSignature(),
-        "Created new-branch on HEAD");
-    }, function(err) {
-      console.error(err);
+    .then(function (repo) {
+      // Create a new branch on head
+      repos = repo;
+      var flag = false;
+
+      repo.getReferenceNames(Git.Reference.TYPE.LISTALL)
+        .then(function (arrayReference) {
+          for (var i = 0; i < arrayReference.length; i++) {
+            var shortName = arrayReference[i].replace(/^.*[\\\/]/, '');
+            if (shortName === branchName) {
+              flag = true;
+            }            
+          }
+          
+
+          if (!flag) {
+            if (confirm("Would you like to make a branch called " + branchName + "?")) {
+              return true;
+            }
+          } else {
+            alert("There is an existing local/remote branch with the name " + branchName + ".");
+            return false;
+          }
+
+        })
+        .then(function (verdict) {
+          if (verdict) {
+            addCommand("git branch " + branchName);
+            return repo.getHeadCommit()
+              .then(function (commit) {
+                return repo.createBranch(
+                  branchName,
+                  commit,
+                  0,
+                  repo.defaultSignature(),
+                  "Created new-branch on HEAD");
+              }, function (err) {
+                console.error(err);
+              })
+              .then(function () {
+                refreshAll(repos);
+              });
+          }
+        });
     });
-  }).done(function() {
-    refreshAll(repos);
-  });
 }
+
 
 function mergeLocalBranches(element) {
   let bn = element.innerHTML;
@@ -499,11 +531,16 @@ function displayModifiedFiles() {
       }
 
       // Add the modified file to the left file panel
-      function displayModifiedFile(file) {
+      function displayModifiedFile(file){
+        let fileContainer = document.createElement("div");
         let filePath = document.createElement("p");
         filePath.className = "file-path";
         filePath.innerHTML = file.filePath;
         let fileElement = document.createElement("div");
+        let checkboxElement = document.createElement("div");
+        fileContainer.appendChild(checkboxElement);
+        fileContainer.appendChild(fileElement);
+        fileContainer.style.display='flex';
         // Set how the file has been modified
         if (file.fileModification === "NEW") {
           fileElement.className = "file file-created";
@@ -516,30 +553,45 @@ function displayModifiedFiles() {
         }
 
         fileElement.appendChild(filePath);
-
+        
         let checkbox = document.createElement("input");
+        checkboxElement.style.margin='5px';
         checkbox.type = "checkbox";
         checkbox.className = "checkbox";
-        fileElement.appendChild(checkbox);
+        checkboxElement.appendChild(checkbox);
 
-        document.getElementById("files-changed").appendChild(fileElement);
+        document.getElementById("files-changed").appendChild(fileContainer);
 
         fileElement.onclick = function() {
-          let doc = document.getElementById("diff-panel");
-          if (doc.style.width === '0px' || doc.style.width === '') {
-            displayDiffPanel();
-            document.getElementById("diff-panel-body").innerHTML = "";
+          let textEditorPanel = document.getElementById("text-editor-panel");
+          let diffPanel = document.getElementById("diff-panel");
 
-            if (fileElement.className === "file file-created") {
-              printNewFile(file.filePath);
+          console.log('diffPanel width = ' + diffPanel.style.width);
+          console.log('textEditorPanel width = ' + textEditorPanel.style.width);
+          
+          // if EDITOR NOT OPEN
+          if(textEditorPanel.style.width === '0px' || textEditorPanel.style.width === ''){
+            // if DIFF NOT OPEN
+            if (diffPanel.style.width === '0px' || diffPanel.style.width === '') {
+              // OPEN DIFF
+              displayDiffPanel();
+              document.getElementById("diff-panel-body").innerHTML = "";
+
+              if (fileElement.className === "file file-created") {
+                printNewFile(file.filePath);
+              } else {
+                printFileDiff(file.filePath);
+              }
             } else {
-              printFileDiff(file.filePath);
+              hideDiffPanel();
             }
-          } else {
-            hideDiffPanel();
+          } else{
+            displayExitConfirmationDialog();
           }
         };
       }
+
+      
 
       function printNewFile(filePath) {
         let fileLocation = require("path").join(repoFullPath, filePath);
@@ -605,7 +657,23 @@ function displayModifiedFiles() {
         element.innerHTML = text;
         document.getElementById("diff-panel-body").appendChild(element);
       }
+      
+      // If files on the left panel exist, enable commit button
+      disableOrEnableCommitButton();
+      
+      function disableOrEnableCommitButton(){
+        let filesOnPanel = document.getElementsByClassName("file");
+        let commitButton = (document.getElementById("commit-button") as HTMLButtonElement);
+        console.log("Files to enable commit button: " + filesOnPanel.length);
+        if(filesOnPanel.length == 0){
+          commitButton.disabled = true;
+        } else{
+          commitButton.disabled = false;
+        }
+      }
+
     });
+    
   },
   function(err) {
     console.error(err);

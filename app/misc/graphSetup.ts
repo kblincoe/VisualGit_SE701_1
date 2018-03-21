@@ -144,6 +144,26 @@ function drawGraph() {
     processGraph(commits);
   });
 
+  network.on('click', function(properties) {
+    let ids = properties.nodes;        
+    if (ids != '') {        // If we have clicked on a node
+      let clickedNode;
+      
+      if (flag == 'basic'){
+        clickedNode = bsNodes.get(ids)[0];
+      } else if (flag == 'abstract'){
+        clickedNode = abNodes.get(ids)[0];
+      } else {
+        clickedNode = nodes.get(ids)[0];
+      } 
+      
+      if (clickedNode.hasOwnProperty('name')){  // if node has a name property, show data
+        displayModal('<b>Name: ' + clickedNode.name + '</b></br>'
+          + 'Email: <a href=mailto:' + clickedNode.email + '>' + clickedNode.email + '</a></br>');
+      }
+    }
+  });
+
   network.on("stabilizationIterationsDone", function () {
     network.setOptions( { physics: false } );
   });

@@ -13,6 +13,10 @@ function changeColor(color) {
     let footer = document.getElementById('footer');
     let arp = document.getElementById('add-repository-panel');
     let auth = document.getElementById('authenticate');
+	let push = document.getElementsByClassName('push');
+	let pull = document.getElementsByClassName('pull');
+	let rightArrows = document.getElementsByClassName('right-arrow');
+	let addRepo = document.getElementsByClassName('add-repository-button');
     if (color === 'white') {
         for (let i = 0; i < head.length; i++) {
             head[i].className = 'navbar navbar-white';
@@ -36,6 +40,18 @@ function changeColor(color) {
         for (let i = 0; i < h2.length; i++) {
             h2[i].style.color = '#5E5E5E';
         }
+		for (let i = 0; i < push.length; i++) {
+			push[i].setAttribute('src', './assets/OctopushDark.svg');
+		}
+		for (let i = 0; i < pull.length; i++) {
+			pull[i].setAttribute('src', './assets/OctopullDark.svg');
+		}
+		for (let i = 0; i < rightArrows.length; i++) {
+			rightArrows[i].setAttribute('src', './assets/RightArrowDark.svg');
+		}
+		for (let i = 0; i < addRepo.length; i++) {
+			addRepo[i].setAttribute('src', './assets/AddRepositoryFolderDark.svg');
+		}
         diffp.style.color = '#D2D3D4';
         diffp.style.backgroundColor = '#616161';
         network.style.backgroundColor = '#D6D6D6';
@@ -66,6 +82,18 @@ function changeColor(color) {
         for (let i = 0; i < h2.length; i++) {
             h2[i].style.color = '#ccc';
         }
+		for (let i = 0; i < push.length; i++) {
+			push[i].setAttribute('src', './assets/Octopush.svg');
+		}
+		for (let i = 0; i < pull.length; i++) {
+			pull[i].setAttribute('src', './assets/Octopull.svg');
+		}
+		for (let i = 0; i < rightArrows.length; i++) {
+			rightArrows[i].setAttribute('src', './assets/RightArrow.svg');
+		}
+		for (let i = 0; i < addRepo.length; i++) {
+			addRepo[i].setAttribute('src', './assets/AddRepositoryFolder.svg');
+		}
         diffp.style.color = '#fff';
         diffp.style.backgroundColor = '#282828';
         network.style.backgroundColor = '#181818';
@@ -96,7 +124,18 @@ function changeColor(color) {
         for (let i = 0; i < h2.length; i++) {
             h2[i].style.color = '#E9E7DA';
         }
-
+		for (let i = 0; i < push.length; i++) {
+			push[i].setAttribute('src', './assets/Octopush.svg');
+		}
+		for (let i = 0; i < pull.length; i++) {
+			pull[i].setAttribute('src', './assets/Octopull.svg');
+		}
+		for (let i = 0; i < rightArrows.length; i++) {
+			rightArrows[i].setAttribute('src', './assets/RightArrow.svg');
+		}
+		for (let i = 0; i < addRepo.length; i++) {
+			addRepo[i].setAttribute('src', './assets/AddRepositoryFolder.svg');
+		}
         diffp.style.color = '#fff'
         diffp.style.backgroundColor = '#282828';
         network.style.backgroundColor = '#E9E7DA';
@@ -128,7 +167,18 @@ function changeColor(color) {
         for (let i = 0; i < h2.length; i++) {
             h2[i].style.color = '#f2f2f2';
         }
-
+		for (let i = 0; i < push.length; i++) {
+			push[i].setAttribute('src', './assets/Octopush.svg');
+		}
+		for (let i = 0; i < pull.length; i++) {
+			pull[i].setAttribute('src', './assets/Octopull.svg');
+		}
+		for (let i = 0; i < rightArrows.length; i++) {
+			rightArrows[i].setAttribute('src', './assets/RightArrow.svg');
+		}
+		for (let i = 0; i < addRepo.length; i++) {
+			addRepo[i].setAttribute('src', './assets/AddRepositoryFolder.svg');
+		}
         diffp.style.color = '#fff'
         diffp.style.backgroundColor = '#282828';
         network.style.backgroundColor = '#88BDBC';
@@ -159,6 +209,18 @@ function changeColor(color) {
         for (let i = 0; i < h2.length; i++) {
             h2[i].style.color = '#F4EDE9';
         }
+		for (let i = 0; i < push.length; i++) {
+			push[i].setAttribute('src', './assets/Octopush.svg');
+		}
+		for (let i = 0; i < pull.length; i++) {
+			pull[i].setAttribute('src', './assets/Octopull.svg');
+		}
+		for (let i = 0; i < rightArrows.length; i++) {
+			rightArrows[i].setAttribute('src', './assets/RightArrow.svg');
+		}
+		for (let i = 0; i < addRepo.length; i++) {
+			addRepo[i].setAttribute('src', './assets/AddRepositoryFolder.svg');
+		}
         diffp.style.color = '#fff'
         diffp.style.backgroundColor = '#282828';
         network.style.backgroundColor = '#C9A2A3';
@@ -167,4 +229,5 @@ function changeColor(color) {
         auth.style.backgroundColor = '#C9A2A3';
         before = 'burgundy';
     }
+    sessionStorage.setItem('currColor', color);
 }

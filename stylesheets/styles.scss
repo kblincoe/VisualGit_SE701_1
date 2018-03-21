@@ -14,6 +14,12 @@ p, h1 {
   width: 100px;
 }
 
+.push, .pull {
+  margin: 2px;
+  padding: 0px 8px;
+  height: 48px;
+}
+
 @media screen and (max-width: 767px) {
   .navbar .navbar-collapse .navbar-right > li:last-child {
     padding-left: 15px;
@@ -119,6 +125,36 @@ body {
     border-bottom: 2px solid #181818;
   }
 
+  .navbar-burgundy {
+    background-color: #572219;
+    border-bottom: 2px solid #181818;
+
+    .navbar-nav > li > a {
+      color: #F4EDE9;
+    }
+
+  }
+
+  .navbar-blue {
+    background-color: #112D32;
+    border-bottom: 2px solid #181818;
+
+    .navbar-nav > li > a {
+      color: #fff;
+    }
+
+  }
+
+  .navbar-vintage {
+    background-color: #212617;
+    border-bottom: 2px solid #181818;
+
+    .navbar-nav > li > a {
+      color: #E9E7DA;
+    }
+
+  }
+
   .add-repository-button {
     position: relative;
     z-index: 2;
@@ -214,9 +250,14 @@ body {
         padding: 0 15px;
         background-color: $teal;
         color: $white;
+        opacity: 1.0;
       }
 
-      .commit-button:hover {
+      .commit-button:disabled {
+        opacity: 0.3;
+      }
+
+      .commit-button:hover:enabled {
         opacity: 0.8;
       }
     }
@@ -253,6 +294,45 @@ body {
         background-color: $dark-grey-hover;
       }
 
+    }
+
+    .text-editor-panel {
+      width: 0;
+      height: 100%;
+      float: left;
+      background-color: $dark-grey;
+
+      #text-editor-panel-title {
+        color: #ffffff;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+      .editor-button{
+        display: inline-block;
+        margin-left: 8px;
+        margin-right: 8px;
+        margin-top: 6px;
+        margin-bottom: 8px;
+        height: 30px;
+        border-radius: 10px;
+        border: 0;
+        padding: 0 13px;
+        background-color: $teal;
+        color: $white;
+      }
+      .editor-button:hover{
+        opacity: 0.8;
+      }
+      .text-editor-panel-body {
+        visibility: hidden;
+        width: 100%;
+        height: 80vh;
+        float: left;
+        background-color: $dark-grey;
+        color: $white;
+        overflow-y: scroll;
+        outline: 1px solid $darker-grey;
+      }
     }
 
     .graph-panel {
@@ -413,4 +493,8 @@ body {
 
 .file-deleted {
   background-color: $file-deleted;
+}
+
+#repo-dropdown {
+  list-style-type: none;
 }
