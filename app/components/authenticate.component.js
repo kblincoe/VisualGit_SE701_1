@@ -20,6 +20,10 @@ var AuthenticateComponent = /** @class */ (function () {
         var password = getPassword();
         var uncryptedData = decryptValue(password);
         document.getElementById('password').value = uncryptedData.toString(CryptoJS.enc.Utf8);
+        var currColor = sessionStorage.getItem('currColor');
+        if (currColor != null) {
+            changeColor(currColor);
+        }
     };
     AuthenticateComponent = __decorate([
         core_1.Component({
