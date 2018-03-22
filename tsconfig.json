@@ -16,8 +16,14 @@
         "suppressImplicitAnyIndexErrors": true,
         "strictNullChecks": true
     },
+    "include": [
+        "app/components/*.ts",
+        "app/misc/*.ts",
+        "app/services/*.ts",
+        "app/*.ts"
+    ],
     "exclude": [
-        "node_modules"
+        "node_modules/*"
     ],
     "compileOnSave": true,
     "buildOnSave": false,
