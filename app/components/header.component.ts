@@ -38,6 +38,18 @@ import { GraphService } from "../services/graph.service";
                 </li>
               </ul>
             </li>
+            <li class="color-name dropdown">       
+               <button class="btn btn-inverse dropdown-toggle btn-sm navbar-btn" id="color-name" data-toggle="dropdown">
+             color
+             <span class="caret"></span>
+           </button>
+             <ul class="dropdown-menu" id="color-dropdown" role="menu" aria-labelledby="color-name">
+               <li class="white" onclick="changeColor('white')">white</li>
+               <li class="vintage" onclick="changeColor('vintage')">vintage</li>
+               <li class="blue" onclick="changeColor('blue')">blue</li>
+               <li class="burgundy" onclick="changeColor('burgundy')">burgundy</li>
+               <li class="default" onclick="changeColor('default')">default</li>
+             </ul>
           </ul>
 
           <ul class="nav navbar-nav col-md-4 hidden-xs">
