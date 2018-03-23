@@ -46,7 +46,7 @@ p, h1 {
 
 body {
   margin: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
 
   .btn:focus {
@@ -70,6 +70,10 @@ body {
 
   .navbar {
     z-index: 1;
+
+    .navbar-container {
+      width: 100%;
+    }
 
     .modal:hover {
       opacity: 1;
@@ -326,7 +330,7 @@ body {
       .text-editor-panel-body {
         visibility: hidden;
         width: 100%;
-        height: 80vh;
+        height: 70vh;
         float: left;
         background-color: $dark-grey;
         color: $white;
