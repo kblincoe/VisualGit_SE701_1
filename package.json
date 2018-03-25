@@ -11,7 +11,7 @@
     "start": "npm run build-ts && npm run build-sass && electron index.js",
     "build": "electron-packager . --out=dist --app-version=$npm_package_version --prune --asar --overwrite --all",
     "postinstall": "typings install",
-    "build-ts": "./node_modules/.bin/tsc",
+    "build-ts": "./node_modules/.bin/tsc || exit 0",
     "build-sass": "./node_modules/.bin/node-sass --recursive --output-style=\"expanded\" -o stylesheets ./stylesheets/"
   },
   "keywords": [

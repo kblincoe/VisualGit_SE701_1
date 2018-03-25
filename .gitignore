@@ -7,6 +7,9 @@ dist/
 stylesheets/*.css
 stylesheets/*.css.map
 .sass-cache/
+app/components/*.js
+app/misc/*.js
+app/services/*.js
 app/*.js
 
 npm-debug.log
