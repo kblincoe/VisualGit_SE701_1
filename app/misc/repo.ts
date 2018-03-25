@@ -65,10 +65,25 @@ function openRepository() {
       let tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
     }
     refreshAll(repository);
+    // Need to initialise the existing stashes
+    persistStashList(repository);
     updateModalText("Repository successfully opened");
   },
   function(err) {
     displayErrorMessage("Opening Failed - " + err);
+  })
+}
+
+function persistStashList(repository) {
+  let stashList = new Map();
+  Git.Stash.foreach(repository, ((value,key) => {
+    stashList.set(key, value);
+  }), {}).then(function(result) {
+    // saves stash list in local storage
+    setStashList(stashList);
+  },
+  function(err) {
+    displayErrorMessage("Failed retrieving stashes");
   });
 }
 

@@ -120,6 +120,7 @@ function cloneRepo() {
         return;
     }
     var fullPath = document.getElementById("repoCloneLocation").files[0].path;
+    setStashList(new Map());
     var splitText = url.split(/\.|:|\//);
     var local;
     if (splitText.length >= 2) {

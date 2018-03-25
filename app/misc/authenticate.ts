@@ -132,6 +132,7 @@ function cloneRepo() {
     return;
   }
   let fullPath = document.getElementById("repoCloneLocation").files[0].path
+  setStashList(new Map());
   let splitText = url.split(/\.|:|\//);
   let local;
   if (splitText.length >= 2) {
