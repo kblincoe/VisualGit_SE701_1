@@ -8,7 +8,7 @@ let fs = require("fs");
 let async = require("async");
 let readFile = require("fs-sync");
 let green = "#84db00";
-let repo, index, oid, remote, commitMessage;
+let repo, index, oid, remote, commitMessage, stashMessage;
 let filesToAdd = [];
 let theirCommit = null;
 
@@ -536,6 +536,7 @@ function displayModifiedFiles() {
         let filePath = document.createElement("p");
         filePath.className = "file-path";
         filePath.innerHTML = file.filePath;
+        filePath.title = file.filePath;
         let fileElement = document.createElement("div");
         let checkboxElement = document.createElement("div");
         fileContainer.appendChild(checkboxElement);
@@ -679,3 +680,18 @@ function displayModifiedFiles() {
     console.error(err);
   });
 }
+
+function clearModifiedFilesExport() {
+  return new clearModifiedFilesList();
+}
+
+function clearCommitMessageExport() {
+  return new clearCommitMessage();
+}
+
+function clearSelectAllCheckboxExport() {
+  return new clearSelectAllCheckbox();
+}
+
+
+module.exports = { clearModifiedFilesExport, clearCommitMessageExport, clearSelectAllCheckboxExport };
