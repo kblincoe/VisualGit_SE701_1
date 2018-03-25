@@ -536,6 +536,7 @@ function displayModifiedFiles() {
         let filePath = document.createElement("p");
         filePath.className = "file-path";
         filePath.innerHTML = file.filePath;
+        filePath.title = file.filePath;
         let fileElement = document.createElement("div");
         let checkboxElement = document.createElement("div");
         fileContainer.appendChild(checkboxElement);
