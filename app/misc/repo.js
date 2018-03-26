@@ -17,6 +17,11 @@ function downloadRepository() {
     var cloneURL = document.getElementById("repoClone").value;
     var localPath = document.getElementById("repoSave").value;
     var fullPath = document.getElementById("repoSaveLocation").files[0].path;
+    var splitText = cloneURL.split(/\.|:|\//);
+    var local;
+    local = splitText[splitText.length - 2] + "/" + splitText[splitText.length - 1];
+    var ghrepo = getRepo(local);
+    getIssues(ghrepo);
     downloadFunc(cloneURL, localPath, fullPath);
 }
 function downloadFunc(cloneURL, localPath, fullPath) {
@@ -49,6 +54,16 @@ function openRepository() {
     var fullLocalPath = document.getElementById("repoOpen").files[0].path;
     displayModal("Opening Local Repository...");
     Git.Repository.open(fullLocalPath).then(function (repository) {
+        repository.getRemotes().then(function (remoteArray) {
+            repository.getRemote(remoteArray[0]).then(function (remote) {
+                var remoteUrl = remote.url();
+                var local;
+                var splitText = remoteUrl.split(/\.|:|\//);
+                local = splitText[splitText.length - 2] + "/" + splitText[splitText.length - 1];
+                var ghrepo = getRepo(local);
+                getIssues(ghrepo);
+            });
+        });
         repoFullPath = fullLocalPath;
         setupWatcher(repoFullPath);
         repoLocalPath = fullLocalPath.replace(/^.*[\\\/]/, '');
@@ -225,6 +240,7 @@ function displayBranch(name, id, onclick) {
     a.setAttribute("class", "list-group-item");
     a.setAttribute("onclick", onclick);
     li.setAttribute("role", "presentation");
+    li.setAttribute("id", name);
     a.appendChild(document.createTextNode(name));
     li.appendChild(a);
     ul.appendChild(li);

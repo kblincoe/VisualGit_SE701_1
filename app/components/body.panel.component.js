@@ -10,14 +10,15 @@ var core_1 = require("@angular/core");
 var diff_panel_component_1 = require("./diff.panel.component");
 var textEditor_panel_component_1 = require("./textEditor.panel.component");
 var graph_panel_component_1 = require("./graph.panel.component");
+var single_issue_component_1 = require("./single.issue.component");
 var BodyPanelComponent = (function () {
     function BodyPanelComponent() {
     }
     BodyPanelComponent = __decorate([
         core_1.Component({
             selector: "body-panel",
-            template: "\n  <div class=\"body-panel\" id=\"body-panel\">\n    <text-editor-panel></text-editor-panel>\n    <diff-panel></diff-panel>\n    <graph-panel></graph-panel>\n  </div>\n  ",
-            directives: [textEditor_panel_component_1.TextEditorPanelComponent, diff_panel_component_1.DiffPanelComponent, graph_panel_component_1.GraphPanelComponent]
+            template: "\n  <div class=\"body-panel\" id=\"body-panel\">\n    <single-issue></single-issue>\n    <text-editor-panel></text-editor-panel>\n    <diff-panel></diff-panel>\n    <graph-panel></graph-panel>\n  </div>\n  ",
+            directives: [textEditor_panel_component_1.TextEditorPanelComponent, diff_panel_component_1.DiffPanelComponent, graph_panel_component_1.GraphPanelComponent, single_issue_component_1.SingleIssueComponent]
         })
     ], BodyPanelComponent);
     return BodyPanelComponent;

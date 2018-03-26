@@ -15,6 +15,31 @@ function switchToAddRepositoryPanel() {
     hideGraphPanel();
     displayAddRepositoryPanel();
 }
+function switchToIssuesPanel() {
+    hideGraphPanel();
+    hideDiffPanel();
+    hideTextEditorPanel();
+    displayIssuesPanel();
+    displaySingleIssue();
+    hideFilePanel();
+    hideCreateIssue();
+}
+function switchFromIssuesPanel() {
+    hideIssuesPanel();
+    hideSingleIssue();
+    displayGraphPanel();
+    displayDiffPanel();
+    displayFilePanel();
+}
+function switchToCreateIssue() {
+    displayCreateIssue();
+    hideIssueContent();
+}
+function switchFromCreateIssue() {
+    hideCreateIssue();
+    displayIssueContent();
+    resetSingleIssue();
+}
 function wait(ms) {
     var start = new Date().getTime();
     var end = start;
@@ -40,6 +65,18 @@ function hideGraphPanel() {
 function hideAddRepositoryPanel() {
     document.getElementById("add-repository-panel").style.zIndex = "-10";
 }
+function hideIssuesPanel() {
+    document.getElementById("issues-panel").style.zIndex = "-100";
+}
+function hideSingleIssue() {
+    document.getElementById("single-issue").style.display = "none";
+}
+function hideCreateIssue() {
+    document.getElementById("create-issue").style.display = "none";
+}
+function hideIssueContent() {
+    document.getElementById("issue-content").style.display = "none";
+}
 function displayDiffPanel() {
     document.getElementById("graph-panel").style.width = "60%";
     document.getElementById("diff-panel").style.width = "40%";
@@ -63,6 +100,18 @@ function hideAuthenticatePanel() {
 }
 function displayAuthenticatePanel() {
     document.getElementById("authenticate").style.zIndex = "20";
+}
+function displayIssuesPanel() {
+    document.getElementById("issues-panel").style.zIndex = "100";
+}
+function displayCreateIssue() {
+    document.getElementById("create-issue").style.display = "block";
+}
+function displayIssueContent() {
+    document.getElementById("issue-content").style.display = "block";
+}
+function displaySingleIssue() {
+    document.getElementById("single-issue").style.display = "block";
 }
 function clearTextBoxes() {
     document.getElementById("Email1").value = "";

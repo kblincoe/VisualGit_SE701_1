@@ -19,6 +19,35 @@ function switchToAddRepositoryPanel() {
   displayAddRepositoryPanel();
 }
 
+function switchToIssuesPanel() {
+  hideGraphPanel();
+  hideDiffPanel();
+  hideTextEditorPanel();
+  displayIssuesPanel();
+  displaySingleIssue();
+  hideFilePanel()
+  switchFromCreateIssue();
+}
+
+function switchFromIssuesPanel() {
+ hideIssuesPanel();
+ hideSingleIssue();
+ displayGraphPanel();
+ displayDiffPanel();
+ displayFilePanel();
+}
+
+function switchToCreateIssue() {
+  document.getElementById("create-issue").style.display = "block";
+  document.getElementById("issue-content").style.display = "none";
+}
+
+function switchFromCreateIssue() {
+  document.getElementById("create-issue").style.display = "none";
+  document.getElementById("issue-content").style.display = "block";
+  resetSingleIssue();
+}
+
 function wait(ms){
    var start = new Date().getTime();
    var end = start;
@@ -51,6 +80,14 @@ function hideAddRepositoryPanel() {
   document.getElementById("add-repository-panel").style.zIndex = "-10";
 }
 
+function hideIssuesPanel() {
+  document.getElementById("issues-panel").style.zIndex = "-100";
+}
+
+function hideSingleIssue() {
+  document.getElementById("single-issue").style.display = "none";
+}
+
 function displayDiffPanel() {
   document.getElementById("graph-panel").style.width = "60%";
   document.getElementById("diff-panel").style.width = "40%";
@@ -80,6 +117,14 @@ function hideAuthenticatePanel() {
 
 function displayAuthenticatePanel() {
   document.getElementById("authenticate").style.zIndex = "20";
+}
+
+function displayIssuesPanel() {
+  document.getElementById("issues-panel").style.zIndex = "100";
+}
+
+function displaySingleIssue() {
+  document.getElementById("single-issue").style.display = "block";
 }
 
 // Clears username and password textboxes after use signs in on the top right corner

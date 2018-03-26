@@ -178,7 +178,7 @@ body {
     height: 80vh;
     background-color: $dark-grey;
     float: left;
-    z-index: 0;
+    z-index: 10;
 
     .modified-files-header {
 
@@ -534,3 +534,25 @@ body {
 #repo-dropdown {
   list-style-type: none;
 }
+.issues-panel {
+  background-color: $dark-grey;
+  width: 20%;
+  height: 80vh;
+  float: left;
+  z-index: -100;
+  position: fixed;
+  overflow-y: scroll; 
+}
+
+ .single-issue {
+  background-color: $dark-grey;
+  display: none;
+
+  h1 {
+    color: white;
+  }
+ }
+
+ #enter-comment {
+   display: none;
+ }

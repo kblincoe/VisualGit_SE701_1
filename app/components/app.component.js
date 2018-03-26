@@ -13,6 +13,7 @@ var body_panel_component_1 = require("./body.panel.component");
 var footer_component_1 = require("./footer.component");
 var add_repository_component_1 = require("./add.repository.component");
 var authenticate_component_1 = require("./authenticate.component");
+var issues_panel_component_1 = require("./issues.panel.component");
 var AppComponent = (function () {
     function AppComponent() {
     }
