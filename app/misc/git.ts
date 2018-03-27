@@ -90,14 +90,33 @@ function addAndCommit() {
 // Clear all modified files from the left file panel
 function clearModifiedFilesList() {
   let filePanel = document.getElementById("files-changed");
-  while (filePanel.firstChild) {
-    filePanel.removeChild(filePanel.firstChild);
-  }
-  let filesChangedMessage = document.createElement("p");
-  filesChangedMessage.className = "modified-files-message";
-  filesChangedMessage.id = "modified-files-message";
-  filesChangedMessage.innerHTML = "Your modified files will appear here";
-  filePanel.appendChild(filesChangedMessage);
+  let commitPanel = document.getElementById("commit-panel");
+
+  // Grab a NodeList of all the children
+  // This potentially includes changed files (<div>), 'no modified files' message (<p>), 
+  // and the commit elements (<div>).
+  let filePanelChildren = filePanel.childNodes;
+
+  let childrenToRemove = Array();
+
+  // Find all the children to remove, leaving the commit panel
+  filePanelChildren.forEach(function(currentValue) {
+    if (currentValue !== commitPanel) {
+      childrenToRemove.push(currentValue);
+    }
+  });
+
+  // Removes all the found children
+  childrenToRemove.forEach(function(child) {
+    filePanel.removeChild(child);
+  });
+
+  // Re-adding the message given when there are no modified files
+  let modifiedFilesMessage = document.createElement("p");
+  modifiedFilesMessage.className = "modified-files-message";
+  modifiedFilesMessage.id = "modified-files-message";
+  modifiedFilesMessage.innerHTML = "Your modified files will appear here";
+  filePanel.appendChild(modifiedFilesMessage);
 }
 
 function clearCommitMessage() {

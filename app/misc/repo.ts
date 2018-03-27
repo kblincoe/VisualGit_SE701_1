@@ -193,6 +193,7 @@ function refreshAll(repository) {
     drawGraph();
     document.getElementById("repo-name").innerHTML = repoLocalPath;
     document.getElementById("branch-name").innerHTML = branch + '<span class="caret"></span>';
+    clearModifiedFilesList();
   });
 }
 
