@@ -2,7 +2,16 @@ node_modules/
 typings/
 tmp/
 dist/
-stylesheets/variables.css
+
+# Transpiled files
+stylesheets/*.css
+stylesheets/*.css.map
+.sass-cache/
+app/components/*.js
+app/misc/*.js
+app/services/*.js
+app/*.js
+
 npm-debug.log
 git-history*
 
