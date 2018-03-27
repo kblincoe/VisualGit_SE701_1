@@ -1,0 +1,240 @@
+/**
+ * TEST PLAN FOR STAGING, UNSTAGING, AND VISUALISING RESPECTIVE CHANGES
+ * 
+ * The following is a test plan for the staging and unstaging functionality.
+ * Since there is currently no test suite for VisualGit, this test plan will act as a guideline for integrating staging/unstaging test cases when a test suite is created.
+ * To compensate for the lack of testing support, the following functionalities have been smoke tested and observed for correct behaviour. The results from VisualGit were compared against the terminal and SourceTree.
+ * 
+ * 1.1 Purpose of test plan
+ * The purpose of this test plan is to test the staging, unstaging functionality for changed files, as well as other functionalities centred around these. 
+ * 
+ * 1.2 Test approaches
+ * The following are an outline of the tests
+ * 
+ * //--- To be run before every single unit test in this test plan ---// 
+ * setUp() {
+ *  import { stageFiles } from ../app/misc/git.ts
+ *  import { unstageFiles } from ../app/misc/git.ts
+ *  import { commitFiles } from ../app/misc/git.ts
+ *  import { printFileDiff } from ../app/msic/git.ts
+ *  import * as nodegit from "git";
+ *
+ *
+ *  var testRepository = new Repository();
+ *
+ *  var fileName = "TEST_FILE.txt";
+ *  var fileContent = "This is some added content.";
+ *  var textFile = new File(fileName);
+ *
+ *
+ *  var fileName1 = "TEST_FILE_1.txt";
+ *  var fileContent1 = "This is some added content 1.";
+ *  var textFile1 = new File(fileName1);
+ * 
+ *  textFile.writeln(fileContent);
+ * }
+ *
+ * //-- to be used when second file is required --//
+ * setUpSecondFile() {
+ *
+ *  var fileName1 = "TEST_FILE_1.txt";
+ *  var fileContent1 = "This is some added content 1.";
+ *  var textFile1 = new File(fileName1);
+ * 
+ *  textFile1.writeln(fileContent1);
+ * }
+ * 
+ *
+ * 
+ * //--- Stage new file ----//
+ * testStageNewFile(){
+ *  
+ *  stageFiles();
+ *
+ *  Git.Git.Repository.open(repoFullPath)
+ *  .then(function(repo) {
+ *     return repo.getStatus().then(function(statuses) {
+ *          return statuses[0]; 
+ *      });
+ *  }).then (function(status) {
+ *      assert(status.status().includes("INDEX_NEW"));
+ *      assert(document.getElementsByClassName('file-path staged')[0].innerHTML === status.path());
+ *     assert(!document.getElementsByClassName('file-path modified')[0].innerHTML === status.path());
+ *  }) 
+ *
+ * }
+ *
+ *
+ * //--- Modify file ----//
+ * testModifyFile(){
+ *  
+ *  stageFiles();
+ *
+ * //file already contain staged changes, so at the end it should have staged changes and unstaged changes
+ *  textFile.writeln("This change should be staged later.");
+ *
+ *  Git.Git.Repository.open(repoFullPath)
+ *  .then(function(repo) {
+ *     return repo.getStatus().then(function(statuses) {
+ *          return statuses[0]; 
+ *      });
+ *  }).then (function(status) {
+ *      assert(status.status().includes("INDEX_NEW") && status.status().includes("WT_MODIFIED"));
+ *      assert(document.getElementsByClassName('file-path staged')[0].innerHTML === status.path());
+  *     assert(document.getElementsByClassName('file-path modified')[0].innerHTML === status.path());
+ *  }) 
+ *
+ * }
+ *
+ * 
+ * //--- Stage modified file ----//
+ * testStageNewFile(){
+ *  
+ *  stageFiles();
+ *
+ *  textFile.writeln("This change should be staged later.");
+ *  
+ *  stageFiles();
+ *
+ *  Git.Git.Repository.open(repoFullPath)
+ *  .then(function(repo) {
+ *     return repo.getStatus().then(function(statuses) {
+ *          return statuses[0]; 
+ *      });
+ *  }).then (function(status) {
+ *      assert(status.status().includes("INDEX_MODIFIED"));
+ *      assert(document.getElementsByClassName('file-path staged')[0].innerHTML === status.path());
+ *     assert(!document.getElementsByClassName('file-path modified')[0].innerHTML === status.path());
+ *  }) 
+ *
+ * }
+ * 
+ * 
+ * //--- Unstage changes ---//
+ * //same for unstaging new and modified staged files
+ * testUnstageFile() {
+ *  
+ *  stageFiles();
+ *  unstageFiles();
+ * 
+ *  Git.Repository.open(repoFullPath)
+ *  .then(function(repo) {
+ *     return repo.getStatus().then(function(statuses) {
+ *          return statuses[0]; 
+ *      });
+ *  }).then (function(status) {
+ *      assert(status.status().includes("INDEX_DELETED") && status.status().includes("WT_NEW"));
+ *      assert(document.getElementsByClassName('file-path modified')[0].innerHTML === status.path());
+ *      assert(!document.getElementsByClassName('file-path staged')[0].innerHTML === status.path());
+ *  })
+ *
+ *
+ * 
+ * //--- Stage multiple files ----//
+ * testStageNewFile(){
+ *  
+ *  setUpSecondFile();
+ *  stageFiles();
+ *
+ *
+ *  Git.Git.Repository.open(repoFullPath)
+ *  .then(function(repo) {
+ *     return repo.getStatus().then(function(statuses) {
+ *          return statuses; 
+ *      });
+ *  }).then (function(statuses) {
+ *
+ *      assert(statuses[0].status().includes("INDEX_NEW"));
+ *      assert(document.getElementsByClassName('file-path staged')[0].innerHTML === statuses[0].path());
+ *      assert(!document.getElementsByClassName('file-path modified')[0].innerHTML === statuses[0].path());
+ *
+ *      assert(statuses[1].status().includes("INDEX_NEW"));
+ *      assert(document.getElementsByClassName('file-path staged')[1].innerHTML === statuses[0].path());
+ *      assert(!document.getElementsByClassName('file-path modified')[1].innerHTML === statuses[0].path());
+ *  }) 
+ *
+ * }
+ *
+ *
+* //--- Unstage multiple files ----//
+ * testStageNewFile(){
+ *  
+ *  setUpSecondFile();
+ *  stageFiles();
+ *  unstageFiles();
+ *
+ *
+ *  Git.Git.Repository.open(repoFullPath)
+ *  .then(function(repo) {
+ *     return repo.getStatus().then(function(statuses) {
+ *          return statuses; 
+ *      });
+ *  }).then (function(statuses) {
+ *
+ *      assert(statuses[0].status().includes("WT_NEW"));
+ *      assert(!document.getElementsByClassName('file-path staged')[0].innerHTML === statuses[0].path());
+ *      assert(document.getElementsByClassName('file-path modified')[0].innerHTML === statuses[0].path());
+ *
+ *      assert(statuses[1].status().includes("WT_NEW"));
+ *      assert(!document.getElementsByClassName('file-path staged')[1].innerHTML === statuses[0].path());
+ *      assert(document.getElementsByClassName('file-path modified')[1].innerHTML === statuses[0].path());
+ *  }) 
+ *
+ * }
+ * 
+ * 
+ * //--- Commit changes ---//
+ * testCommit() {
+ *  
+ *  setUpSecondFile();
+ *  stageFiles()
+ *  
+ *  Git.Repository.open(repoFullPath)
+ *  .then(function(repo) {
+ *     return repo.getStatus().then(function(statuses) {
+ *          return statuses; 
+ *      });
+ *  })
+ *  .then(function() {
+ *    assert.equals(statuses.length == 0);
+ *      assert(!document.getElementsByClassName('file-path modified')[0].innerHTML === status.path());
+ *      assert(!document.getElementsByClassName('file-path staged')[0].innerHTML === status.path());
+ *  });
+ * }
+ *
+ *
+ * 
+ * //--- View staged and unstaged changes of a file ----//
+ * testViewStagedChanges(){
+ *
+ *  stageFiles();
+ *  fileName.writeln("This change is unstaged")
+ *
+ *  
+ *  printFileDiff()
+ *   .then(function() {
+ *      //when you click file in staged section
+ *      var printedDiff = document.getElementById("diff-panel-body").childNodes;
+ *      var computedStyle = window.getComputedStyle(printedDiff, null);
+ *      assert(printedDiff[0] === "This is some added content");
+ *      assert(computedStyle[printedDiff[0].style] === "rgb(132, 219, 0)"); //green
+ *
+ *      //when you click file in unstaged section
+ *      var printedDiff = document.getElementById("diff-panel-body").childNodes;
+ *      var computedStyle = window.getComputedStyle(printedDiff, null);
+ *      var lineOneStyle = printedDiff[0].style;
+ *      var lineTwoStyle = printedDiff[1].style;
+ *      var lineThreeStyle = printedDiff[2].style;
+ *      var lineFourStyle = printedDiff[3].style;
+ *      assert(printedDiff[0] === "This is some added content");
+ *      assert(computedStyle[lineOneStyle] === "rgb(255, 36, 72)"); //red
+ *
+ *      assert(printedDiff[1] === "\ No newline at end of file");
+ *
+ *      assert(printedDiff[2] === "This change is unstaged");
+ *      assert(computedStyle[lineThreeStyle] === "rgb(132, 219, 0)"); //green
+ *
+ *      assert(printedDiff[3] === "\ No newline at end of file");
+ *   });
+ *  }
+ */

@@ -1,7 +1,7 @@
 import * as nodegit from "git";
 import NodeGit, { Status } from "nodegit";
 
-let clearModifiedFilesList = require('./git');
+let clearFilesList = require('./git');
 let clearCommitMessage = require('./git');
 let clearSelectAllCheckbox = require('./git');
 let Git = require("nodegit");
@@ -38,7 +38,8 @@ function stashChanges() {
   .then(function(stashMessage) {
     if (stashMessage) {
       hideDiffPanel();
-      clearModifiedFilesList();
+      clearFilesList("modified");
+      clearFilesList("staged");
       clearCommitMessage();
       clearSelectAllCheckbox();
       addCommand("git stash save '" + stashMessage + "'");
