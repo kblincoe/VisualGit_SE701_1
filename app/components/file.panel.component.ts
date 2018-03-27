@@ -4,41 +4,72 @@ import { StashPanelComponent } from "./stash.panel.component";
 @Component({
   selector: "file-panel",
   template: `
-  <div class="file-panel" id="file-panel" style="overflow-y:scroll; position:relative;">
+  <div class="file-panel" id="file-panel" style="position:relative;">
 
-  <div [hidden]="showStashPanel" class="modified-file-panel">
-    <div class="modified-files-header" id="modified-files-header">
-      <p class="select-all-message" id="select-all-message">Select all</p>
-      <input onClick="setAllCheckboxes(this);" type="checkbox" class="select-all-checkbox" id="select-all-checkbox"/>
+    <div [hidden]="showStashPanel" class="modified-file-panel">
+      <div style="overflow-y:scroll; height: 60vh;">
+        <hr>
+
+        <!-- modified files -->
+
+        <div class="files-header" id="modified-files-header">
+          <p class="section-heading">Unstaged changes</p>
+          <input onClick="setAllCheckboxes(this); determineButtonStates()" type="checkbox" class="select-all-checkbox" id="select-all-modified"/>
+        </div>
+
+        <div class="files-changed" id="files-changed">
+          <p class="modified-files-message" id="">Your unstaged files will appear here</p>
+        </div>
+
+        <div class="button-panel">
+          <button class="file-panel-button" id="stage-button" disabled>Stage</button>
+        </div>
+        <hr>
+
+
+        <!-- staged files -->
+
+        <div class="files-header" id="staged-files-header">
+          <p class="section-heading">Staged changes</p>
+          <input onClick="setAllCheckboxes(this); determineButtonStates();" type="checkbox" class="select-all-checkbox" id="select-all-staged"/>
+        </div>
+
+        <div class="files-changed" id="staged-files">
+          <p class="modified-files-message" id="staged-files-message">Your staged files will appear here</p>
+          <div class="file" *ngFor="let file of files">
+            <p>{{file}}</p>
+          </div>
+        </div>
+
+        <div class="button-panel">
+          <button class="file-panel-button" id="unstage-button" disabled>Unstage</button>
+        </div>
+        <hr>
+
+        <!-- commit -->
+
+        <div class="button-panel">
+          <p class="section-heading">Commit staged files</p>
+          <textarea placeholder="Describe your changes here..." class="commit-message-input" id="commit-message-input"></textarea>
+          <button class="file-panel-button" id="commit-button">Commit</button>
+        </div>
+      </div>
     </div>
 
-    <div class="files-changed" id="files-changed">
-      <p class="modified-files-message" id="modified-files-message">Your modified files will appear here</p>
-      <div class="file" *ngFor="let file of files">
-        <p>{{file}}</p>
-      </div>
-
-      <div class="commit-panel" id="commit-panel">
-        <textarea placeholder="Describe your changes here..." class="commit-message-input" id="commit-message-input"></textarea>
-        <button class="commit-button" id="commit-button">Commit</button>
-      </div>
-    </div>
-  </div>
-
-  <stash-panel [hidden]="!showStashPanel" [setUpStashList]="showStashPanel"></stash-panel>
-
-    <div class="commit-panel" id="stash-panel">
+    <stash-panel [hidden]="!showStashPanel" [setUpStashList]="showStashPanel"></stash-panel>
+    <div class="button-panel" id="stash-panel">
       <div>
-        <button class="commit-button" id="show-stash-button" (click)="togglePanelMode()">{{stashLabel}}</button>
+        <button class="file-panel-button" id="show-stash-button" (click)="togglePanelMode()">{{stashLabel}}</button>
       </div>
       <div class="stash-buttons">
-        <button [ngClass]="{'hidden': showStashPanel}" class="commit-button" id="stash-button">Stash</button>
-        <button [disabled]="disableWhenEmpty()" [ngClass]="{'hidden': !showStashPanel}" class="commit-button" id="delete-stash-button" (click)="togglePanelMode()">Delete Stash</button>
-        <button [disabled]="disableWhenEmpty()" class="commit-button" id="stash-apply-button" (click)="togglePanelMode()">Apply Stash</button>
+        <button [ngClass]="{'hidden': showStashPanel}" class="file-panel-button" id="stash-button">Stash</button>
+        <button [disabled]="disableWhenEmpty()" [ngClass]="{'hidden': !showStashPanel}" class="file-panel-button" id="delete-stash-button" (click)="togglePanelMode()">Delete Stash</button>
+        <button [disabled]="disableWhenEmpty()" class="file-panel-button" id="stash-apply-button" (click)="togglePanelMode()">Apply Stash</button>
       </div>
     </div>
-
+    
   </div>
+
   `,
   directives: [StashPanelComponent]
 })

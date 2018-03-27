@@ -138,21 +138,22 @@ body .file-panel {
   float: left;
   z-index: 0; }
 
-body .file-panel .modified-files-header .select-all-message {
+body .file-panel hr {
+  opacity: 0.5;
+  margin: 20px; }
+
+body .file-panel .files-header .section-heading {
   width: 77.5%;
   display: inline-block;
-  margin-left: 10px;
-  vertical-align: middle; }
-
-body .file-panel #scroll-panel {
-  height: 55vh;
-  overflow-y: scroll; }
+  margin-left: 15px;
+  vertical-align: middle;
+  font-size: 20px; }
 
 body .file-panel .files-changed .modified-files-message {
   padding: 20px; }
 
 body .file-panel .files-changed .file {
-  width: 99%;
+  width: 85%;
   height: 10%;
   position: relative;
   overflow: hidden;
@@ -181,7 +182,10 @@ body .file-panel .files-changed .file.stashed-file .selected {
 body .file-panel .files-changed .file:hover {
   opacity: 0.8; }
 
-body .file-panel .commit-panel .commit-message-input {
+body .file-panel .files-changed .file:hover {
+  opacity: 0.8; }
+
+body .file-panel .button-panel .commit-message-input {
   resize: none;
   width: 90%;
   display: block;
@@ -193,11 +197,11 @@ body .file-panel .commit-panel .commit-message-input {
   border-radius: 5px;
   padding: 5px; }
 
-body .file-panel .commit-panel .commit-button {
+body .file-panel .button-panel .file-panel-button {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 10px;
+  margin-top: 17px;
   margin-bottom: 10px;
   height: 30px;
   border-radius: 10px;

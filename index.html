@@ -53,7 +53,15 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
     // Add click event to Commit button
     document.getElementById('commit-button').addEventListener("click", function() {
-      addAndCommit();
+      commitFiles();
+    });
+
+    document.getElementById('stage-button').addEventListener("click", function() {
+      stageFiles();
+    });
+    
+    document.getElementById('unstage-button').addEventListener("click", function() {
+      unstageFiles();
     });
 
     document.getElementById('stash-button').addEventListener("click", function() {
@@ -71,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Update modified files on left file panel every X seconds
   setInterval(function() {
-    displayModifiedFiles();
+    displayFiles();
   }, 3000);
 }, false);
 
