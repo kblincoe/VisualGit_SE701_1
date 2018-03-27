@@ -116,7 +116,7 @@ function clearModifiedFilesList() {
   modifiedFilesMessage.className = "modified-files-message";
   modifiedFilesMessage.id = "modified-files-message";
   modifiedFilesMessage.innerHTML = "Your modified files will appear here";
-  filePanel.appendChild(modifiedFilesMessage);
+  filePanel.insertBefore(modifiedFilesMessage, commitPanel);
 }
 
 function clearCommitMessage() {
@@ -580,7 +580,8 @@ function displayModifiedFiles() {
         checkbox.className = "checkbox";
         checkboxElement.appendChild(checkbox);
 
-        document.getElementById("files-changed").appendChild(fileContainer);
+        let commitPanel = document.getElementById("commit-panel");
+        document.getElementById("files-changed").insertBefore(fileContainer, commitPanel);
 
         fileElement.onclick = function() {
           let textEditorPanel = document.getElementById("text-editor-panel");
