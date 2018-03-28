@@ -68,7 +68,6 @@ export class AddRepositoryComponent {
        displayModal("Please enter a save location!");
     } else {
       downloadRepository();
-      switchToMainPanel();
     }
   }
 
@@ -77,7 +76,6 @@ export class AddRepositoryComponent {
       displayModal("Please enter a local path!");
     } else {
       openRepository();
-      switchToMainPanel();
     }
   }
 
