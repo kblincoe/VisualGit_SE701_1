@@ -6,7 +6,7 @@ import { GraphService } from "../services/graph.service";
   selector: "app-header",
   template: `
     <nav class="navbar navbar-inverse" role="navigation">
-      <div class="container-fluid row">
+      <div class="container-fluid row navbar-container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
             <span class="sr-only">Toggle navigation</span>
