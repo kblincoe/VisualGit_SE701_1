@@ -15,8 +15,15 @@ let theirCommit = null;
 let modifiedFiles;
 let stagedFiles;
 
+function stageAllFiles() {
+  stageFiles($('#unstaged-file-drop')[0].children);
+}
 
-function stageFiles() {
+function unstageAllFiles() {
+  unStageFiles($('#staged-file-drop')[0].children);
+}
+
+function stageFiles(fileElements) {
   let repository;
 
   Git.Repository.open(repoFullPath)
@@ -28,15 +35,9 @@ function stageFiles() {
   .then(function(indexResult) {
     index = indexResult;
     let filesToStage = [];
-    filesToAdd = [];
-    //only loop through the files in the unstaged(modified) section of the file panel
-    let relevantCheckboxes = $(".checkbox-modified");
-    for (let i = 0; i < relevantCheckboxes.length; i++) {
-      if (relevantCheckboxes[i].checked === true) {
-        filesToStage.push($(".file .modified")[i].innerHTML);
-        filesToAdd.push($(".file .modified")[i].innerHTML);
-      }
-    }
+    $.each(fileElements, function(index, fileElement) {
+      filesToStage.push(fileElement.textContent);
+    });
     return index.addAll(filesToStage);
   })
 
@@ -48,43 +49,26 @@ function stageFiles() {
     return index.writeTree();
   })
 
-  .then(function(oidResult) {
-    oid = oidResult;
-  })
-  
   .then(function() {
-    for (let i = 0; i < filesToAdd.length; i++) {
-      addCommand("git add " + filesToAdd[i]);
-    }
-    hideDiffPanel();
-    clearFilesList("modified");
-    clearCommitMessage();
-    clearSelectAllCheckbox(true);
-    determineButtonStates();  //disable the stage button as no files would be selected
-    refreshAll(repository);
-  });
+    displayFiles();
+  })
 }
 
-function unstageFiles() {
+function unStageFiles(fileElements) {
   let repository;
 
   Git.Repository.open(repoFullPath)
-  .then(function(repo) {
-    repository = repo;
+  .then(function(repoResult) {
+    repository = repoResult;
     return repository.refreshIndex();
   })
 
-  .then(function(indexInfo) {
-    index = indexInfo;
-    filesToUnstage = [];
-    //only loop through the files in the unstaged(modified) section of the file panel
-    let relevantCheckboxes = $(".checkbox-staged");
-    for (let i = 0; i < relevantCheckboxes.length; i++) {
-      if (relevantCheckboxes[i].checked === true) {
-        filesToUnstage.push($(".file .staged")[i].innerHTML);
-      }
-    }
-    //remove all files selected from index- makes them untracked, but functions the same as unstaging in the VisualGit UI
+  .then(function(indexResult) {
+    index = indexResult;
+    let filesToUnstage = [];
+    $.each(fileElements, function(index, fileElement) {
+      filesToUnstage.push(fileElement.textContent);
+    });
     return index.removeAll(filesToUnstage);
   })
 
@@ -97,23 +81,38 @@ function unstageFiles() {
   })
 
   .then(function() {
-    for (let i = 0; i < filesToUnstage.length; i++) {
-      addCommand("git reset " + filesToUnstage[i]);
-    }
-    hideDiffPanel();
-    clearFilesList("staged");
-    clearSelectAllCheckbox(false);
-    determineButtonStates();  //disable stage button
-    refreshAll(repository);
+    displayFiles();
   })
 }
 
-function commitFiles() {
+
+
+function commit() {
   let repository;
 
   Git.Repository.open(repoFullPath)
   .then(function(repoResult) {
     repository = repoResult;
+    console.log("1.0");
+    return repository.refreshIndex();
+  })
+
+  .then(function(indexResult) {
+    index = indexResult;
+  })
+
+  .then(function() {
+    console.log("3.0");
+    return index.write();
+  })
+
+  .then(function() {
+    console.log("4.0");
+    return index.writeTree();
+  })
+
+  .then(function(oidResult) {
+    oid = oidResult;
     return Git.Reference.nameToId(repository, "HEAD");
   })
 
@@ -129,6 +128,7 @@ function commitFiles() {
       sign = Git.Signature.default(repository);
     }
     commitMessage = document.getElementById('commit-message-input').value;
+    readFile = require("fs-sync");
     if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
       let tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
       return repository.createCommit("HEAD", sign, sign, commitMessage, oid, [parent.id().toString(), tid.trim()]);
@@ -136,20 +136,18 @@ function commitFiles() {
       return repository.createCommit("HEAD", sign, sign, commitMessage, oid, [parent]);
     }
   })
-
   .then(function(oid) {
     theirCommit = null;
 
     hideDiffPanel();
     clearFilesList("staged");
     clearCommitMessage();
-  
+
     addCommand('git commit -m "' + commitMessage + '"');
     refreshAll(repository);
   }, function(err) {
     updateModalText("Please sign in before committing!");
   });
-
 }
 
 /*
@@ -168,7 +166,7 @@ function clearFilesList(type) {
   while (filePanel.firstChild) {
     filePanel.removeChild(filePanel.firstChild);
   }
-  
+
   //add message when there are no files back to UI
   let filesChangedMessage = document.createElement("p");
   filesChangedMessage.className = "modified-files-message";
@@ -353,9 +351,9 @@ function createBranch() {
             var shortName = arrayReference[i].replace(/^.*[\\\/]/, '');
             if (shortName === branchName) {
               flag = true;
-            }            
+            }
           }
-          
+
 
           if (!flag) {
             if (confirm("Would you like to make a branch called " + branchName + "?")) {
@@ -518,7 +516,7 @@ function resetCommit(name: string) {
   })
   .then(function(commit) {
     let checkoutOptions = new Git.CheckoutOptions();
-    return Git.Reset.fromAnnotated(repos, commit, Git.Reset.TYPE.HARD, checkoutOptions);
+    return Git.Reset.fromAnnotated(repos, commit, Git.Reset.TYPE.MIXED, checkoutOptions);
   })
   .then(function(number) {
     if (number !== 0) {
@@ -565,23 +563,23 @@ function revertCommit(name: string) {
 function displayFiles() {
   modifiedFiles = [];
   stagedFiles = [];
-  
+
   Git.Repository.open(repoFullPath)
   .then(function(repo) {
     repo.getStatus().then(function(statuses) {
       statuses.forEach(addModifiedOrStagedFile);  //add files to modifedFiles or stagedFiles array above if necessary
-      
+
       //if there are files in the unstaged section, then remove the default message if its present
       if (modifiedFiles.length !== 0 && document.getElementById("modified-files-message") !== null) {
         let filePanelMessage = document.getElementById("modified-files-message");
         filePanelMessage.parentNode.removeChild(filePanelMessage);
-      } 
+      }
         //if there are files in the staged section, then remove the default message if its present
       if (stagedFiles.length !== 0 && document.getElementById("staged-files-message") !== null) {
         let filePanelMessage = document.getElementById("staged-files-message");
         filePanelMessage.parentNode.removeChild(filePanelMessage);
       }
-  
+
       for (let file of modifiedFiles) {
         displayFile(file, "modified");
       }
@@ -595,8 +593,8 @@ function displayFiles() {
 
         let modifiedFilePaths = document.getElementsByClassName('file-path modified');
         let stagedFilePaths = document.getElementsByClassName('file-path staged');
-        
-        //there are complex situations in which files should or should not appear 
+
+        //there are complex situations in which files should or should not appear
         //these are necessary to determine if files should be displayed in the staged or modified (unstaged) sections
         //e.g. files are in section but need to be updated
         let newChangesExist = file.status().includes("WT_MODIFIED") || file.status().includes("WT_NEW");
@@ -621,7 +619,7 @@ function displayFiles() {
 
         let path = file.path();
         let modification = calculateModification(file);
-        
+
         //if file is not staged and not displayed in the modified section
         if (!file.inIndex() && !displayedInModified) {
           modifiedFiles.push({
@@ -666,15 +664,13 @@ function displayFiles() {
 
       // Add the modified file to the left file panel
       function displayFile(file, type) {
-        
+
         let fileContainer = document.createElement("div");
         let filePath = document.createElement("p");
         filePath.className = ("file-path " + type);
         filePath.innerHTML = file.filePath;
         filePath.title = file.filePath;
         let fileElement = document.createElement("div");
-        let checkboxElement = document.createElement("div");
-        fileContainer.appendChild(checkboxElement);
         fileContainer.appendChild(fileElement);
         fileContainer.style.display='flex';
 
@@ -689,22 +685,33 @@ function displayFiles() {
           fileElement.className = "file" + type + " ";
         }
 
+        fileElement.draggable = true;
+        fileElement.id = filePath.innerText;
+
+        fileElement.ondragstart = function(ev) {
+          ev.dataTransfer.setData("text", ev.target.id);
+        }
+
         fileElement.appendChild(filePath);
-        
-        let checkbox = document.createElement("input");
-        checkboxElement.style.margin='5px';
-        checkbox.type = "checkbox";
-        checkbox.className = "checkbox checkbox-" + type; //type is required to separate out checkboxes for staged and unstaged files
-        checkboxElement.appendChild(checkbox);
 
         if (type == "modified") {
-          document.getElementById("files-changed").appendChild(fileContainer);
+          document.getElementById("unstaged-file-drop").appendChild(fileContainer);
+          $.each(($('#staged-file-drop')[0].children), function(index, value) {
+            if (value.innerText == fileContainer.innerText) {
+              document.getElementById("staged-file-drop").removeChild(value);
+            }
+          });
         } else if (type == "staged") {
-          document.getElementById("staged-files").appendChild(fileContainer);
+          document.getElementById("staged-file-drop").appendChild(fileContainer);
+          $.each(($('#unstaged-file-drop')[0].children), function(index, value) {
+            if (value.innerText == fileContainer.innerText) {
+              document.getElementById("unstaged-file-drop").removeChild(value);
+            }
+          });
         }
 
         checkbox.onclick = function() {
-          determineButtonStates();  //checks if any buttons should be disabled as no relevant checkboxes are selected 
+          determineButtonStates();  //checks if any buttons should be disabled as no relevant checkboxes are selected
         }
 
         fileElement.onclick = function () {
@@ -728,7 +735,7 @@ function displayFiles() {
         }
       }
 
-      
+
 
       function printNewFile(filePath) {
         let fileLocation = require("path").join(repoFullPath, filePath);
@@ -750,7 +757,7 @@ function displayFiles() {
 
       function getCurrentDiff(filePath, staged, callback) {
         //depending on whether file is in staged or unstaged section in file panel, staged
-        // or unstaged changes will be obtained in the code following this section of code.
+        //changes or unstaged changes need to be shown
         var diff;
         if (staged) {
           diff= repo.getHeadCommit().then(function(commit) {
@@ -764,7 +771,6 @@ function displayFiles() {
           });
         }
 
-        //gets each line of code that has been modified and passes the lines onto formatLine() to be processed
         diff.then(function(diff) {
           diff.patches().then(function(patches) {
             patches.forEach(function(patch) {
@@ -807,10 +813,10 @@ function displayFiles() {
         element.innerHTML = text;
         document.getElementById("diff-panel-body").appendChild(element);
       }
-      
+
       // If files on the left panel exist, enable commit button
       disableOrEnableCommitButton();
-      
+
       function disableOrEnableCommitButton(){
         let filesOnPanel = document.getElementsByClassName("file");
         let commitButton = (document.getElementById("commit-button") as HTMLButtonElement);
@@ -823,7 +829,7 @@ function displayFiles() {
       }
 
     });
-    
+
   },
   function(err) {
     console.error(err);
