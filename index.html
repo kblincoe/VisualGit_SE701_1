@@ -49,6 +49,8 @@
 </html>
 
 <script>
+var isRepositoryLoaded = false;
+
 document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
     // Add click event to Commit button
@@ -79,7 +81,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Update modified files on left file panel every X seconds
   setInterval(function() {
-    displayFiles();
+    if (isRepositoryLoaded){
+      displayModifiedFiles();
+    }
   }, 3000);
 }, false);
 

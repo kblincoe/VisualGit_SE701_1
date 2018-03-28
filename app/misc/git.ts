@@ -814,7 +814,6 @@ function displayFiles() {
       function disableOrEnableCommitButton(){
         let filesOnPanel = document.getElementsByClassName("file");
         let commitButton = (document.getElementById("commit-button") as HTMLButtonElement);
-        console.log("Files to enable commit button: " + filesOnPanel.length);
         if(filesOnPanel.length == 0){
           commitButton.disabled = true;
         } else{
