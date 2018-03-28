@@ -63,9 +63,6 @@ export class AuthenticateComponent implements AfterViewInit {
     signInPage(switchToMainPanel);
   }
 
-  showQuickStart() : void {
-
-  }
 
   ngAfterViewInit() {
     let username = getUsername();
