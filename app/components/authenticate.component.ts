@@ -43,8 +43,15 @@ import { Component, AfterViewInit } from "@angular/core";
           <button type="submit" style="width:280px;" class="btn btn-success" (click)="switchToMainPanel()">Sign In</button>
         </div>
         <br>
+        <div>
         <button type="submit" style="width:280px;" class="btn btn-primary" onclick="switchToMainPanel()">Continue without sign in</button>
+        </div>
+        <div>
         <br>
+        <button type="submit" style="width:280px;" class="btn btn-primary" onclick="displayQuickstartModal()">Quick Start</button>
+        </div>
+        <br>
+        
         <a class="forgot-password" onClick="openForgotPassword()" href="#">Forgot Password</a>
       </form>
     </div>
@@ -54,6 +61,10 @@ import { Component, AfterViewInit } from "@angular/core";
 export class AuthenticateComponent implements AfterViewInit {
   switchToMainPanel(): void {
     signInPage(switchToMainPanel);
+  }
+
+  showQuickStart() : void {
+
   }
 
   ngAfterViewInit() {
