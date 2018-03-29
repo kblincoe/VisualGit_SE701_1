@@ -93,7 +93,6 @@ function commit() {
   Git.Repository.open(repoFullPath)
   .then(function(repoResult) {
     repository = repoResult;
-    console.log("1.0");
     return repository.refreshIndex();
   })
 
@@ -102,12 +101,10 @@ function commit() {
   })
 
   .then(function() {
-    console.log("3.0");
     return index.write();
   })
 
   .then(function() {
-    console.log("4.0");
     return index.writeTree();
   })
 
