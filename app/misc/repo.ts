@@ -8,7 +8,6 @@ let bname = {};
 let branchCommit = [];
 let remoteName = {};
 let localBranches = [];
-let readFile = require("fs-sync");
 let repoCurrentBranch = "master";
 let modal;
 let span;
@@ -47,10 +46,11 @@ function downloadFunc(cloneURL, localPath, fullPath) {
   .then(function(repository) {
     updateModalText("Clone Successful, repository saved under: " + fullLocalPath);
     addCommand("git clone " + cloneURL + " " + localPath);
+    isRepositoryLoaded = true;
     repoFullPath = fullLocalPath;
     repoLocalPath = localPath;
-    setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
     refreshAll(repository);
+    setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
   },
   function(err) {
     displayErrorMessage("Clone Failed - " + err);
@@ -59,6 +59,8 @@ function downloadFunc(cloneURL, localPath, fullPath) {
 
 function openRepository() {
   let fullLocalPath = document.getElementById("repoOpen").files[0].path;
+
+  let readFile = require("fs-sync");
 
   displayModal("Opening Local Repository...");
   Git.Repository.open(fullLocalPath).then(function(repository) {
@@ -74,7 +76,6 @@ function openRepository() {
     });
 
     repoFullPath = fullLocalPath;
-    setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
     repoLocalPath = fullLocalPath.replace(/^.*[\\\/]/, '');
     if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
       let tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
@@ -83,6 +84,8 @@ function openRepository() {
     // Need to initialise the existing stashes
     persistStashList(repository);
     updateModalText("Repository successfully opened");
+    isRepositoryLoaded = true;
+    setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
   },
   function(err) {
     displayErrorMessage("Opening Failed - " + err);
