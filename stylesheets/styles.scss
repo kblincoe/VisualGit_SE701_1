@@ -207,6 +207,8 @@ body {
     }
 
     .files-changed {
+      display: flex;
+      flex-direction: column;
 
       .modified-files-message {
         padding: 20px;
@@ -286,10 +288,6 @@ body {
 
       .file-panel-button:disabled {
         opacity: 0.3;
-      }
-
-      .file-panel-button:hover:enabled {
-        width:28%;
       }
 
       .file-panel-button:hover {
@@ -553,7 +551,7 @@ body {
   float: left;
   z-index: -100;
   position: fixed;
-  overflow-y: scroll; 
+  overflow-y: scroll;
 }
 
  .single-issue {

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="stylesheets/styles.css">
     <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
     <script src="app/misc/checkbox.js"></script>
+    <script src="app/misc/dropArea.js"></script>
     <script src="app/misc/gitCommands.js"></script>
     <script src="app/misc/git.js"></script>
     <script src="app/misc/gitStash.js"></script>
@@ -55,15 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
   setTimeout(function() {
     // Add click event to Commit button
     document.getElementById('commit-button').addEventListener("click", function() {
-      commitFiles();
-    });
-
-    document.getElementById('stage-button').addEventListener("click", function() {
-      stageFiles();
-    });
-    
-    document.getElementById('unstage-button').addEventListener("click", function() {
-      unstageFiles();
+      commit();
     });
 
     document.getElementById('stash-button').addEventListener("click", function() {
@@ -77,6 +70,15 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('delete-stash-button').addEventListener("click", function() {
     deleteStash();
     });
+
+    document.getElementById('stage-button').addEventListener("click", function() {
+      stageAllFiles();
+    });
+
+    document.getElementById('unstage-button').addEventListener("click", function() {
+      unstageAllFiles();
+    });
+
   }, 2000);
 
   // Update modified files on left file panel every X seconds
@@ -118,15 +120,15 @@ $('#repo-modal').on('hidden.bs.modal', function (e) {
             // show EXIT EDIT MODE confirmation dialog if the user clicks the Edit button
             // on some file when the text editor is opened
             if (textEditorPanel.style.width !== '0px' && textEditorPanel.style.width !== '') {
-              // Set the [Yes] button of exit confirmation dialog to 
+              // Set the [Yes] button of exit confirmation dialog to
               // configure the text editor with the new text
-              document.getElementById("exit-edit-mode-button").onclick = function () { 
+              document.getElementById("exit-edit-mode-button").onclick = function () {
                 configureTextEditorForSelectedFile();
               }
               // ^ the setting of [Yes] button above must be run before this line of code
               // because we need the [Yes] button to configure the text editor if needed
               displayExitConfirmationDialog();
-              
+
               console.log('after confirmation');
             } else {
               // hide diff if it's open
