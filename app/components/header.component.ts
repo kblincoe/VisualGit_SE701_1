@@ -62,6 +62,9 @@ import { GraphService } from "../services/graph.service";
               <a id="usernameTitle"></a>
             </li>
             <li>
+              <a class="btn btn-default btn-outline btn-circle"  id="quickstartButton" data-toggle="collapse" (click)="showQuickstartModal()" aria-expanded="false" aria-controls="nav-collapse1">Quick Start</a>
+            </li>
+            <li>
               <a class="btn btn-default btn-outline btn-circle"  id="issuesButton" data-toggle="collapse" (click)="toggleIssuesPanel()" aria-expanded="false" aria-controls="nav-collapse1">Issues</a>
             </li>
             <li>
@@ -194,6 +197,10 @@ export class HeaderComponent   {
 
   switchToMainPanel(): void {
     signInHead(collpaseSignPanel);
+  }
+
+  showQuickstartModal(): void {
+    displayQuickstartModal();
   }
 
   toggleIssuesPanel(): void {
