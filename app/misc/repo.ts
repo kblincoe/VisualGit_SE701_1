@@ -8,7 +8,6 @@ let bname = {};
 let branchCommit = [];
 let remoteName = {};
 let localBranches = [];
-let readFile = require("fs-sync");
 let repoCurrentBranch = "master";
 let modal;
 let span;
@@ -47,11 +46,12 @@ function downloadFunc(cloneURL, localPath, fullPath) {
   .then(function(repository) {
     updateModalText("Clone Successful, repository saved under: " + fullLocalPath);
     addCommand("git clone " + cloneURL + " " + localPath);
+    isRepositoryLoaded = true;
     repoFullPath = fullLocalPath;
     repoLocalPath = localPath;
-    setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
     refreshAll(repository);
     switchToMainPanel();
+    setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
   },
   function(err) {
     displayErrorMessage("Clone Failed - " + err);
@@ -60,6 +60,8 @@ function downloadFunc(cloneURL, localPath, fullPath) {
 
 function openRepository() {
   let fullLocalPath = document.getElementById("repoOpen").files[0].path;
+
+  let readFile = require("fs-sync");
 
   displayModal("Opening Local Repository...");
   Git.Repository.open(fullLocalPath).then(function(repository) {
@@ -75,7 +77,6 @@ function openRepository() {
     });
 
     repoFullPath = fullLocalPath;
-    setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
     repoLocalPath = fullLocalPath.replace(/^.*[\\\/]/, '');
     if (readFile.exists(repoFullPath + "/.git/MERGE_HEAD")) {
       let tid = readFile.read(repoFullPath + "/.git/MERGE_HEAD", null);
@@ -85,6 +86,8 @@ function openRepository() {
     persistStashList(repository);
     updateModalText("Repository successfully opened");
     switchToMainPanel();
+    isRepositoryLoaded = true;
+    setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
   },
   function(err) {
     displayErrorMessage("Opening Failed - " + err);
@@ -366,6 +369,25 @@ function displayErrorMessage(errorMessage) {
     document.getElementById("modal-text-box").innerHTML = errorMessage;
     document.getElementById("modal-text-box").style.wordWrap = 'break-word';
     $('#modal').modal('show');
+}
+
+function displayQuickstartModal() {
+
+  let header1 = "<h4 style='color: black'>File Changes</h4>"
+  let descriptionFiles = "File changes since the last commit are shown on the left column with a color code: <span class='file-created'>Added</span>, <span class='file-modified'>Modified</span>, and <span class='file-deleted'>Deleted</span>."
+
+  let header2 = "<h4 style='color: black'>Text Changes</h4>"
+  let descriptionTextDiff = "The Text Changes panel in the centre shows a 'diff' of the selected file -- what has been added and deleted."
+  
+  let header3 = "<h4 style='color: black'>Revision History</h4>"
+  let descriptionRevision = "The graph shows the revision history in a graph layout. Nodes will be added as more commits are added."
+
+  let descriptionNote = "<p style='font-style: italic'>This QuickStart guide will still be available in the top menu bar.</p>"
+
+  document.getElementById("modal-text-box").innerHTML = header1 + descriptionFiles + header2 + descriptionTextDiff + header3 + descriptionRevision + descriptionNote;
+  document.getElementById("modal-text-box").style.wordWrap = 'break-word';
+  document.getElementById("modal-title").innerHTML = "VisualGit Quick Start";
+  $('#modal').modal('show');
 }
 
 function displayWarning(warningMessege){
