@@ -50,6 +50,7 @@ function downloadFunc(cloneURL, localPath, fullPath) {
     repoFullPath = fullLocalPath;
     repoLocalPath = localPath;
     refreshAll(repository);
+    switchToMainPanel();
     setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
   },
   function(err) {
@@ -84,6 +85,7 @@ function openRepository() {
     // Need to initialise the existing stashes
     persistStashList(repository);
     updateModalText("Repository successfully opened");
+    switchToMainPanel();
     isRepositoryLoaded = true;
     setupWatcher(repoFullPath); // This sets up the local repo to be tracked for file deletion
   },
